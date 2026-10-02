@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boceto: Memphis Belle</title>
+<meta name="robots" content="noindex">
+<style>
+/* WIREFRAME: solo estructura y jerarquía. Sin colores de marca, sin tipografía final, sin fotos.
+   Las cajas con aspa son huecos para fotos reales del local. Las notas amarillas explican cada decisión
+   y no forman parte de la web. */
+:root {
+  --fondo: #E9E9E7; --bloque: #D3D3D0; --bloque-2: #BDBDB9; --linea: #9A9A96;
+  --texto: #2B2B29; --suave: #6B6B67; --nota: #FFF3B0; --nota-borde: #E0C64A;
+  --radio: 12px; /* una sola escala de esquinas: 12 px en cajas, píldora en botones */
+}
+* { box-sizing: border-box; }
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--texto); background: var(--fondo); }
+.wrap { width: min(100% - 2rem, 1100px); margin-inline: auto; }
+section, header, footer { position: relative; }
+section { padding: 4.5rem 0; border-bottom: 2px dashed var(--linea); }
+
+/* Piezas del wireframe */
+.foto { background: var(--bloque); border-radius: var(--radio); position: relative; overflow: hidden; display: grid; place-items: center; color: var(--suave); font-size: .85rem; text-align: center; padding: 1rem; }
+.foto::before, .foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - 1px), var(--linea) 50%, transparent calc(50% + 1px)); }
+.foto::after { transform: scaleX(-1); }
+.foto span { position: relative; z-index: 1; background: var(--bloque); padding: .2rem .5rem; border-radius: 6px; }
+.t { background: var(--bloque-2); border-radius: 4px; height: .8rem; margin: .45rem 0; }
+.t.corta { width: 40%; } .t.media { width: 65%; } .t.larga { width: 90%; }
+.h1 { font-size: clamp(2.6rem, 7vw, 4.8rem); line-height: 1; font-weight: 700; letter-spacing: -.03em; margin: 0 0 1rem; }
+.h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.1; font-weight: 700; margin: 0 0 1.5rem; }
+.btn { display: inline-block; padding: .8rem 1.4rem; border-radius: 999px; font-weight: 600; text-decoration: none; border: 2px solid var(--texto); color: var(--texto); user-select: none; touch-action: manipulation; }
+.btn.prim { background: var(--texto); color: var(--fondo); }
+.estado { display: inline-flex; gap: .5rem; align-items: center; font-size: .9rem; color: var(--suave); margin: 0 0 1.5rem; }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--suave); }
+.meta { font-size: .9rem; color: var(--suave); margin: .5rem 0 0; }
+.acciones { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+/* Notas del boceto */
+.nota { background: var(--nota); border: 1px solid var(--nota-borde); border-radius: 8px; padding: .7rem .9rem; font-size: .82rem; line-height: 1.45; color: #4A4020; max-width: 46ch; }
+.nota b { display: block; margin-bottom: .2rem; font-size: .75rem; letter-spacing: .02em; }
+.notas { display: grid; gap: .7rem; margin-top: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* Cabecera */
+.nav { position: sticky; top: 0; z-index: 2; background: var(--fondo); border-bottom: 2px solid var(--linea); }
+.nav .wrap { display: flex; align-items: center; gap: 1.5rem; height: 64px; }
+.marca { display: flex; align-items: center; gap: .6rem; font-weight: 700; }
+.marca i { width: 28px; height: 28px; border-radius: 50%; background: var(--bloque-2); }
+.nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0 0 0 auto; padding: 0; font-size: .9rem; color: var(--suave); }
+.nav .btn { padding: .5rem 1rem; font-size: .9rem; }
+
+/* Portada: texto a la izquierda, foto a la derecha */
+.hero { padding: 3.5rem 0 4.5rem; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: center; }
+.hero .foto { aspect-ratio: 4 / 5; }
+.hero p.sub { font-size: 1.2rem; max-width: 30ch; margin: 0 0 1.2rem; }
+
+/* Carta: pestañas y lista a dos columnas */
+.tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1.8rem; }
+.tabs span { padding: .55rem 1rem; border-radius: 999px; border: 2px solid var(--linea); font-size: .9rem; font-weight: 600; }
+.tabs span:first-child { background: var(--texto); color: var(--fondo); border-color: var(--texto); }
+.carta-grid { display: grid; grid-template-columns: 1fr 1fr 280px; gap: 0 3rem; }
+.plato { padding: .9rem 0; }
+.plato .fila { display: flex; gap: .6rem; align-items: baseline; }
+.plato .nombre { font-weight: 700; font-size: 1.1rem; }
+.plato .guia { flex: 1; border-bottom: 2px dotted var(--linea); }
+.plato .precio { font-weight: 700; }
+.carta-grid .foto { grid-column: 3; grid-row: 1 / span 3; aspect-ratio: 3 / 4; align-self: start; }
+
+/* El local: mosaico de fotos con texto funcional */
+.mosaico { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; min-height: 460px; }
+.mosaico .grande { grid-row: 1 / span 2; }
+.mosaico figure { margin: 0; display: grid; grid-template-rows: 1fr auto; gap: .5rem; }
+.mosaico figcaption { font-size: .95rem; }
+.mosaico figcaption strong { display: block; }
+
+/* Visítanos: mapa o fachada + datos */
+.visita .rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+.visita .foto { aspect-ratio: 4 / 3; }
+.dato { margin-bottom: 1.6rem; }
+.dato .etq { font-size: .85rem; color: var(--suave); margin-bottom: .2rem; }
+.dato .val { font-size: 1.15rem; font-weight: 600; }
+
+/* Reseñas */
+.resenas .rejilla { display: grid; grid-template-columns: 220px 1fr 1fr; gap: 2rem; align-items: start; }
+.nota-google { font-size: 3rem; font-weight: 700; line-height: 1; }
+blockquote { margin: 0; padding-left: 1rem; border-left: 3px solid var(--linea); }
+
+/* Reservar */
+.reservar .rejilla { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; }
+.form { background: var(--bloque); border-radius: var(--radio); padding: 1.5rem; display: grid; gap: 1rem; }
+.campo .etq { font-size: .85rem; font-weight: 600; margin-bottom: .3rem; }
+.campo .caja { height: 48px; border-radius: 10px; background: var(--fondo); border: 2px solid var(--linea); }
+.form .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+
+footer { padding: 2.5rem 0 3rem; font-size: .9rem; color: var(--suave); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: start; }
+
+/* Barra fija del móvil */
+.barra-movil { display: none; }
+
+/* Encabezado del boceto */
+.portada-boceto { background: var(--texto); color: var(--fondo); padding: 1rem 0; font-size: .85rem; }
+.portada-boceto strong { font-size: 1rem; }
+
+@media (max-width: 760px) {
+  section { padding: 3rem 0; }
+  .nav ul, .nav .btn { display: none; }
+  .hero .wrap, .visita .rejilla, .reservar .rejilla, .resenas .rejilla { grid-template-columns: 1fr; gap: 1.8rem; }
+  .hero .foto { aspect-ratio: 4 / 3; order: -1; }
+  .carta-grid { grid-template-columns: 1fr; }
+  .carta-grid .foto { display: none; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -1rem; padding-inline: 1rem; }
+  .tabs span { white-space: nowrap; scroll-snap-align: start; }
+  .mosaico { grid-template-columns: 1fr; grid-template-rows: none; min-height: 0; }
+  .mosaico .grande { grid-row: auto; }
+  .mosaico .foto { aspect-ratio: 4 / 3; }
+  .form .tres { grid-template-columns: 1fr 1fr; }
+  .barra-movil { display: grid; grid-template-columns: 1fr 1.6fr; gap: .6rem; position: fixed; inset: auto 0 0 0; z-index: 3; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px)); background: var(--fondo); border-top: 2px solid var(--linea); }
+  .barra-movil .btn { text-align: center; }
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+}
+</style>
+</head>
+<body>
+
+<div class="portada-boceto"><div class="wrap">
+  <strong>Boceto de estructura: Memphis Belle Coctelería</strong><br>
+  Solo jerarquía y orden de secciones. Las cajas con aspa son fotos reales del local (pendientes). Las notas amarillas no forman parte de la web.
+</div></div>
+
+<header class="nav"><div class="wrap">
+  <div class="marca"><i></i>Memphis Belle</div>
+  <ul><li>Carta</li><li>El local</li><li>Visítanos</li></ul>
+  <a class="btn prim" href="#reservar">Reservar mesa</a>
+</div></header>
+
+<!-- PORTADA -->
+<section class="hero" id="inicio"><div class="wrap">
+  <div>
+    <h1 class="h1">Memphis Belle</h1>
+    <p class="sub">Coctelería de clásicos en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.</p>
+    <p class="estado">Abierto ahora, hasta las 02:00</p>
+    <div class="acciones"><a class="btn prim" href="#reservar">Reservar mesa</a><a class="btn" href="#carta">Ver la carta</a></div>
+  </div>
+  <div class="foto"><span>FOTO: la barra o un cóctel de la casa, de noche (4:5)</span></div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Lectura del encargo (taste)</b>Landing de un local físico para gente que busca dónde tomar una copa en Santa Cruz, casi siempre desde el móvil. Lenguaje nocturno con guiño años 40, sin disfraz. Diales: variedad 6, movimiento 3, densidad 3.</div>
+  <div class="nota"><b>Portada en dos columnas (taste)</b>Texto a la izquierda y foto real a la derecha. Máximo 4 elementos: título, frase de 15 palabras, estado y botones. Sin etiqueta encima del título, sin estrella decorativa: la foto es el elemento visual.</div>
+  <div class="nota"><b>Un solo texto por acción (taste)</b>"Reservar mesa" en la cabecera, la portada, la barra del móvil y el formulario. El punto de estado se queda porque indica algo real (abierto o cerrado).</div>
+  <div class="nota"><b>Movimiento (Emil)</b>Entrada escalonada una sola vez al cargar (600 ms, 60 ms entre elementos, curva ease-out fuerte). Botones a scale(0.97) al pulsar. Con "reducir movimiento", nada se mueve.</div>
+</div></section>
+
+<!-- CARTA -->
+<section id="carta"><div class="wrap">
+  <h2 class="h2">La carta</h2>
+  <div class="tabs"><span>Clásicos</span><span>De la casa</span><span>Sin alcohol</span><span>Cervezas y vinos</span></div>
+  <div class="carta-grid">
+    <div>
+      <div class="plato"><div class="fila"><span class="nombre">Dry Martini</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t media"></div></div>
+      <div class="plato"><div class="fila"><span class="nombre">Manhattan</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t media"></div></div>
+      <div class="plato"><div class="fila"><span class="nombre">Cóctel</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t corta"></div></div>
+    </div>
+    <div>
+      <div class="plato"><div class="fila"><span class="nombre">Cóctel</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t media"></div></div>
+      <div class="plato"><div class="fila"><span class="nombre">Cóctel</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t corta"></div></div>
+      <div class="plato"><div class="fila"><span class="nombre">Cóctel</span><span class="guia"></span><span class="precio">0,00 €</span></div><div class="t media"></div></div>
+    </div>
+    <div class="foto"><span>FOTO: cóctel destacado de la sección (3:4)</span></div>
+  </div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Carta en pestañas y dos columnas (taste)</b>Más de 5 platos no van en una lista larga: pestañas por sección y dos columnas en escritorio. En el móvil, una columna y las pestañas se deslizan en horizontal.</div>
+  <div class="nota"><b>Cambio de pestaña (Emil)</b>Se usa muchas veces: fundido de 180 ms, sin desplazamiento. Teclado con flechas, sin animación extra.</div>
+  <div class="nota"><b>Pendiente</b>La carta real con precios. Los nombres y precios de este boceto son huecos.</div>
+</div></section>
+
+<!-- EL LOCAL -->
+<section id="local"><div class="wrap">
+  <h2 class="h2">El local</h2>
+  <div class="mosaico">
+    <figure class="grande"><div class="foto"><span>FOTO: la terraza llena, de noche</span></div><figcaption><strong>Terraza</strong>Unas 30 personas fuera.</figcaption></figure>
+    <figure><div class="foto"><span>FOTO: interior y barra</span></div><figcaption><strong>Dentro</strong>40 personas.</figcaption></figure>
+    <figure><div class="foto"><span>FOTO: un perro en la terraza</span></div><figcaption><strong>Mascotas bienvenidas</strong>Dentro y fuera.</figcaption></figure>
+  </div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Mosaico de fotos, no tres tarjetas iguales (taste)</b>Una foto grande y dos pequeñas, exactamente 3 huecos para 3 datos. Cada foto lleva debajo un texto corto y funcional, nada encima de la imagen.</div>
+  <div class="nota"><b>Sin animación al hacer scroll (Emil)</b>Es contenido para mirar, no un estado que cambia. Las fotos aparecen sin efectos.</div>
+</div></section>
+
+<!-- VISÍTANOS -->
+<section class="visita" id="visitanos"><div class="wrap">
+  <div class="rejilla">
+    <div>
+      <h2 class="h2">Visítanos</h2>
+      <div class="dato"><div class="etq">Horario</div><div class="val">De miércoles a domingo, de 18:00 a 02:00</div><div class="etq" style="margin-top:.2rem">Lunes y martes, cerrado</div></div>
+      <div class="dato"><div class="etq">Dirección</div><div class="val">Calle de los Sueños, 1, Santa Cruz de Tenerife</div></div>
+      <div class="dato"><div class="etq">Teléfono y WhatsApp</div><div class="val">636 864 193</div></div>
+      <div class="acciones"><span class="btn">Cómo llegar</span><span class="btn">Llamar</span></div>
+    </div>
+    <div class="foto"><span>FOTO: la fachada o la calle, para reconocer el sitio al llegar (4:3)</span></div>
+  </div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Horario agrupado (taste)</b>Dos líneas en lugar de una tabla de 7 filas. Si un día cambia, se muestra aparte.</div>
+  <div class="nota"><b>Foto de la fachada, no mapa incrustado</b>Un mapa de Google añade cookies y peso. La foto ayuda a reconocer la puerta y "Cómo llegar" abre la ficha de Google Maps.</div>
+</div></section>
+
+<!-- RESEÑAS -->
+<section class="resenas" id="resenas"><div class="wrap">
+  <div class="rejilla">
+    <div><div class="nota-google">0,0</div><p class="meta">de 5 en Google, 000 reseñas</p></div>
+    <blockquote><div class="t larga"></div><div class="t media"></div><p class="meta">Nombre, reseña en Google</p></blockquote>
+    <blockquote><div class="t larga"></div><div class="t corta"></div><p class="meta">Nombre, reseña en Google</p></blockquote>
+  </div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Opcional</b>Solo si hay valoración y reseñas reales copiadas de la ficha, con permiso. Máximo 3 líneas por cita. Si no hay, la sección no se muestra.</div>
+</div></section>
+
+<!-- RESERVAR -->
+<section class="reservar" id="reservar"><div class="wrap">
+  <div class="rejilla">
+    <div>
+      <h2 class="h2">Reservar mesa</h2>
+      <div class="t larga"></div><div class="t media"></div>
+      <p class="meta" style="margin-top:1rem">Grupos de más de 12: llamar.</p>
+    </div>
+    <div class="form">
+      <div class="campo"><div class="etq">Tu nombre</div><div class="caja"></div></div>
+      <div class="tres">
+        <div class="campo"><div class="etq">Personas</div><div class="caja"></div></div>
+        <div class="campo"><div class="etq">Día</div><div class="caja"></div></div>
+        <div class="campo"><div class="etq">Hora</div><div class="caja"></div></div>
+      </div>
+      <div class="campo"><div class="etq">Comentario (opcional)</div><div class="caja"></div></div>
+      <div><span class="btn prim">Reservar mesa</span></div>
+    </div>
+  </div>
+</div>
+<div class="wrap notas">
+  <div class="nota"><b>Formulario (taste y mobile-native)</b>Etiqueta encima de cada campo, nunca dentro. Campos a 16 px para que iOS no haga zoom. Aviso en línea si el día está cerrado. Al enviar se abre WhatsApp con el mensaje escrito.</div>
+</div></section>
+
+<footer><div class="wrap">
+  <div><strong style="color:var(--texto)">Memphis Belle Coctelería</strong><br>Calle de los Sueños, 1, 38006 Santa Cruz de Tenerife</div>
+  <div>Instagram<br>Email</div>
+  <div>Aviso legal, Privacidad, Cookies</div>
+  <div>Bebe con moderación. No servimos alcohol a menores de 18 años.</div>
+</div></footer>
+
+<nav class="barra-movil" aria-label="Acciones rápidas"><span class="btn">Llamar</span><a class="btn prim" href="#reservar">Reservar mesa</a></nav>
+
+</body>
+</html>

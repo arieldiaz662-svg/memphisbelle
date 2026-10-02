@@ -16,3 +16,16 @@ Copiadas de [emilkowalski/skill](https://github.com/emilkowalski/skill) (commit 
 
 Se omiten las de Swift, Expo/React Native, Sonner y selección de librerías de React: la web no usa esas tecnologías.
 Para actualizarlas, vuelve a copiar las carpetas desde el repositorio original.
+
+## Taste Skill
+
+`taste-skill/SKILL.md` copiada de [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) (commit `ce26fc2`), licencia MIT
+(`LICENSE-tasteskill`). Solo la skill principal (`design-taste-frontend`): criterio "anti-plantilla" para landings (lectura del
+encargo, diales de variedad/movimiento/densidad, patrones prohibidos y comprobación final).
+
+Cómo encaja con las de Emil en esta web:
+
+- **Stack**: taste propone React + Tailwind + Motion por defecto, pero admite CSS nativo cuando el encargo es una estética y no
+  un sistema de diseño. Esta web sigue siendo HTML estático con CSS propio.
+- **Movimiento**: manda Emil (cuándo y cómo animar). De taste se aplican los diales y la regla de que cada animación tenga motivo.
+- **Composición, imágenes, textos y paleta**: manda taste.
