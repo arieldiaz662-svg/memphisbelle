@@ -194,6 +194,27 @@ ul { margin: 0; padding: 0; list-style: none; }
 .estado.abierto .estado-punto { background: var(--oliva); box-shadow: 0 0 0 4px rgba(143, 163, 91, .18); }
 .estado.abierto .estado-texto { color: var(--crema); }
 
+/* ---------- 4b. Cóctel estrella ---------- */
+/* Rojo tomate muy oscuro (de la familia del óxido del mural) que se funde en hollín: el color del
+   propio cóctel, sin salir del tema oscuro. Sección tipográfica; si hay foto, va en la columna central. */
+.estrella {
+  background:
+    radial-gradient(60% 80% at 0% 50%, rgba(140, 32, 20, .55), transparent 70%),
+    linear-gradient(180deg, #2A0F0B, var(--hollin));
+  border-top: 1px solid var(--linea);
+}
+.estrella-grid { display: grid; gap: 2.5rem 4rem; grid-template-columns: 1.4fr 1fr; align-items: end; }
+.estrella-grid.con-foto { grid-template-columns: 1.2fr 1fr .9fr; }
+.estrella-foto { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radio); }
+.estrella-etiqueta { font-family: var(--serif); font-style: normal; color: var(--ambar); font-size: var(--t-l); margin: 0 0 .4rem; }
+.estrella h2 { font-size: clamp(3.2rem, 9vw, 6.5rem); line-height: .95; letter-spacing: -0.025em; margin: 0 0 1.4rem; }
+.estrella-desc { font-size: var(--t-l); line-height: 1.5; max-width: 36ch; }
+.estrella-precio { font-family: var(--serif); font-size: var(--t-xl); margin: 1.4rem 0 0; font-variant-numeric: tabular-nums; }
+.estrella-receta h3 { font-size: var(--t-s); font-weight: 600; color: var(--humo); margin: 0 0 .8rem; }
+.estrella-receta ul { display: grid; gap: .55rem; }
+.estrella-receta li { font-family: var(--serif); font-size: var(--t-l); line-height: 1.2; padding-left: 1.1rem; position: relative; }
+.estrella-receta li::before { content: ""; position: absolute; left: 0; top: .5em; width: .45rem; height: 1px; background: var(--ambar); }
+
 /* ---------- 5. La carta: papel sobre la barra ---------- */
 .carta {
   /* El mismo cielo, muy apagado, para que el papel de la carta destaque sin cambiar de tema. */
@@ -318,6 +339,9 @@ footer a { text-decoration: none; transition: color .15s ease; }
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
   .formulario .btn { justify-self: stretch; }
   .plato-nombre { font-size: 1.15rem; }
+  .estrella-grid, .estrella-grid.con-foto { grid-template-columns: 1fr; align-items: start; }
+  .estrella-receta ul { grid-template-columns: 1fr 1fr; gap: .55rem 1rem; }
+  .estrella-receta li { font-size: var(--t-m); }
 }
 
 /* ---------- 11. Páginas sencillas (legales y 404) ---------- */

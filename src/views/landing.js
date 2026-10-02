@@ -32,6 +32,34 @@ function hero(site) {
 </section>`;
 }
 
+// Cóctel estrella: el precio sale de la carta, para que no pueda ser distinto en las dos secciones.
+export function featuredItem(site) {
+  return site.featured && site.menu.sections.flatMap((s) => s.items).find((i) => i.name === site.featured.name);
+}
+
+function featured(site) {
+  const f = site.featured;
+  if (!f) return '';
+  const item = featuredItem(site);
+  return `<section class="estrella" id="estrella" aria-labelledby="estrella-titulo">
+  <div class="wrap estrella-grid${f.image ? ' con-foto' : ''}">
+    <div class="estrella-texto">
+      <p class="estrella-etiqueta">${esc(f.label)}</p>
+      <h2 id="estrella-titulo">${esc(f.name)}</h2>
+      <p class="estrella-desc">${esc(f.text)}</p>
+      <p class="estrella-precio">${esc(item.price)}</p>
+    </div>
+    ${f.image ? `<img class="estrella-foto" src="assets/${esc(f.image.src)}" alt="${esc(f.image.alt)}" width="800" height="1000" loading="lazy">` : ''}
+    <div class="estrella-receta">
+      <h3>Lleva</h3>
+      <ul>
+        ${f.ingredients.map((i) => `<li>${esc(i)}</li>`).join('\n        ')}
+      </ul>
+    </div>
+  </div>
+</section>`;
+}
+
 function menu(site) {
   const { menu: m } = site;
   const first = m.sections[0].id;
@@ -162,6 +190,7 @@ function barraMovil(site) {
 export function renderLanding({ site, config }) {
   const body = `<main>
 ${hero(site)}
+${featured(site)}
 ${menu(site)}
 ${info(site)}
 ${local(site)}

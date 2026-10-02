@@ -12,7 +12,7 @@ import { buildStatic } from '../scripts/build-static.js';
 import { pendientes } from '../scripts/pendientes.js';
 import { site } from '../src/content/site.js';
 import { STATIC_CSP } from '../src/views/html.js';
-import { NAV } from '../src/views/landing.js';
+import { NAV, featuredItem } from '../src/views/landing.js';
 import { parsePrice, structuredDataObject } from '../src/views/schema.js';
 import worker from '../worker/index.js';
 import { DOMINIO, redireccion, sinExtension } from '../worker/redireccion.js';
@@ -160,6 +160,25 @@ describe('carta', () => {
 
   test('mientras la carta sea de ejemplo, se avisa en la propia carta', () => {
     assert.equal(index.includes('class="aviso-ejemplo"'), Boolean(site.menu.pendiente));
+  });
+});
+
+describe('cóctel estrella', () => {
+  test('está en la carta y la sección muestra el mismo precio', () => {
+    if (!site.featured) return;
+    const item = featuredItem(site);
+    assert.ok(item, `"${site.featured.name}" debe estar en la carta`);
+    const seccion = index.slice(index.indexOf('id="estrella"'), index.indexOf('id="carta"'));
+    assert.ok(seccion.includes(`<h2 id="estrella-titulo">${site.featured.name}</h2>`));
+    assert.ok(seccion.includes(`<p class="estrella-precio">${item.price}</p>`));
+    for (const ingrediente of site.featured.ingredients) assert.ok(seccion.includes(`<li>${ingrediente}</li>`), ingrediente);
+  });
+
+  test('va justo después de la portada y sin foto no deja un hueco vacío', () => {
+    if (!site.featured) return;
+    assert.ok(index.indexOf('id="inicio"') < index.indexOf('id="estrella"'));
+    assert.ok(index.indexOf('id="estrella"') < index.indexOf('id="carta"'));
+    assert.equal(index.includes('class="estrella-foto"'), Boolean(site.featured.image));
   });
 });
 

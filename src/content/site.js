@@ -70,6 +70,18 @@ export const site = {
     revisar: 'Completar con los servicios y atributos de la ficha de Google (accesibilidad, pagos, ambiente...)',
   },
 
+  // CÓCTEL ESTRELLA: sección destacada justo después de la portada. Debe estar también en la carta
+  // (menu) con el mismo nombre y precio; un test lo comprueba. "image" es opcional (foto propia del
+  // cóctel, en public/img/): sin foto, la sección es solo tipográfica.
+  featured: {
+    label: 'Cóctel estrella',
+    name: 'Bloody Mary',
+    text: 'El clásico de vodka y tomate, con el picante y la sal a nuestra manera. Se sirve largo, con mucho hielo y su rama de apio.',
+    ingredients: ['Vodka', 'Zumo de tomate', 'Lima', 'Salsa Worcestershire', 'Tabasco', 'Sal de apio y pimienta negra'],
+    image: null, // { src: 'img/bloody-mary.jpg', alt: 'Bloody Mary en la barra de Memphis Belle' }
+    pendiente: 'Cóctel estrella de ejemplo: confirmar con el local cuál es, su receta y su precio, y conseguir una foto propia',
+  },
+
   // CARTA DIGITAL. Precios con IGIC incluido, tal como se cobran en la barra.
   // "text" es opcional (ingredientes o una línea de descripción).
   menu: {
@@ -87,6 +99,7 @@ export const site = {
           { name: 'Old Fashioned', text: 'Bourbon, azúcar, angostura, piel de naranja.', price: '9,50 €' },
           { name: 'Daiquiri', text: 'Ron blanco, lima, azúcar.', price: '8,50 €' },
           { name: 'Margarita', text: 'Tequila, triple seco, lima.', price: '8,50 €' },
+          { name: 'Bloody Mary', text: 'Vodka, tomate, lima, Worcestershire, tabasco, sal de apio.', price: '9,50 €' },
         ],
       },
       {
