@@ -214,7 +214,8 @@ describe('portada y móvil', () => {
   test('el bombardero de la portada es decorativo y solo se mueve si el sistema lo permite', () => {
     const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('id="estrella"'));
     assert.match(hero, /<div class="bombardero" aria-hidden="true">/);
-    assert.match(hero, /class="belle-morro"/); // el nombre del morro es el logotipo
+    const logoPath = /<path[^>]* d="([^"]+)"/.exec(readFileSync(new URL('../public/img/logo-belle.svg', import.meta.url), 'utf8'))[1];
+    assert.ok(hero.includes(`d="${logoPath}"`), 'el nombre del morro es el trazado del logotipo');
     const animaciones = /@media \(prefers-reduced-motion: no-preference\) \{\s*\.bombardero-vuelo \{ animation: flotar/;
     assert.match(css, animaciones);
     // Fuera de ese bloque no hay ninguna animación del avión.

@@ -54,7 +54,7 @@ export const site = {
 
   // PORTADA
   hero: {
-    lead: 'Coctelería de clásicos en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
+    lead: 'Los mejores clásicos de coctelería, en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
     cta: 'Reservar mesa',
     secondary: 'Ver la carta',
   },

@@ -161,12 +161,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: inset 0 0 140px 30px rgba(22, 14, 11, .85);
 }
 /* ---------- Bombardero: ilustración de fondo de la portada (src/views/bombardero.js) ----------
-   Estilo cartoon de los 90: contorno negro grueso, colores planos, sombras de bloque sin degradado y
-   brillos blancos. Vista a 45 grados, grande y recortada a la mitad del avión, a la derecha y
-   difuminada hacia el título (máscara fija, sin animar).
-   Movimiento decorativo, visto una vez por visita: las hélices giran (movimiento constante: linear) y
-   el avión se balancea y se acerca un poco (ida y vuelta: curva senoidal de easings.co). Solo
-   transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
+   Acabado realista, como un cartel de aviación de los años 40: sin contornos, metal sombreado y la
+   luz naranja del cielo en la panza (los colores van en los degradados del SVG). Vista a 45 grados,
+   grande y recortada a la mitad del avión, a la derecha y difuminada hacia el título (máscara fija).
+   Movimiento sobrio, visto una vez por visita: las hélices son un disco desenfocado con palas que
+   apenas se intuyen girando (movimiento constante: linear) y el avión se mece muy despacio (ida y
+   vuelta: curva senoidal de easings.co). Solo transform, en animaciones CSS fuera del hilo principal.
+   Con "reducir movimiento", quieto. */
 .bombardero {
   position: absolute; z-index: -1; pointer-events: none;
   right: -16%; top: 69%; width: min(72vw, 1040px);
@@ -176,26 +177,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .bombardero-svg { width: 100%; height: auto; overflow: visible; }
 .bombardero-vuelo { transform-box: view-box; transform-origin: 600px 420px; }
-/* Contorno de dibujo animado en todas las piezas, salvo sombras, brillos y arcos (.sin-linea). */
-.bombardero :is(path, circle, ellipse, rect) { stroke: #1A0F0B; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
-.bombardero .sin-linea { stroke: none; }
-/* Colores planos del mural, algo más saturados como en los dibujos animados. */
-.bombardero .oliva { fill: #7A8A3A; }
-.bombardero .oliva-luz { fill: #A2B256; }
-.bombardero .oliva-sombra { fill: #55611F; }
-.bombardero .remaches { fill: none; stroke: #55611F; stroke-width: 4; stroke-dasharray: 2 14; }
-.bombardero .carenado { fill: #2A2622; }
-.bombardero .cristal { fill: #86C2C6; }
-.bombardero .cristal-oscuro { fill: #2B4448; }
-.bombardero .brillo { fill: #FFFFFF; opacity: .85; }
-.bombardero .marco { fill: none; stroke-width: 5; }
-.bombardero .insignia-azul, .bombardero .insignia-barra { fill: #2C4C8A; }
-.bombardero .insignia-blanca { fill: #FFFFFF; }
-.bombardero .belle-morro { fill: var(--mostaza); stroke-width: 3; }
-.bombardero .helice-disco { fill: rgba(255, 255, 255, .12); }
-.bombardero .arco { fill: none; stroke: rgba(255, 255, 255, .55); stroke-width: 5; stroke-linecap: round; }
-.bombardero .pala { fill: #1A0F0B; stroke: none; }
-.bombardero .buje { fill: #C9CDB0; }
+.bombardero .bm-panel { fill: none; stroke: rgba(20, 16, 10, .45); stroke-width: 1.5; }
+.bombardero .bm-remaches { fill: none; stroke: rgba(205, 200, 170, .22); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: .1 11; }
+.bombardero .bm-marco { fill: none; stroke: rgba(30, 32, 22, .9); stroke-width: 3; }
+.bombardero .bm-reflejo { fill: #F2EBDC; opacity: .42; }
+.bombardero .bm-pintura { opacity: .9; } /* pintura algo gastada por el uso */
+.bombardero .bm-borde-ataque { fill: none; stroke: rgba(220, 205, 160, .28); stroke-width: 3; }
+.bombardero .bm-pala { fill: rgba(18, 16, 12, .22); }
+.bombardero .bm-lejos { opacity: .72; } /* perspectiva aérea: lo lejano, más apagado */
 @media (max-width: 1100px) {
   .bombardero { top: 76%; }
 }
@@ -203,14 +192,14 @@ ul { margin: 0; padding: 0; list-style: none; }
   .bombardero { top: 76%; right: -14%; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .bombardero-vuelo { animation: flotar 7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate; }
-  .bombardero .giro { animation: girar 420ms linear infinite; }
+  .bombardero-vuelo { animation: flotar 10s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate; }
+  .bombardero .giro { animation: girar 160ms linear infinite; }
   .bombardero .giro-1 { animation-delay: -60ms; }
   .bombardero .giro-2 { animation-delay: -170ms; }
   .bombardero .giro-3 { animation-delay: -250ms; }
   @keyframes flotar {
-    from { transform: translate(0, 8px) rotate(-1.5deg) scale(1); }
-    to { transform: translate(-10px, -8px) rotate(1deg) scale(1.03); }
+    from { transform: translate(0, 4px) rotate(-.6deg) scale(1); }
+    to { transform: translate(-6px, -4px) rotate(.4deg) scale(1.015); }
   }
   @keyframes girar { to { transform: rotate(360deg); } }
 }
