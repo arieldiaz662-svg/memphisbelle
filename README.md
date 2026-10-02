@@ -25,7 +25,7 @@ Los datos que no se han podido confirmar llevan `pendiente` en `src/content/site
 
 ## Publicación
 
-**Cloudflare Workers**: conectar el Worker `memphisbar` a este repositorio. Toda la configuración está en `wrangler.jsonc`: pasa los tests (si alguno falla, no se publica), construye y publica `dist/`, sirve `404.html` en rutas inexistentes y aplica las cabeceras de `_headers`. Sin dominio propio, la web queda en `memphisbar.<cuenta>.workers.dev`.
+**Cloudflare Workers**: conectar el Worker `memphisbelle` a este repositorio. Toda la configuración está en `wrangler.jsonc`: pasa los tests (si alguno falla, no se publica), construye y publica `dist/`, sirve `404.html` en rutas inexistentes y aplica las cabeceras de `_headers`. Sin dominio propio, la web queda en `memphisbelle.<cuenta>.workers.dev`.
 
 Al tener dominio: añadirlo en `worker/redireccion.js` (`DOMINIO`) y en `wrangler.jsonc` (`routes` con el dominio y `www`, y `PUBLIC_BASE_URL=https://<dominio>` en el comando de construcción). Un test comprueba que coinciden. Con `PUBLIC_BASE_URL` se generan el canonical, el sitemap, la imagen al compartir y los datos estructurados para Google.
 

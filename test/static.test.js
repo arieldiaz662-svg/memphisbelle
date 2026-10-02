@@ -17,7 +17,7 @@ import { parsePrice, structuredDataObject } from '../src/views/schema.js';
 import worker from '../worker/index.js';
 import { DOMINIO, redireccion, sinExtension } from '../worker/redireccion.js';
 
-const BASE = 'https://ejemplo.com/memphisbar';
+const BASE = 'https://ejemplo.com/memphisbelle';
 const outDir = mkdtempSync(join(tmpdir(), 'memphis-static-'));
 let index;
 const read = (file) => readFileSync(join(outDir, file), 'utf8');
@@ -72,9 +72,9 @@ describe('construcción y publicación', () => {
 
   test('una sola dirección cuando haya dominio, y páginas .html sin redirección', async () => {
     assert.equal(redireccion(new URL('https://www.memphis.test/carta?a=1'), 'memphis.test'), 'https://memphis.test/carta?a=1');
-    assert.equal(redireccion(new URL('https://memphisbar.cuenta.workers.dev/'), 'memphis.test'), 'https://memphis.test/');
+    assert.equal(redireccion(new URL('https://memphisbelle.cuenta.workers.dev/'), 'memphis.test'), 'https://memphis.test/');
     assert.equal(redireccion(new URL('https://memphis.test/'), 'memphis.test'), null);
-    assert.equal(redireccion(new URL('https://memphisbar.cuenta.workers.dev/'), ''), null);
+    assert.equal(redireccion(new URL('https://memphisbelle.cuenta.workers.dev/'), ''), null);
     assert.equal(sinExtension(new URL('https://memphis.test/privacidad.html')).pathname, '/privacidad');
     assert.equal(sinExtension(new URL('https://memphis.test/')), null);
 

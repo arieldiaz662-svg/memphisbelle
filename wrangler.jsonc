@@ -1,11 +1,11 @@
-// Cloudflare Workers (Worker "memphisbar"): pasa los tests, construye la web estática y publica dist/.
+// Cloudflare Workers (Worker "memphisbelle"): pasa los tests, construye la web estática y publica dist/.
 // Si falla un test, no se publica. Tampoco se publica mientras queden datos pendientes en site.js
 // (CHECK_PUBLICACION=1, ver test/publicacion.test.js).
-// Sin dominio propio todavía: la web queda en memphisbar.<cuenta>.workers.dev. Al tener dominio, añadir
+// Sin dominio propio todavía: la web queda en memphisbelle.<cuenta>.workers.dev. Al tener dominio, añadir
 // "routes" (dominio y www, con custom_domain), PUBLIC_BASE_URL en el comando y el dominio en
 // worker/redireccion.js.
 {
-  "name": "memphisbar",
+  "name": "memphisbelle",
   "main": "worker/index.js",
   "compatibility_date": "2025-09-01",
   "build": {
