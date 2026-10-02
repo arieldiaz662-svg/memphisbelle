@@ -1,159 +1,168 @@
 import { readFileSync } from 'node:fs';
 
-// Ilustración del bombardero (un B-17 de los años 40, como el del mural del local) para el fondo de la
-// portada. Dibujo propio en SVG con acabado realista, como un cartel de aviación de la época: sin
-// contornos, metal sombreado como un cilindro, reflejos, la luz naranja del cielo rebotando en la panza
-// y líneas de paneles discretas. Vista a 45 grados, grande y recortada a la mitad del avión: morro de
-// cristal, cabina, torreta y el ala cercana con sus motores; la cola queda fuera del encuadre.
-// Va en línea en el HTML para que el CSS pueda animar las hélices y el vuelo
-// (public/css/site.css → "Bombardero"). El nombre del morro es el trazado del logotipo
+// Ilustración de la portada: un cartel de aviación de los años 40, como el mural del local. Dibujo
+// propio en SVG (no copia ningún cartel concreto): el B-17 Memphis Belle de lado y en grande, recortado
+// a la mitad del avión, con el morro de cristal, la cabina, la torreta, las 25 bombas de sus misiones
+// (dato histórico), la estrella con barras y la hélice del motor interior en primer plano; detrás, un
+// cielo de cartel con nubes y bombarderos en formación a lo lejos.
+// Acabado realista: sin contornos, metal sombreado y la luz cálida del horizonte en la panza.
+// El SVG cubre la mitad derecha de la portada (preserveAspectRatio "slice": recorta, nunca deforma;
+// anclado abajo, así el avión siempre queda por debajo del título) y se funde con el fondo por la
+// izquierda. Va en línea para que el CSS pueda animar la hélice, el avión
+// y las nubes (public/css/site.css → "Bombardero"). El nombre del costado es el trazado del logotipo
 // (public/img/logo-belle.svg).
 
 const logo = readFileSync(new URL('../../public/img/logo-belle.svg', import.meta.url), 'utf8');
 const [, logoX, logoY, logoW] = /viewBox="(-?\d+) (-?\d+) (\d+) (\d+)"/.exec(logo).map(Number);
 const logoPath = /<path[^>]* d="([^"]+)"/.exec(logo)[1];
-const BELLE_ANCHO = 190; // ancho del nombre pintado en el costado del morro
+const BELLE_ANCHO = 250; // ancho del nombre pintado en el costado
 const belleEscala = BELLE_ANCHO / logoW;
 
-// Pala "fantasma" de una hélice a toda velocidad: apenas se intuye dentro del disco desenfocado.
-const pala = (r) => `M0 0 C${(r * 0.12).toFixed(1)} ${(-r * 0.3).toFixed(1)} ${(r * 0.14).toFixed(1)} ${(-r * 0.78).toFixed(1)} 0 ${-r} C${(-r * 0.14).toFixed(1)} ${(-r * 0.78).toFixed(1)} ${(-r * 0.12).toFixed(1)} ${(-r * 0.3).toFixed(1)} 0 0Z`;
+const MISIONES = 25; // el Memphis Belle completó 25 misiones en 1943
 
-// Motor a 45 grados: góndola hacia atrás, carenado mirando hacia delante y hélice girando: un disco
-// translúcido (como en una foto a velocidad real) con tres palas fantasma que giran (ver .giro en el
-// CSS). "n" (1-4) desfasa cada hélice; va en clases porque la CSP no admite estilos en línea.
-const motor = ({ x, y, r, n }) => {
-  const R = Math.round(r * 2.2); // radio de la hélice
-  return `<g transform="translate(${x} ${y})">
-      <path fill="url(#bm-gondola)" d="M${-r * 0.2} ${-r} L${r * 2.2} ${-r * 2} L${r * 2.6} ${r * 0.2} L${r * 0.3} ${r} Z"/>
-      <path class="bm-panel" d="M${r * 0.9} ${-r * 1.28} L${r * 1.15} ${r * 0.62}"/>
-      <g transform="rotate(-25) scale(.62 1)">
-        <circle fill="url(#bm-carenado)" r="${r}"/>
-        <circle fill="url(#bm-toma)" r="${(r * 0.74).toFixed(1)}"/>
-        <circle fill="url(#bm-disco)" r="${R}"/>
-        <g class="giro giro-${n}">
-          <path class="bm-pala" d="${pala(R)}"/>
-          <path class="bm-pala" d="${pala(R)}" transform="rotate(120)"/>
-          <path class="bm-pala" d="${pala(R)}" transform="rotate(240)"/>
-        </g>
-        <circle fill="url(#bm-buje)" r="${(r * 0.26).toFixed(1)}"/>
-      </g>
-    </g>`;
+// Bomba pintada (marca de misión): cuerpo, punta y aletas.
+const bomba = (x, y) => `<path d="M${x} ${y} h16 c4 0 7 2 7 4.5 s-3 4.5 -7 4.5 h-16 l-5 3 v-15 z"/>`;
+const bombas = () => {
+  const fila1 = Math.ceil(MISIONES / 2);
+  return Array.from({ length: MISIONES }, (_, i) => {
+    const fila = i < fila1 ? 0 : 1;
+    const col = fila ? i - fila1 : i;
+    return bomba(372 + col * 29 + fila * 14, 340 + fila * 24);
+  }).join('');
 };
 
+// Nube de cartel: varias bolas superpuestas, con la base en sombra. Se dibuja en (x, y) a escala s.
+const nube = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})">
+        <ellipse class="nube-sombra" cx="0" cy="34" rx="150" ry="34"/>
+        <circle class="nube" cx="-80" cy="10" r="46"/>
+        <circle class="nube" cx="-20" cy="-18" r="64"/>
+        <circle class="nube" cx="50" cy="-4" r="54"/>
+        <circle class="nube" cx="110" cy="16" r="38"/>
+        <ellipse class="nube" cx="10" cy="26" rx="150" ry="30"/>
+      </g>`;
+
+// Banda de nubes que se repite: dos copias seguidas para que el desplazamiento sea continuo.
+const bandaNubes = `<g class="nubes-banda">
+        ${nube(120, 640, 1)}${nube(470, 700, 0.8)}${nube(820, 630, 1.15)}${nube(1120, 690, 0.9)}
+        ${nube(1320, 640, 1)}${nube(1670, 700, 0.8)}${nube(2020, 630, 1.15)}${nube(2320, 690, 0.9)}
+      </g>`;
+
+// Silueta pequeña de un B-17 de lado, para la formación del fondo.
+const silueta = (x, y, s) => `<path class="formacion" transform="translate(${x} ${y}) scale(${s})" d="M0 12 C4 6 14 4 24 4 L110 2 C120 -10 128 -22 134 -24 L140 -22 L138 2 L150 6 L150 12 L110 16 L24 18 C12 18 2 16 0 12 Z M50 12 L96 12 L70 22 Z"/>`;
+
 export const BOMBARDERO = `<div class="bombardero" aria-hidden="true">
-  <svg class="bombardero-svg" viewBox="0 0 1200 800" focusable="false">
+  <svg class="bombardero-svg" viewBox="0 0 1200 1000" preserveAspectRatio="xMinYMax slice" focusable="false">
     <defs>
-      <!-- Fuselaje como un cilindro: luz cenital, sombra propia y el naranja del cielo rebotando abajo.
-           El degradado va perpendicular al eje del avión, así que sirve a todo lo largo. -->
-      <linearGradient id="bm-fuselaje" gradientUnits="userSpaceOnUse" x1="316" y1="364" x2="443" y2="636">
-        <stop offset="0" stop-color="#3E4227"/>
-        <stop offset=".14" stop-color="#7E8455"/>
-        <stop offset=".24" stop-color="#6A7043"/>
-        <stop offset=".6" stop-color="#4C5130"/>
-        <stop offset=".86" stop-color="#2E3020"/>
-        <stop offset="1" stop-color="#8A5A2C"/>
+      <!-- Cielo de cartel: humo azulado arriba, ámbar en el horizonte. -->
+      <linearGradient id="bm-cielo" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2C2A26"/>
+        <stop offset=".45" stop-color="#5B4A39"/>
+        <stop offset=".8" stop-color="#A8804F"/>
+        <stop offset="1" stop-color="#C79A5E"/>
       </linearGradient>
-      <radialGradient id="bm-tapa" cx=".35" cy=".3" r=".8">
-        <stop offset="0" stop-color="#727848"/>
-        <stop offset=".7" stop-color="#454A2B"/>
-        <stop offset="1" stop-color="#2C2E1D"/>
-      </radialGradient>
-      <!-- Cristal del morro: oscuro, con el cielo naranja reflejado abajo y un brillo arriba. -->
-      <linearGradient id="bm-cristal" x1="0" y1="0" x2=".4" y2="1">
-        <stop offset="0" stop-color="#9DB3AE"/>
-        <stop offset=".35" stop-color="#3F5556"/>
-        <stop offset=".75" stop-color="#1F2B2C"/>
-        <stop offset="1" stop-color="#8C5A2E"/>
+      <!-- Fuselaje como un cilindro: luz arriba, sombra abajo y el ámbar del horizonte en la panza. -->
+      <linearGradient id="bm-fuselaje" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4A4E2F"/>
+        <stop offset=".12" stop-color="#7C8253"/>
+        <stop offset=".3" stop-color="#686E42"/>
+        <stop offset=".72" stop-color="#454A2C"/>
+        <stop offset=".92" stop-color="#2F311F"/>
+        <stop offset="1" stop-color="#8E6436"/>
+      </linearGradient>
+      <linearGradient id="bm-cristal" x1="0" y1="0" x2=".5" y2="1">
+        <stop offset="0" stop-color="#A9BCB4"/>
+        <stop offset=".35" stop-color="#4A5E5C"/>
+        <stop offset=".8" stop-color="#1D2627"/>
+        <stop offset="1" stop-color="#7E5A34"/>
       </linearGradient>
       <linearGradient id="bm-cabina" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#5F7472"/>
-        <stop offset="1" stop-color="#162021"/>
+        <stop offset="0" stop-color="#6E8380"/>
+        <stop offset="1" stop-color="#151E1F"/>
       </linearGradient>
-      <linearGradient id="bm-ala" gradientUnits="userSpaceOnUse" x1="760" y1="470" x2="700" y2="600">
-        <stop offset="0" stop-color="#6C7246"/>
-        <stop offset=".7" stop-color="#474C2D"/>
-        <stop offset="1" stop-color="#7A5230"/>
-      </linearGradient>
-      <linearGradient id="bm-ala-lejana" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#4A4F30"/>
-        <stop offset="1" stop-color="#2D2F1F"/>
-      </linearGradient>
-      <linearGradient id="bm-gondola" x1="0" y1="0" x2=".3" y2="1">
-        <stop offset="0" stop-color="#737949"/>
-        <stop offset=".6" stop-color="#454A2C"/>
-        <stop offset="1" stop-color="#7C5230"/>
-      </linearGradient>
-      <radialGradient id="bm-carenado" cx=".38" cy=".3" r=".75">
-        <stop offset="0" stop-color="#7B8150"/>
-        <stop offset=".8" stop-color="#3E4228"/>
-        <stop offset="1" stop-color="#25271A"/>
-      </radialGradient>
-      <radialGradient id="bm-toma" cx=".5" cy=".5" r=".5">
-        <stop offset="0" stop-color="#3A352E"/>
-        <stop offset=".8" stop-color="#15130F"/>
-        <stop offset="1" stop-color="#0D0C0A"/>
-      </radialGradient>
-      <radialGradient id="bm-buje" cx=".35" cy=".3" r=".7">
-        <stop offset="0" stop-color="#C9C6B4"/>
-        <stop offset="1" stop-color="#55534A"/>
-      </radialGradient>
-      <!-- Disco de la hélice a toda velocidad: borde algo más marcado, centro casi transparente. -->
-      <radialGradient id="bm-disco" cx=".5" cy=".5" r=".5">
-        <stop offset="0" stop-color="#E9E2D0" stop-opacity="0"/>
-        <stop offset=".75" stop-color="#E9E2D0" stop-opacity=".06"/>
-        <stop offset=".96" stop-color="#E9E2D0" stop-opacity=".16"/>
-        <stop offset="1" stop-color="#E9E2D0" stop-opacity="0"/>
-      </radialGradient>
       <radialGradient id="bm-torreta" cx=".4" cy=".3" r=".75">
-        <stop offset="0" stop-color="#A9BDB8"/>
-        <stop offset=".5" stop-color="#425859"/>
+        <stop offset="0" stop-color="#B2C3BC"/>
+        <stop offset=".5" stop-color="#46595A"/>
         <stop offset="1" stop-color="#1A2425"/>
+      </radialGradient>
+      <linearGradient id="bm-gondola" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#767C4D"/>
+        <stop offset=".6" stop-color="#454A2C"/>
+        <stop offset="1" stop-color="#8A6034"/>
+      </linearGradient>
+      <radialGradient id="bm-carenado" cx=".4" cy=".35" r=".7">
+        <stop offset="0" stop-color="#3B362E"/>
+        <stop offset="1" stop-color="#121010"/>
+      </radialGradient>
+      <radialGradient id="bm-disco" cx=".5" cy=".5" r=".5">
+        <stop offset="0" stop-color="#EDE4CF" stop-opacity="0"/>
+        <stop offset=".7" stop-color="#EDE4CF" stop-opacity=".07"/>
+        <stop offset=".95" stop-color="#EDE4CF" stop-opacity=".2"/>
+        <stop offset="1" stop-color="#EDE4CF" stop-opacity="0"/>
       </radialGradient>
     </defs>
 
+    <rect width="1200" height="1000" fill="url(#bm-cielo)"/>
+
+    <!-- Bombarderos en formación, lejos y en la bruma -->
+    <g transform="translate(760 -170)">${silueta(70, 560, 0.75)}${silueta(220, 600, 0.55)}${silueta(10, 630, 0.45)}</g>
+
+    <!-- Nubes que pasan despacio por detrás del avión -->
+    <g class="nubes" transform="translate(0 270)">${bandaNubes}</g>
+
     <g class="bombardero-vuelo">
-      <!-- Ala lejana con sus dos motores, detrás del fuselaje y algo apagada por la distancia -->
-      <g class="bm-lejos">
-        <path fill="url(#bm-ala-lejana)" d="M700 250 L330 120 L300 150 L640 320 Z"/>
-        ${motor({ x: 410, y: 168, r: 34, n: 1 })}
-        ${motor({ x: 560, y: 222, r: 40, n: 2 })}
+      <g transform="translate(40 330) rotate(-6 640 440)">
+        <!-- Torreta superior (asoma por encima del fuselaje) -->
+        <ellipse fill="url(#bm-torreta)" cx="700" cy="296" rx="62" ry="46"/>
+        <path class="bm-reflejo" d="M666 284 C676 266 696 256 718 254 C702 266 690 278 684 292 Z"/>
+
+        <!-- Fuselaje, cortado a la mitad del avión por el borde derecho -->
+        <path fill="url(#bm-fuselaje)" d="M300 300 L1320 300 L1320 560 L170 556 C110 532 86 484 96 440 C112 372 190 316 300 300 Z"/>
+        <!-- Joroba de la cabina y sus ventanas -->
+        <path fill="url(#bm-fuselaje)" d="M330 304 C374 262 440 240 524 236 L612 238 L622 304 Z"/>
+        <path fill="url(#bm-cabina)" d="M394 272 C420 256 452 248 488 246 L492 290 L404 296 Z"/>
+        <path fill="url(#bm-cabina)" d="M504 246 L560 245 L566 290 L508 290 Z"/>
+        <path class="bm-reflejo" d="M410 280 C426 266 446 258 470 254 L472 260 C450 264 432 272 418 284 Z"/>
+
+        <!-- Morro acristalado -->
+        <path fill="url(#bm-cristal)" d="M262 314 C196 326 132 372 108 436 C98 476 116 516 162 538 L246 548 C230 470 236 384 262 314 Z"/>
+        <path class="bm-marco" d="M150 360 C170 420 186 480 200 544 M108 440 C150 446 200 452 250 456 M126 392 C170 396 214 400 256 404 M118 500 C160 502 200 504 244 506"/>
+        <path class="bm-reflejo" d="M150 372 C170 350 196 334 226 326 C208 346 192 368 182 394 Z"/>
+        <!-- Ventana de la mejilla con su ametralladora -->
+        <ellipse fill="url(#bm-cabina)" cx="300" cy="470" rx="22" ry="16"/>
+        <path class="bm-canon" d="M286 474 L214 498"/>
+
+        <!-- Paneles y remaches -->
+        <path class="bm-panel" d="M640 304 L640 560 M820 300 L820 560 M1010 300 L1010 560 M300 420 L1320 420"/>
+        <path class="bm-remaches" d="M652 304 L652 560 M832 300 L832 560 M1022 300 L1022 560"/>
+
+        <!-- Las 25 bombas de las misiones, pintadas bajo la cabina -->
+        <g class="bm-bombas">${bombas()}</g>
+
+        <!-- "Belle" pintado en el costado, en el amarillo del logotipo -->
+        <g class="bm-pintura" transform="translate(360 418) rotate(-4) scale(${belleEscala.toFixed(5)}) translate(${-logoX} ${-logoY})">
+          <path fill="#DDB040" d="${logoPath}"/>
+        </g>
+
+        <!-- Estrella con barras, al fondo del costado -->
+        <g class="bm-pintura" transform="translate(1110 470)">
+          <rect fill="#24365C" x="-130" y="-22" width="260" height="44" rx="2"/>
+          <circle fill="#24365C" r="66"/>
+          <path fill="#DCD5C3" d="M0 -56 L16.5 -19.3 L53.3 -17.2 L25.6 8.4 L32.9 45.5 L0 25.9 L-32.9 45.5 L-25.6 8.4 L-53.3 -17.2 L-16.5 -19.3 Z"/>
+        </g>
+
+        <!-- Motor interior bajo el ala, con la hélice girando en primer plano -->
+        <path fill="url(#bm-gondola)" d="M860 556 L1320 548 L1320 640 L900 652 C870 646 856 610 860 556 Z"/>
+        <ellipse fill="url(#bm-carenado)" cx="872" cy="604" rx="30" ry="50"/>
+        <g transform="translate(846 604) scale(.2 1)">
+          <circle fill="url(#bm-disco)" r="250"/>
+          <g class="giro giro-4">
+            <path class="bm-pala" d="M0 0 C28 -75 32 -195 0 -250 C-32 -195 -28 -75 0 0Z"/>
+            <path class="bm-pala" d="M0 0 C28 -75 32 -195 0 -250 C-32 -195 -28 -75 0 0Z" transform="rotate(120)"/>
+            <path class="bm-pala" d="M0 0 C28 -75 32 -195 0 -250 C-32 -195 -28 -75 0 0Z" transform="rotate(240)"/>
+          </g>
+        </g>
+        <ellipse fill="#9C9884" cx="842" cy="604" rx="7" ry="14"/>
       </g>
-
-      <!-- Fuselaje, cortado a la mitad del avión por el borde derecho -->
-      <path fill="url(#bm-fuselaje)" d="M316 364 L1300 -96 L1440 200 L443 636 Z"/>
-      <path class="bm-panel" d="M640 236 L668 470 M820 152 L852 384 M1000 70 L1036 300 M560 290 L1300 -55"/>
-      <path class="bm-remaches" d="M652 236 L680 470 M832 152 L864 384 M1012 70 L1048 300"/>
-
-      <!-- Insignia de la época, pintada y algo gastada -->
-      <g class="bm-pintura" transform="translate(960 250) rotate(-25) scale(.74 1)">
-        <rect fill="#24365C" x="-70" y="-13" width="140" height="26" rx="2"/>
-        <circle fill="#24365C" r="38"/>
-        <path fill="#D9D3C2" d="M0 -32 L9.4 -11 L30.4 -9.8 L14.6 4.8 L18.8 26 L0 14.8 L-18.8 26 L-14.6 4.8 L-30.4 -9.8 L-9.4 -11 Z"/>
-      </g>
-
-      <!-- Torreta superior y cabina -->
-      <ellipse fill="url(#bm-torreta)" cx="560" cy="250" rx="58" ry="34" transform="rotate(-25 560 250)"/>
-      <path class="bm-reflejo" d="M530 246 C538 232 554 224 572 222 C558 232 548 242 542 254 Z"/>
-      <path fill="url(#bm-cabina)" d="M420 350 C440 318 474 300 512 290 L540 340 L446 386 Z"/>
-      <path class="bm-marco" d="M470 312 L494 360"/>
-      <path class="bm-reflejo" d="M440 350 C452 334 466 324 482 318 L485 324 C470 330 458 340 448 354 Z"/>
-
-      <!-- Morro: la cara delantera del fuselaje y el morro acristalado que viene hacia nosotros -->
-      <ellipse fill="url(#bm-tapa)" cx="380" cy="500" rx="150" ry="84" transform="rotate(65 380 500)"/>
-      <path fill="url(#bm-cristal)" d="M334 378 C262 392 196 468 186 552 C178 616 236 656 320 656 C380 656 424 646 440 628 C396 560 360 470 334 378 Z"/>
-      <path class="bm-marco" d="M334 378 C300 450 262 540 236 640 M386 520 C320 530 250 548 190 576 M214 470 C260 480 320 500 404 560"/>
-      <path class="bm-reflejo" d="M228 482 C242 444 268 416 302 404 C282 428 268 456 260 488 Z"/>
-
-      <!-- "Belle" pintado en el costado del morro -->
-      <g class="bm-pintura" transform="translate(470 450) rotate(-25) scale(${belleEscala.toFixed(5)}) translate(${-logoX} ${-logoY})">
-        <path fill="#D9AE3E" d="${logoPath}"/>
-      </g>
-
-      <!-- Ala cercana con sus dos motores, saliendo del encuadre por abajo a la derecha -->
-      <path fill="url(#bm-ala)" d="M690 560 L1260 860 L1420 760 L900 470 Z"/>
-      <path class="bm-borde-ataque" d="M694 562 L1262 860"/>
-      ${motor({ x: 990, y: 772, r: 64, n: 3 })}
-      ${motor({ x: 812, y: 654, r: 72, n: 4 })}
     </g>
   </svg>
 </div>`;
