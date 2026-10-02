@@ -4,24 +4,32 @@ Notas de diseño para mantener la web coherente en futuros cambios.
 
 ## Idea
 
-Una **barra de noche**. Fondo oscuro y cálido, luz de lámpara en la portada y la **carta como un papel impreso** sobre la barra: es el único elemento claro de la página y el que más se usa. El nombre viene del bombardero de los años 40; el guiño es discreto: la estrella de las insignias de la época (dibujo propio) y una serif de cartelería. Nada de aviones, camuflaje ni pin-ups.
+La web sale del **mural del local**: la parte frontal del bombardero Memphis Belle pintada en la pared, sobre un cielo de atardecer (óxido y ámbar que se apagan en hollín), con **"Belle" rotulado a mano en amarillo**. Ese "Belle" es el logotipo del bar.
+
+- **Portada**: recrea el cielo del mural con degradados y una textura de pintura (sin dibujar el avión: cuando haya fotos buenas, la del mural irá en la portada).
+- **Logotipo**: "Memphis" en serif + "Belle" manuscrito en amarillo e inclinado, como en la pared. `public/img/logo-belle.svg` y el favicon (la "B") están trazados desde la letra Yellowtail, así que se ven igual aunque no cargue la tipografía. Cuando haya una foto de cerca de las letras del mural, se puede calcar el trazo original y sustituir el SVG.
+- **Carta**: un papel impreso sobre la barra, el único elemento claro de la página.
 
 Público: gente que busca dónde tomar una copa en Santa Cruz, casi siempre desde el móvil y a menudo ya en la calle. Lo que necesitan, en orden: si está abierto ahora, la carta con precios, cómo llegar y reservar.
 
-## Tokens (`public/css/site.css` → `:root`)
+## Colores (`public/css/site.css` → `:root`)
 
-| Token | Valor | Uso |
-|---|---|---|
-| `--noche` | `#15120E` | Fondo de la página y color de la barra de estado del móvil |
-| `--barra` | `#1F1A15` | Secciones alternas y formulario |
-| `--crema` | `#EFE6D3` | Texto principal |
-| `--humo` | `#B5A891` | Texto secundario (contraste AA sobre `--noche`) |
-| `--laton` | `#D9AE55` | Solo la acción principal (Reservar) y detalles de marca |
-| `--carmin` | `#B33A2E` | Acento puntual: "Cerrado" y avisos |
-| `--oliva` | `#8FA35B` | "Abierto ahora" |
-| `--papel` / `--tinta` | `#F3EBDA` / `#221B14` | La carta |
+Tomados de la foto del mural y aclarados lo justo para leerse en pantalla. Un solo color de acción: el amarillo.
 
-Tipografía: **DM Serif Display** (títulos, nombre de los cócteles) e **Instrument Sans** (texto). Las dos OFL y alojadas en `public/fonts/`.
+| Token | Valor | En el mural | Uso |
+|---|---|---|---|
+| `--hollin` | `#160E0B` | Bordes ahumados | Fondo de la página y barra de estado del móvil |
+| `--pared` | `#24150F` | Sombra cálida | Secciones alternas y formulario |
+| `--crema` | `#F1E4CB` | Luces pintadas | Texto principal |
+| `--humo` | `#C0AA90` | | Texto secundario (contraste AA) |
+| `--mostaza` | `#E8BE45` | Letra "Belle" y lámparas | Solo la acción principal (Reservar mesa) y el logotipo |
+| `--oxido` / `--ambar` | `#A8431C` / `#D38B2C` | Cielo y horizonte | Solo en el fondo de la portada y de la carta |
+| `--motor` | `#4C7A80` | Motor del avión | Un toque en el cielo de la portada |
+| `--oliva` | `#9AA566` | Fuselaje | "Abierto ahora" |
+| `--aviso` | `#E8896B` | | "Cerrado" y errores del formulario |
+| `--papel` / `--tinta` | `#F2E5CC` / `#24160F` | | La carta |
+
+Tipografía: **DM Serif Display** (títulos, "Memphis", nombres de cócteles), **Instrument Sans** (texto) y **Yellowtail** (solo "Belle"). Todas alojadas en `public/fonts/` (OFL y Apache 2.0).
 
 ## Movimiento (skills de Emil Kowalski)
 
@@ -41,9 +49,11 @@ Tipografía: **DM Serif Display** (títulos, nombre de los cócteles) e **Instru
 - Etiquetas en mayúsculas o "píldoras" encima de cada título.
 - Separadores con punto medio ("A · B · C"), flechas "→" en botones.
 - Fotos de banco de cócteles genéricos: mejor ninguna foto que una que no es del local.
-- Más de un color de acento por pantalla.
+- Más de un color de acción: el amarillo es solo para Reservar mesa y el logotipo.
+- Dibujar el avión a mano: se usará la foto real del mural.
 
 ## Pendiente
 
 - Fotos propias del local (barra, terraza, cócteles). Las de la ficha de Google suelen ser de clientes y no se pueden usar sin permiso.
-- Logotipo real del bar, si existe, en lugar de la estrella.
+- Foto del mural en alta resolución para la portada, y una de cerca de las letras "Belle" para calcar el logotipo.
+- Aplicar la estructura del boceto (`docs/boceto.html`) a la web.

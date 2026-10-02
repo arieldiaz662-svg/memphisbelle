@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
 export function esc(value) {
@@ -15,11 +17,13 @@ export function whatsappUrl(number, text) {
 
 export const instagramUrl = (user) => `https://www.instagram.com/${user}/`;
 
-// Estrella en un círculo: guiño a las insignias de los aviones de los años 40, dibujo propio.
-export const LOGO = `<svg viewBox="0 0 40 40" aria-hidden="true">
-        <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M20 6.5l3.2 9.8h10.3l-8.3 6.1 3.2 9.8-8.4-6.1-8.4 6.1 3.2-9.8-8.3-6.1h10.3z" fill="currentColor"/>
-      </svg>`;
+// Logotipo: "Belle" rotulado a mano en amarillo, como en el mural del local. Se genera desde
+// public/img/logo-belle.svg (trazado de la letra Yellowtail) y se incrusta en línea con el color del texto.
+export const LOGO = readFileSync(new URL('../../public/img/logo-belle.svg', import.meta.url), 'utf8')
+  .trim()
+  .replace('<svg ', '<svg class="marca-belle" aria-hidden="true" ')
+  .replace(' role="img" aria-label="Belle"', '')
+  .replace('fill="#E8BE45"', 'fill="currentColor"');
 
 // El aviso legal solo se publica cuando están los datos del titular (site.legal.owner).
 export function hasLegalNotice(site) {
@@ -31,7 +35,7 @@ export function hasLegalNotice(site) {
 export const STATIC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'";
 
 // Color de la parte de arriba de la página (barra de estado del móvil). La web es oscura siempre.
-export const THEME_COLOR = '#15120E';
+export const THEME_COLOR = '#160E0B';
 
 // Rutas de enlaces y recursos, relativas y con .html para que la web funcione en cualquier subcarpeta
 // o dominio. assetVersions añade ?v=<hash> a CSS y JS para evitar cachés antiguas.
@@ -43,7 +47,7 @@ export function links(config) {
   };
 }
 
-const FONTS = ['fonts/dm-serif-display.woff2', 'fonts/instrument-sans.woff2'];
+const FONTS = ['fonts/dm-serif-display.woff2', 'fonts/instrument-sans.woff2', 'fonts/yellowtail.woff2'];
 
 // baseHref: para páginas que se sirven desde cualquier ruta (la página 404), fija la base de los
 // enlaces relativos en la raíz de la web. head: HTML extra para <head> (p. ej. datos estructurados).
@@ -88,13 +92,13 @@ ${head}</head>
 <header class="nav">
   <div class="wrap">
     <a class="marca" href="${home}#inicio" aria-label="${esc(site.fullName)}, inicio">
+      <span class="marca-memphis" aria-hidden="true">Memphis</span>
       ${LOGO}
-      <span aria-hidden="true">${esc(site.name)}</span>
     </a>
     <ul>
       ${nav.map((item) => `<li><a href="${home}#${esc(item.id)}">${esc(item.label)}</a></li>`).join('\n      ')}
     </ul>
-    <a class="btn btn-laton btn-nav" href="${home}#reservar">Reservar</a>
+    <a class="btn btn-mostaza btn-nav" href="${home}#reservar">Reservar mesa</a>
   </div>
 </header>
 
@@ -127,7 +131,7 @@ export function messagePage({ site, config, title, heading, text, baseHref = '' 
     body: `<main class="pagina-simple"><div class="wrap">
   <h1>${esc(heading)}</h1>
   <p>${esc(text)}</p>
-  <p><a class="btn btn-laton" href="${links(config).home}">Volver al inicio</a></p>
+  <p><a class="btn btn-mostaza" href="${links(config).home}">Volver al inicio</a></p>
 </div></main>`,
   });
 }

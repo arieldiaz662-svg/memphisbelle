@@ -1,8 +1,9 @@
 /* =========================================================
    MEMPHIS BELLE · Coctelería
-   Concepto: una barra de noche. Fondo oscuro cálido, latón para la acción principal y la carta
-   como un papel impreso sobre la barra (el único elemento claro de la página). Guiño discreto a los
-   años 40 del bombardero que da nombre al bar: la estrella de las insignias y la serif de cartelería.
+   Concepto: el mural del local. Un bombardero de los años 40 pintado sobre un cielo de atardecer
+   (óxido y ámbar que se apagan en hollín), con "Belle" escrito a mano en amarillo. La portada
+   recrea ese cielo; el amarillo de la letra es el único color de acción; la carta es un papel
+   impreso sobre la barra (el único elemento claro de la página).
    ========================================================= */
 
 /* ---------- 0. Tipografía alojada en la propia web (OFL) ---------- */
@@ -12,9 +13,9 @@
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
-  font-family: "DM Serif Display";
-  src: url("../fonts/dm-serif-display-italic.woff2") format("woff2");
-  font-weight: 400; font-style: italic; font-display: swap;
+  font-family: "Yellowtail"; /* rotulación manuscrita, como el "Belle" del mural (licencia Apache 2.0) */
+  src: url("../fonts/yellowtail.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Instrument Sans";
@@ -24,20 +25,25 @@
 
 /* ---------- 1. Tokens: cambia aquí colores y medidas ---------- */
 :root {
-  --noche: #15120E;      /* fondo de la página (y theme-color en html.js) */
-  --barra: #1F1A15;      /* superficies elevadas: secciones alternas, formulario */
-  --linea: #3A3129;      /* separadores sobre oscuro */
-  --crema: #EFE6D3;      /* texto principal sobre oscuro */
-  --humo: #B5A891;       /* texto secundario sobre oscuro (contraste AA) */
-  --laton: #D9AE55;      /* solo la acción principal y detalles de marca */
-  --laton-oscuro: #B98F38;
-  --carmin: #B33A2E;     /* acento puntual: "cerrado", avisos */
-  --oliva: #8FA35B;      /* "abierto ahora" */
-  --papel: #F3EBDA;      /* la carta */
-  --tinta: #221B14;      /* texto sobre la carta */
-  --tinta-suave: #6A5B49;
+  /* Colores tomados del mural (foto del local), aclarados lo justo para la pantalla. */
+  --hollin: #160E0B;     /* los bordes ahumados del mural: fondo de la página (y theme-color en html.js) */
+  --pared: #24150F;      /* sombra cálida del mural: secciones alternas, formulario */
+  --linea: #432C21;      /* separadores sobre oscuro */
+  --crema: #F1E4CB;      /* luces pintadas: texto principal */
+  --humo: #C0AA90;       /* texto secundario sobre oscuro (contraste AA) */
+  --mostaza: #E8BE45;    /* la letra "Belle" y la luz de las lámparas: SOLO la acción principal y la marca */
+  --mostaza-oscura: #C99E2C;
+  --oxido: #A8431C;      /* el cielo rojo del mural: solo en el fondo de la portada y la carta */
+  --ambar: #D38B2C;      /* el horizonte del mural: solo en el fondo de la portada */
+  --motor: #4C7A80;      /* el azul del motor: solo un toque en el cielo de la portada */
+  --oliva: #9AA566;      /* el fuselaje: "abierto ahora" */
+  --aviso: #E8896B;      /* "cerrado" y errores del formulario (óxido aclarado para leerse sobre oscuro) */
+  --papel: #F2E5CC;      /* la carta */
+  --tinta: #24160F;      /* texto sobre la carta */
+  --tinta-suave: #6B5444;
 
   --serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --rotulo: "Yellowtail", "Brush Script MT", cursive;
   --sans: "Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
 
   /* Escala tipográfica 1.25 sobre 17 px */
@@ -59,7 +65,7 @@ html {
   scroll-behavior: smooth; scroll-padding-top: 76px;
   -webkit-tap-highlight-color: transparent; /* sin el destello al tocar: cada control tiene su :active */
   -webkit-text-size-adjust: 100%;           /* sin agrandar el texto al girar el móvil */
-  background: var(--noche);
+  background: var(--hollin);
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
@@ -68,13 +74,13 @@ body {
   font-size: var(--t-m);
   line-height: 1.6;
   color: var(--crema);
-  background: var(--noche);
+  background: var(--hollin);
   -webkit-font-smoothing: antialiased;
 }
 img, svg { max-width: 100%; display: block; }
 a { color: inherit; text-underline-offset: .2em; }
 a, button, select, input[type="date"], input[type="time"] { touch-action: manipulation; }
-:focus-visible { outline: 2px solid var(--laton); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--mostaza); outline-offset: 3px; border-radius: 4px; }
 [hidden] { display: none !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
@@ -101,29 +107,29 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform 160ms var(--ease-out);
 }
 .btn:active { transform: scale(0.97); }
-.btn-laton { background: var(--laton); color: var(--noche); }
-.btn-laton:active { background: var(--laton-oscuro); }
+.btn-mostaza { background: var(--mostaza); color: var(--hollin); }
+.btn-mostaza:active { background: var(--mostaza-oscura); }
 .btn-linea { border-color: var(--linea); color: var(--crema); }
 .btn-linea:active { border-color: var(--humo); }
 @media (hover: hover) and (pointer: fine) {
-  .btn-laton:hover { background: #E4BC68; }
+  .btn-mostaza:hover { background: #F0CB5C; }
   .btn-linea:hover { border-color: var(--humo); }
-  .nav ul a:hover, footer a:hover, .contacto a:hover { color: var(--laton); }
+  .nav ul a:hover, footer a:hover, .contacto a:hover { color: var(--mostaza); }
   .carta-tabs [role="tab"]:hover { color: var(--tinta); }
 }
 
 /* ---------- 3. Cabecera ---------- */
 .nav {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(21, 18, 14, .86);
+  background: rgba(22, 14, 11, .86);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--linea);
   padding-top: env(safe-area-inset-top, 0px);
 }
 .nav .wrap { display: flex; align-items: center; gap: 1.5rem; height: 64px; }
-.marca { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--laton); }
-.marca svg { width: 30px; height: 30px; }
-.marca span { font-family: var(--serif); font-size: 1.35rem; color: var(--crema); letter-spacing: .01em; }
+.marca { display: flex; align-items: center; gap: .45rem; text-decoration: none; color: var(--mostaza); }
+.marca-memphis { font-family: var(--serif); font-size: 1.15rem; color: var(--crema); letter-spacing: .01em; }
+.marca-belle { height: 34px; width: auto; transform: rotate(-5deg) translateY(-2px); }
 .nav ul { display: flex; gap: 1.6rem; margin-left: auto; font-size: var(--t-s); }
 .nav ul a { text-decoration: none; color: var(--humo); transition: color .15s ease; }
 .nav ul li:last-child { display: none; } /* "Reservar" ya es el botón */
@@ -131,28 +137,43 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------- 4. Portada ---------- */
 .hero {
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; isolation: isolate;
   min-height: min(88svh, 760px);
   display: flex; align-items: center;
   padding: 5rem 0 6rem;
-  /* Luz cálida de lámpara sobre la barra */
+  /* El cielo del mural: hollín a la izquierda (donde va el texto), óxido en el centro, ámbar en el
+     horizonte y un toque del azul del motor arriba. */
   background:
-    radial-gradient(60% 55% at 78% 30%, rgba(217, 174, 85, .16), transparent 70%),
-    radial-gradient(40% 40% at 10% 90%, rgba(179, 58, 46, .10), transparent 70%),
-    var(--noche);
+    radial-gradient(55% 60% at 88% 82%, rgba(211, 139, 44, .62), transparent 62%),
+    radial-gradient(60% 75% at 72% 35%, rgba(168, 67, 28, .70), transparent 66%),
+    radial-gradient(35% 40% at 98% 4%, rgba(76, 122, 128, .40), transparent 70%),
+    linear-gradient(100deg, var(--hollin) 28%, #3B170E 58%, #5E2410 100%);
 }
-.hero-estrella {
-  position: absolute; right: -6%; top: 50%; width: min(56vw, 620px); transform: translateY(-50%);
-  fill: none; stroke: var(--laton); stroke-width: .25; opacity: .22; pointer-events: none;
+/* Textura de pintura sobre el cielo y bordes ahumados. Imagen fija (sin animar): no cuesta al hacer scroll. */
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .03' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  opacity: .45; mix-blend-mode: multiply;
 }
-.hero-kicker { font-family: var(--serif); font-style: italic; color: var(--laton); font-size: var(--t-l); margin-bottom: .6rem; }
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  box-shadow: inset 0 0 140px 30px rgba(22, 14, 11, .85);
+}
 .hero-titulo {
   font-family: var(--serif);
   font-size: clamp(3.6rem, 13vw, 8.5rem);
-  line-height: .9; letter-spacing: -0.025em;
+  line-height: .95; letter-spacing: -0.025em;
   margin-bottom: 1.6rem;
 }
-.hero-titulo em { color: var(--laton); }
+/* "Belle" rotulado a mano en amarillo, como en el mural */
+.hero-titulo .belle {
+  display: inline-block;
+  font-family: var(--rotulo); font-weight: 400; letter-spacing: 0;
+  font-size: 1.12em; line-height: 1;
+  color: var(--mostaza);
+  transform: rotate(-5deg) translateY(.04em);
+  padding: 0 .08em .12em 0; /* margen para el trazo de la "B" y las colas de la letra */
+}
 .hero-lead { font-size: var(--t-l); line-height: 1.5; max-width: 34ch; color: var(--crema); }
 .hero-acciones { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
 
@@ -169,12 +190,17 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* Estado "Abierto ahora / Cerrado" */
 .estado { display: inline-flex; align-items: center; gap: .55rem; margin: 0; font-size: var(--t-s); color: var(--humo); }
-.estado-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--carmin); flex: none; }
+.estado-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--aviso); flex: none; }
 .estado.abierto .estado-punto { background: var(--oliva); box-shadow: 0 0 0 4px rgba(143, 163, 91, .18); }
 .estado.abierto .estado-texto { color: var(--crema); }
 
 /* ---------- 5. La carta: papel sobre la barra ---------- */
-.carta { background: var(--barra); }
+.carta {
+  /* El mismo cielo, muy apagado, para que el papel de la carta destaque sin cambiar de tema. */
+  background:
+    radial-gradient(70% 60% at 100% 0%, rgba(168, 67, 28, .30), transparent 70%),
+    var(--pared);
+}
 .papel {
   background: var(--papel); color: var(--tinta);
   border-radius: 6px;
@@ -186,7 +212,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .aviso-ejemplo {
   margin: 0 0 1.5rem; padding: .6rem .9rem; border-radius: 6px;
-  background: rgba(179, 58, 46, .1); color: var(--carmin); font-size: var(--t-s); font-weight: 600;
+  background: rgba(168, 67, 28, .1); color: var(--oxido); font-size: var(--t-s); font-weight: 600;
 }
 .carta-tabs {
   display: flex; gap: .3rem; flex-wrap: wrap;
@@ -230,7 +256,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .horario { border-collapse: collapse; width: 100%; max-width: 340px; font-variant-numeric: tabular-nums; }
 .horario th, .horario td { padding: .45rem 0; border-bottom: 1px solid var(--linea); text-align: left; font-weight: 400; }
 .horario td { text-align: right; color: var(--humo); }
-.horario tr.hoy th, .horario tr.hoy td { color: var(--laton); font-weight: 600; }
+.horario tr.hoy th, .horario tr.hoy td { color: var(--mostaza); font-weight: 600; }
 address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-bottom: .6rem; }
 .info .btn { margin-top: .4rem; }
 .contacto li { display: grid; gap: .1rem; padding: .55rem 0; border-bottom: 1px solid var(--linea); }
@@ -238,29 +264,29 @@ address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-b
 .contacto a { text-decoration: none; overflow-wrap: break-word; transition: color .15s ease; }
 
 /* ---------- 7. El local ---------- */
-.local { background: var(--barra); }
+.local { background: var(--pared); }
 .rasgos { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 1rem; }
-.rasgos li { border-top: 1px solid var(--laton); padding-top: 1.2rem; }
+.rasgos li { border-top: 1px solid var(--mostaza); padding-top: 1.2rem; }
 .rasgos h3 { font-family: var(--serif); font-size: var(--t-xl); }
 .rasgos p { color: var(--humo); margin: 0; }
 .valoracion { margin: 2.5rem 0 0; color: var(--humo); }
-.valoracion strong { font-family: var(--serif); font-size: var(--t-xl); color: var(--laton); font-weight: 400; }
+.valoracion strong { font-family: var(--serif); font-size: var(--t-xl); color: var(--mostaza); font-weight: 400; }
 
 /* ---------- 8. Reservas ---------- */
 .reservar-grid { display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
-.formulario { display: grid; gap: 1.1rem; background: var(--barra); padding: clamp(1.25rem, 4vw, 2rem); border-radius: var(--radio); border: 1px solid var(--linea); }
+.formulario { display: grid; gap: 1.1rem; background: var(--pared); padding: clamp(1.25rem, 4vw, 2rem); border-radius: var(--radio); border: 1px solid var(--linea); }
 .formulario label { display: grid; gap: .4rem; font-size: var(--t-s); font-weight: 600; }
 .formulario .fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
 .formulario input, .formulario select {
   font: 400 16px/1.3 var(--sans); /* 16 px: iOS no hace zoom al tocar el campo */
-  color: var(--crema); background: var(--noche);
+  color: var(--crema); background: var(--hollin);
   border: 1px solid var(--linea); border-radius: 10px;
   padding: .8rem .9rem; width: 100%; min-height: 48px;
   color-scheme: dark;
   transition: border-color .15s ease;
 }
 .formulario input::placeholder { color: #7D725F; }
-.formulario input:focus, .formulario select:focus { border-color: var(--laton); outline: none; }
+.formulario input:focus, .formulario select:focus { border-color: var(--mostaza); outline: none; }
 .formulario .btn { justify-self: start; }
 .form-aviso { margin: 0; color: #E07A6C; font-size: var(--t-s); font-weight: 600; }
 .form-nota { margin: 0; font-size: var(--t-s); }
@@ -280,12 +306,12 @@ footer a { text-decoration: none; transition: color .15s ease; }
   section { padding: 4rem 0; }
   .nav ul, .btn-nav { display: none; } /* reservar y llamar van en la barra fija de abajo */
   .hero { min-height: auto; padding: 4rem 0 4.5rem; }
-  .hero-estrella { width: 120vw; right: -45%; opacity: .14; }
+  .hero { background-position: 0 0, 0 0, 0 0, 0 0; }
   .barra-movil {
     display: grid; grid-template-columns: 1fr 1.6fr; gap: .6rem;
     position: fixed; inset: auto 0 0 0; z-index: 10;
     padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom, 0px));
-    background: rgba(21, 18, 14, .92);
+    background: rgba(22, 14, 11, .92);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--linea);
   }
@@ -298,4 +324,4 @@ footer a { text-decoration: none; transition: color .15s ease; }
 .pagina-simple { padding: 4rem 0 5rem; }
 .pagina-simple h1 { font-family: var(--serif); font-size: var(--t-2xl); }
 .legal h2 { font-family: var(--sans); font-size: var(--t-l); font-weight: 600; margin-top: 2rem; }
-.legal a { color: var(--laton); }
+.legal a { color: var(--mostaza); }

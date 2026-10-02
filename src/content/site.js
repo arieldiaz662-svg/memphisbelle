@@ -54,8 +54,7 @@ export const site = {
 
   // PORTADA
   hero: {
-    kicker: 'Coctelería en Santa Cruz de Tenerife',
-    lead: 'Dry Martini, Manhattan y los clásicos de siempre, servidos sin prisa en la calle de los Sueños.',
+    lead: 'Coctelería de clásicos en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
     cta: 'Reservar mesa',
     secondary: 'Ver la carta',
   },

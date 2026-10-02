@@ -20,14 +20,12 @@ const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraClass}" 
 function hero(site) {
   const { hero: h } = site;
   return `<section class="hero" id="inicio">
-  <svg class="hero-estrella" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 6.5l3.2 9.8h10.3l-8.3 6.1 3.2 9.8-8.4-6.1-8.4 6.1 3.2-9.8-8.3-6.1h10.3z"/></svg>
   <div class="wrap">
-    <p class="hero-kicker">${esc(h.kicker)}</p>
-    <h1 class="hero-titulo">Memphis <em>Belle</em></h1>
+    <h1 class="hero-titulo">Memphis <span class="belle">Belle</span></h1>
     <p class="hero-lead">${esc(h.lead)}</p>
     ${estadoAhora(site)}
     <div class="hero-acciones">
-      <a class="btn btn-laton" href="#reservar">${esc(h.cta)}</a>
+      <a class="btn btn-mostaza" href="#reservar">${esc(h.cta)}</a>
       <a class="btn btn-linea" href="#carta">${esc(h.secondary)}</a>
     </div>
   </div>
@@ -145,7 +143,7 @@ function booking(site) {
         <input name="comentario" placeholder="Terraza, cumpleaños, vamos con perro…" enterkeyhint="send">
       </label>
       <p class="form-aviso" id="form-aviso" role="alert" hidden></p>
-      <button class="btn btn-laton" type="submit">Enviar por WhatsApp</button>
+      <button class="btn btn-mostaza" type="submit">Reservar mesa</button>
       <p class="form-nota suave">Esta web no guarda tus datos: el mensaje solo se envía si tú lo mandas desde WhatsApp.</p>
     </form>
   </div>
@@ -156,7 +154,7 @@ function booking(site) {
 function barraMovil(site) {
   return `<nav class="barra-movil" aria-label="Acciones rápidas">
   <a class="btn btn-linea" href="tel:+${esc(site.phone)}">Llamar</a>
-  <a class="btn btn-laton" href="#reservar">Reservar</a>
+  <a class="btn btn-mostaza" href="#reservar">Reservar mesa</a>
 </nav>
 `;
 }
