@@ -1,0 +1,17 @@
+{
+  "name": "memphisbar",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web de Memphis Belle Coctelería, Santa Cruz de Tenerife (sitio estático).",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build-static.js",
+    "preview": "node scripts/build-static.js && node scripts/preview.js",
+    "og-image": "node scripts/og-image.cjs",
+    "pendientes": "node scripts/pendientes.js",
+    "test": "node --test"
+  }
+}
