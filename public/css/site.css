@@ -161,41 +161,46 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: inset 0 0 140px 30px rgba(22, 14, 11, .85);
 }
 /* ---------- Bombardero: ilustración de fondo de la portada (src/views/bombardero.js) ----------
-   Totalmente de frente y recortado: solo el morro, las alas y los motores, grande y a la derecha.
-   Se difumina hacia la izquierda para no restar legibilidad al título (máscara fija, sin animar).
-   Movimiento decorativo, visto una vez por visita: las hélices giran de cara (movimiento constante:
-   linear) y el avión se balancea y se acerca un poco (ida y vuelta: curva senoidal de easings.co).
-   Solo transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
+   Estilo cartoon de los 90: contorno negro grueso, colores planos, sombras de bloque sin degradado y
+   brillos blancos. Vista a 45 grados, grande y recortada a la mitad del avión, a la derecha y
+   difuminada hacia el título (máscara fija, sin animar).
+   Movimiento decorativo, visto una vez por visita: las hélices giran (movimiento constante: linear) y
+   el avión se balancea y se acerca un poco (ida y vuelta: curva senoidal de easings.co). Solo
+   transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
 .bombardero {
   position: absolute; z-index: -1; pointer-events: none;
-  right: -21%; top: 67%; width: min(82vw, 1180px);
+  right: -16%; top: 69%; width: min(72vw, 1040px);
   transform: translateY(-50%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 42%);
-  mask-image: linear-gradient(to right, transparent 0%, #000 42%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 34%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 34%);
 }
 .bombardero-svg { width: 100%; height: auto; overflow: visible; }
-.bombardero-vuelo { transform-box: view-box; transform-origin: 600px 320px; }
-/* Colores del mural: verde oliva del fuselaje, cristales del azul del motor, nombre en amarillo.
-   Algo apagados para que el avión se funda con el cielo marrón y no compita con el título. */
-.bombardero .oliva { fill: #5E673B; }
-.bombardero .oliva-luz { fill: #747D4C; }
-.bombardero .oliva-sombra { fill: #3F4428; }
-.bombardero .timon { fill: #545C34; }
-.bombardero .carenado { fill: #26261E; }
-.bombardero .cristal { fill: #6F9396; opacity: .88; }
-.bombardero .cristal-oscuro { fill: #2C3B3D; }
-.bombardero .cristal-luz { fill: rgba(233, 226, 208, .35); }
-.bombardero .marco { fill: none; stroke: #3F4428; stroke-width: 3; }
-.bombardero .paneles { fill: none; stroke: rgba(30, 24, 14, .35); stroke-width: 1.5; }
-.bombardero .insignia-azul, .bombardero .insignia-barra { fill: #2F4566; }
-.bombardero .insignia-blanca { fill: #E9E2D0; }
-.bombardero .belle-morro { fill: var(--mostaza); }
-.bombardero .helice-disco { fill: rgba(233, 226, 208, .10); }
-.bombardero .pala { fill: rgba(28, 28, 22, .78); }
-.bombardero .buje { fill: #7A7F62; }
-.bombardero .cilindros { fill: none; stroke: rgba(122, 127, 98, .35); stroke-width: 3; }
+.bombardero-vuelo { transform-box: view-box; transform-origin: 600px 420px; }
+/* Contorno de dibujo animado en todas las piezas, salvo sombras, brillos y arcos (.sin-linea). */
+.bombardero :is(path, circle, ellipse, rect) { stroke: #1A0F0B; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+.bombardero .sin-linea { stroke: none; }
+/* Colores planos del mural, algo más saturados como en los dibujos animados. */
+.bombardero .oliva { fill: #7A8A3A; }
+.bombardero .oliva-luz { fill: #A2B256; }
+.bombardero .oliva-sombra { fill: #55611F; }
+.bombardero .remaches { fill: none; stroke: #55611F; stroke-width: 4; stroke-dasharray: 2 14; }
+.bombardero .carenado { fill: #2A2622; }
+.bombardero .cristal { fill: #86C2C6; }
+.bombardero .cristal-oscuro { fill: #2B4448; }
+.bombardero .brillo { fill: #FFFFFF; opacity: .85; }
+.bombardero .marco { fill: none; stroke-width: 5; }
+.bombardero .insignia-azul, .bombardero .insignia-barra { fill: #2C4C8A; }
+.bombardero .insignia-blanca { fill: #FFFFFF; }
+.bombardero .belle-morro { fill: var(--mostaza); stroke-width: 3; }
+.bombardero .helice-disco { fill: rgba(255, 255, 255, .12); }
+.bombardero .arco { fill: none; stroke: rgba(255, 255, 255, .55); stroke-width: 5; stroke-linecap: round; }
+.bombardero .pala { fill: #1A0F0B; stroke: none; }
+.bombardero .buje { fill: #C9CDB0; }
 @media (max-width: 1100px) {
-  .bombardero { top: 72%; }
+  .bombardero { top: 76%; }
+}
+@media (min-width: 1360px) {
+  .bombardero { top: 76%; right: -14%; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .bombardero-vuelo { animation: flotar 7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate; }
@@ -204,8 +209,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .bombardero .giro-2 { animation-delay: -170ms; }
   .bombardero .giro-3 { animation-delay: -250ms; }
   @keyframes flotar {
-    from { transform: translate(0, 6px) rotate(-1.2deg) scale(1); }
-    to { transform: translate(-8px, -8px) rotate(1.2deg) scale(1.03); }
+    from { transform: translate(0, 8px) rotate(-1.5deg) scale(1); }
+    to { transform: translate(-10px, -8px) rotate(1deg) scale(1.03); }
   }
   @keyframes girar { to { transform: rotate(360deg); } }
 }
@@ -381,7 +386,7 @@ footer a { text-decoration: none; transition: color .15s ease; }
   .hero { padding-bottom: 16rem; }
   /* En el móvil, el avión vuela por debajo de los botones, sin tapar el texto. */
   .bombardero {
-    top: auto; bottom: -4.5rem; right: -48vw; width: 175vw; transform: none;
+    top: auto; bottom: -6rem; right: -40vw; width: 150vw; transform: none;
     -webkit-mask-image: none; mask-image: none;
   }
   .barra-movil {
