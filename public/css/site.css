@@ -153,6 +153,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .03' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 100% 100%; background-repeat: no-repeat; /* una sola pieza: sin costuras al repetirse */
   opacity: .45; mix-blend-mode: multiply;
 }
 .hero::after {
@@ -160,17 +161,20 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: inset 0 0 140px 30px rgba(22, 14, 11, .85);
 }
 /* ---------- Bombardero: ilustración de fondo de la portada (src/views/bombardero.js) ----------
-   Vista de tres cuartos, como el mural: viene de frente y en diagonal hacia el texto.
+   Totalmente de frente y recortado: solo el morro, las alas y los motores, grande y a la derecha.
+   Se difumina hacia la izquierda para no restar legibilidad al título (máscara fija, sin animar).
    Movimiento decorativo, visto una vez por visita: las hélices giran de cara (movimiento constante:
-   linear) y el avión flota y se acerca un poco (ida y vuelta: curva senoidal de easings.co). Solo
-   transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
+   linear) y el avión se balancea y se acerca un poco (ida y vuelta: curva senoidal de easings.co).
+   Solo transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
 .bombardero {
   position: absolute; z-index: -1; pointer-events: none;
-  right: -2%; top: 62%; width: min(50vw, 720px);
+  right: -21%; top: 67%; width: min(82vw, 1180px);
   transform: translateY(-50%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 42%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 42%);
 }
 .bombardero-svg { width: 100%; height: auto; overflow: visible; }
-.bombardero-vuelo { transform-box: fill-box; transform-origin: 40% 60%; }
+.bombardero-vuelo { transform-box: view-box; transform-origin: 600px 320px; }
 /* Colores del mural: verde oliva del fuselaje, cristales del azul del motor, nombre en amarillo.
    Algo apagados para que el avión se funda con el cielo marrón y no compita con el título. */
 .bombardero .oliva { fill: #5E673B; }
@@ -189,6 +193,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 .bombardero .helice-disco { fill: rgba(233, 226, 208, .10); }
 .bombardero .pala { fill: rgba(28, 28, 22, .78); }
 .bombardero .buje { fill: #7A7F62; }
+.bombardero .cilindros { fill: none; stroke: rgba(122, 127, 98, .35); stroke-width: 3; }
+@media (max-width: 1100px) {
+  .bombardero { top: 72%; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .bombardero-vuelo { animation: flotar 7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate; }
   .bombardero .giro { animation: girar 420ms linear infinite; }
@@ -196,8 +204,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .bombardero .giro-2 { animation-delay: -170ms; }
   .bombardero .giro-3 { animation-delay: -250ms; }
   @keyframes flotar {
-    from { transform: translate(0, 6px) rotate(0deg) scale(1); }
-    to { transform: translate(-14px, -8px) rotate(1.2deg) scale(1.025); }
+    from { transform: translate(0, 6px) rotate(-1.2deg) scale(1); }
+    to { transform: translate(-8px, -8px) rotate(1.2deg) scale(1.03); }
   }
   @keyframes girar { to { transform: rotate(360deg); } }
 }
@@ -370,9 +378,12 @@ footer a { text-decoration: none; transition: color .15s ease; }
   section { padding: 4rem 0; }
   .nav ul, .btn-nav { display: none; } /* reservar y llamar van en la barra fija de abajo */
   .hero { min-height: auto; padding: 4rem 0 4.5rem; }
-  .hero { padding-bottom: 15rem; }
+  .hero { padding-bottom: 16rem; }
   /* En el móvil, el avión vuela por debajo de los botones, sin tapar el texto. */
-  .bombardero { top: auto; bottom: -2.5rem; right: -18%; width: 100vw; transform: none; }
+  .bombardero {
+    top: auto; bottom: -4.5rem; right: -48vw; width: 175vw; transform: none;
+    -webkit-mask-image: none; mask-image: none;
+  }
   .barra-movil {
     display: grid; grid-template-columns: 1fr 1.6fr; gap: .6rem;
     position: fixed; inset: auto 0 0 0; z-index: 10;
