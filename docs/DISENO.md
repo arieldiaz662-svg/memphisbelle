@@ -6,7 +6,7 @@ Notas de diseño para mantener la web coherente en futuros cambios.
 
 La web sale del **mural del local**: la parte frontal del bombardero Memphis Belle pintada en la pared, sobre un cielo de atardecer (óxido y ámbar que se apagan en hollín), con **"Belle" rotulado a mano en amarillo**. Ese "Belle" es el logotipo del bar.
 
-- **Portada**: recrea el cielo del mural con degradados y una textura de pintura (sin dibujar el avión: cuando haya fotos buenas, la del mural irá en la portada).
+- **Portada**: recrea el cielo del mural con degradados y una textura de pintura, y por él vuela un **B-17 verde oliva** con "Belle" en el morro (`src/views/bombardero.js`, dibujo propio en SVG). Las hélices giran y el avión flota despacio; con "reducir movimiento" queda quieto. Es una ilustración plana, no una copia del mural: cuando haya una foto buena del mural, se puede valorar sustituirla o combinarla.
 - **Logotipo**: "Memphis" en serif + "Belle" manuscrito en amarillo e inclinado, como en la pared. `public/img/logo-belle.svg` y el favicon (la "B") están trazados desde la letra Yellowtail, así que se ven igual aunque no cargue la tipografía. Cuando haya una foto de cerca de las letras del mural, se puede calcar el trazo original y sustituir el SVG.
 - **Carta**: un papel impreso sobre la barra, el único elemento claro de la página.
 
@@ -34,6 +34,7 @@ Tipografía: **DM Serif Display** (títulos, "Memphis", nombres de cócteles), *
 ## Movimiento (skills de Emil Kowalski)
 
 - Portada: entrada escalonada de 600 ms una sola vez al cargar (60 ms entre elementos). Con "reducir movimiento" no se mueve nada.
+- Bombardero: hélices con giro continuo (180 ms, linear) y vuelo de ida y vuelta (7 s, curva senoidal `cubic-bezier(0.37, 0, 0.63, 1)` de easings.co). Solo `transform`, en animaciones CSS fuera del hilo principal. Con "reducir movimiento", quieto.
 - Pestañas de la carta: fundido de 180 ms. Es una acción frecuente, así que es corto y sin desplazamiento.
 - Botones: `scale(0.97)` al pulsar. Los `:hover` solo con ratón (`(hover: hover) and (pointer: fine)`).
 - Nada se anima al hacer scroll.
@@ -50,7 +51,7 @@ Tipografía: **DM Serif Display** (títulos, "Memphis", nombres de cócteles), *
 - Separadores con punto medio ("A · B · C"), flechas "→" en botones.
 - Fotos de banco de cócteles genéricos: mejor ninguna foto que una que no es del local.
 - Más de un color de acción: el amarillo es solo para Reservar mesa y el logotipo.
-- Dibujar el avión a mano: se usará la foto real del mural.
+- Más ilustraciones dibujadas a mano: el bombardero de la portada es la única.
 
 ## Pendiente
 

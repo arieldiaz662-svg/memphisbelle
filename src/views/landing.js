@@ -1,4 +1,5 @@
 import { DIAS, NOMBRES } from '../../public/js/horario.js';
+import { BOMBARDERO } from './bombardero.js';
 import { esc, escPhone, instagramUrl, layout, whatsappUrl } from './html.js';
 import { structuredData } from './schema.js';
 
@@ -20,6 +21,7 @@ const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraClass}" 
 function hero(site) {
   const { hero: h } = site;
   return `<section class="hero" id="inicio">
+  ${BOMBARDERO}
   <div class="wrap">
     <h1 class="hero-titulo">Memphis <span class="belle">Belle</span></h1>
     <p class="hero-lead">${esc(h.lead)}</p>

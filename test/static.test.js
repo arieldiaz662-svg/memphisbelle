@@ -211,6 +211,17 @@ describe('portada y móvil', () => {
     assert.match(css, /env\(safe-area-inset-bottom/);
   });
 
+  test('el bombardero de la portada es decorativo y solo se mueve si el sistema lo permite', () => {
+    const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('id="estrella"'));
+    assert.match(hero, /<div class="bombardero" aria-hidden="true">/);
+    assert.match(hero, /class="belle-morro"/); // el nombre del morro es el logotipo
+    const animaciones = /@media \(prefers-reduced-motion: no-preference\) \{\s*\.bombardero-vuelo \{ animation: flotar/;
+    assert.match(css, animaciones);
+    // Fuera de ese bloque no hay ninguna animación del avión.
+    const fuera = css.replace(/@media \(prefers-reduced-motion: no-preference\) \{[\s\S]*?\n\}/g, '');
+    assert.doesNotMatch(fuera, /animation: (flotar|girar)/);
+  });
+
   test('las animaciones respetan "reducir movimiento" y no se usa transition: all', () => {
     assert.match(css, /@media \(prefers-reduced-motion: no-preference\) \{\s*\.hero/);
     assert.doesNotMatch(css, /transition:\s*all/);
