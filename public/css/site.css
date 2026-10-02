@@ -160,51 +160,46 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: inset 0 0 140px 30px rgba(22, 14, 11, .85);
 }
 /* ---------- Bombardero: ilustración de fondo de la portada (src/views/bombardero.js) ----------
-   Movimiento decorativo, visto una vez por visita: las hélices giran (movimiento constante: linear) y
-   el avión flota despacio (ida y vuelta: curva senoidal de easings.co). Solo transform, en animaciones
-   CSS que van fuera del hilo principal. Con "reducir movimiento", el avión queda quieto. */
+   Vista de tres cuartos, como el mural: viene de frente y en diagonal hacia el texto.
+   Movimiento decorativo, visto una vez por visita: las hélices giran de cara (movimiento constante:
+   linear) y el avión flota y se acerca un poco (ida y vuelta: curva senoidal de easings.co). Solo
+   transform, en animaciones CSS que van fuera del hilo principal. Con "reducir movimiento", quieto. */
 .bombardero {
   position: absolute; z-index: -1; pointer-events: none;
-  right: 1%; top: 56%; width: min(54vw, 760px);
+  right: -2%; top: 62%; width: min(50vw, 720px);
   transform: translateY(-50%);
 }
 .bombardero-svg { width: 100%; height: auto; overflow: visible; }
-.bombardero-vuelo { transform-box: fill-box; transform-origin: 50% 50%; }
+.bombardero-vuelo { transform-box: fill-box; transform-origin: 40% 60%; }
 /* Colores del mural: verde oliva del fuselaje, cristales del azul del motor, nombre en amarillo.
    Algo apagados para que el avión se funda con el cielo marrón y no compita con el título. */
 .bombardero .oliva { fill: #5E673B; }
 .bombardero .oliva-luz { fill: #747D4C; }
 .bombardero .oliva-sombra { fill: #3F4428; }
 .bombardero .timon { fill: #545C34; }
-.bombardero .cristal { fill: #6F9396; opacity: .85; }
+.bombardero .carenado { fill: #26261E; }
+.bombardero .cristal { fill: #6F9396; opacity: .88; }
 .bombardero .cristal-oscuro { fill: #2C3B3D; }
-.bombardero .marco { fill: none; stroke: #454B2B; stroke-width: 2.5; }
+.bombardero .cristal-luz { fill: rgba(233, 226, 208, .35); }
+.bombardero .marco { fill: none; stroke: #3F4428; stroke-width: 3; }
 .bombardero .paneles { fill: none; stroke: rgba(30, 24, 14, .35); stroke-width: 1.5; }
 .bombardero .insignia-azul, .bombardero .insignia-barra { fill: #2F4566; }
 .bombardero .insignia-blanca { fill: #E9E2D0; }
 .bombardero .belle-morro { fill: var(--mostaza); }
-.bombardero .helice-disco { fill: rgba(233, 226, 208, .14); }
-.bombardero .pala { fill: #2A2A22; transform-box: fill-box; transform-origin: 50% 50%; }
-.bombardero .pala-2 { opacity: .6; }
-.bombardero .buje { fill: #2A2A22; }
+.bombardero .helice-disco { fill: rgba(233, 226, 208, .10); }
+.bombardero .pala { fill: rgba(28, 28, 22, .78); }
+.bombardero .buje { fill: #7A7F62; }
 @media (prefers-reduced-motion: no-preference) {
   .bombardero-vuelo { animation: flotar 7s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate; }
-  .bombardero .pala { animation: girar 180ms linear infinite; }
-  .bombardero .pala-2 { animation-delay: -90ms; }
+  .bombardero .giro { animation: girar 420ms linear infinite; }
+  .bombardero .giro-1 { animation-delay: -60ms; }
+  .bombardero .giro-2 { animation-delay: -170ms; }
+  .bombardero .giro-3 { animation-delay: -250ms; }
   @keyframes flotar {
-    from { transform: translate(0, 6px) rotate(3deg); }
-    to { transform: translate(-14px, -8px) rotate(4.5deg); }
+    from { transform: translate(0, 6px) rotate(0deg) scale(1); }
+    to { transform: translate(-14px, -8px) rotate(1.2deg) scale(1.025); }
   }
-  /* Una pala vista de canto: al girar, su altura aparente va de entera a nada y vuelta. */
-  @keyframes girar {
-    0% { transform: scaleY(1); }
-    50% { transform: scaleY(-1); }
-    100% { transform: scaleY(1); }
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bombardero-vuelo { transform: rotate(3.5deg); }
-  .bombardero .pala-2 { display: none; }
+  @keyframes girar { to { transform: rotate(360deg); } }
 }
 
 .hero-titulo {
@@ -375,9 +370,9 @@ footer a { text-decoration: none; transition: color .15s ease; }
   section { padding: 4rem 0; }
   .nav ul, .btn-nav { display: none; } /* reservar y llamar van en la barra fija de abajo */
   .hero { min-height: auto; padding: 4rem 0 4.5rem; }
-  .hero { padding-bottom: 13rem; }
+  .hero { padding-bottom: 15rem; }
   /* En el móvil, el avión vuela por debajo de los botones, sin tapar el texto. */
-  .bombardero { top: auto; bottom: 1.5rem; right: -45%; width: 120vw; transform: none; }
+  .bombardero { top: auto; bottom: -2.5rem; right: -18%; width: 100vw; transform: none; }
   .barra-movil {
     display: grid; grid-template-columns: 1fr 1.6fr; gap: .6rem;
     position: fixed; inset: auto 0 0 0; z-index: 10;
