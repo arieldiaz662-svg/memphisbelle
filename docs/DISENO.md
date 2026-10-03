@@ -12,6 +12,13 @@ La web sale del **mural del local**: la parte frontal del bombardero Memphis Bel
 
 Público: gente que busca dónde tomar una copa en Santa Cruz, casi siempre desde el móvil y a menudo ya en la calle. Lo que necesitan, en orden: si está abierto ahora, la carta con precios, cómo llegar y reservar.
 
+## Estructura de la portada
+
+Portada (cartel del B-17), Cóctel estrella, La carta, El local, Visítanos, Reseñas (solo si hay valoración de Google) y Reserva tu mesa. Sigue el boceto de `docs/boceto.html`:
+
+- **El local**: mosaico de 3 (el primero grande). Sin fotos, la misma composición en versión tipográfica; las fotos aparecen solas al añadirlas en `site.js`. Nunca cajas vacías ni tres columnas iguales.
+- **Visítanos**: el horario agrupado en pocas líneas (`resumen()` en `public/js/horario.js`), "Abierto ahora", dirección y contacto, con Cómo llegar, Llamar y WhatsApp.
+
 ## Colores (`public/css/site.css` → `:root`)
 
 Tomados de la foto del mural y aclarados lo justo para leerse en pantalla. Un solo color de acción: el amarillo.

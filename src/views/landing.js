@@ -1,4 +1,4 @@
-import { DIAS, NOMBRES } from '../../public/js/horario.js';
+import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
 import { esc, escPhone, instagramUrl, layout, whatsappUrl } from './html.js';
 import { structuredData } from './schema.js';
@@ -6,12 +6,16 @@ import { structuredData } from './schema.js';
 // Menú de la cabecera, en el orden de las secciones de la página.
 export const NAV = [
   { id: 'carta', label: 'Carta' },
-  { id: 'horario', label: 'Horario' },
   { id: 'local', label: 'El local' },
+  { id: 'visitanos', label: 'Visítanos' },
   { id: 'reservar', label: 'Reservar' },
 ];
 
-const capital = (text) => `${text[0].toUpperCase()}${text.slice(1)}`;
+// "de 18:00 a 02:00" no se parte entre dos líneas en el móvil.
+const horasJuntas = (texto) => texto.replace(/de (\d\d:\d\d) a (\d\d:\d\d)/, 'de&nbsp;$1&nbsp;a&nbsp;$2');
+
+// Foto propia (public/img/...). Ancho y alto evitan saltos al cargar; "lazy" porque va bajo la portada.
+const foto = (image, clase) => `<img class="${clase}" src="assets/${esc(image.src)}" alt="${esc(image.alt)}" width="${image.width || 1200}" height="${image.height || 900}" loading="lazy" decoding="async">`;
 const horarioJson = (site) => esc(JSON.stringify(site.hours.days));
 
 // Estado "Abierto ahora / Cerrado": lo rellena el navegador con la hora de Canarias (public/js/site.js).
@@ -90,55 +94,76 @@ function menu(site) {
 </section>`;
 }
 
-function info(site) {
-  const filas = DIAS.map((d) => {
-    const f = site.hours.days[d];
-    return `<tr data-dia="${d}"><th scope="row">${capital(NOMBRES[d])}</th><td>${f ? `${esc(f[0])} a ${esc(f[1])}` : 'Cerrado'}</td></tr>`;
-  }).join('\n          ');
-  const { address: a } = site;
-  return `<section class="info" id="horario">
-  <div class="wrap info-grid">
-    <div>
-      <h2>Horario</h2>
-      ${estadoAhora(site, 'estado-info')}
-      <table class="horario">
-        <caption class="sr">Horario de apertura, hora de Canarias</caption>
-        <tbody>
-          ${filas}
-        </tbody>
-      </table>
-    </div>
-    <div>
-      <h2>Dónde estamos</h2>
-      <address>
-        ${esc(a.street)}<br>
-        ${esc(a.postalCode)} ${esc(a.city)}
-      </address>
-      <p class="suave">En el centro de Santa Cruz.</p>
-      <a class="btn btn-linea" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Cómo llegar</a>
-    </div>
-    <div>
-      <h2>Contacto</h2>
-      <ul class="contacto">
-        <li><span>Teléfono</span><a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a></li>
-        <li><span>WhatsApp</span><a href="${esc(whatsappUrl(site.whatsapp.number))}" rel="noopener" target="_blank">${escPhone(site.phoneDisplay)}</a></li>
-        <li><span>Email</span><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li>
-        <li><span>Instagram</span><a href="${esc(instagramUrl(site.instagram))}" rel="noopener" target="_blank">@${esc(site.instagram)}</a></li>
-      </ul>
+// El local: mosaico de 3 (el primero grande) con el texto debajo de cada foto. Si todavía no hay
+// fotos, la misma composición en versión tipográfica, sin cajas vacías.
+function local(site) {
+  const { local: l } = site;
+  const conFotos = l.items.some((i) => i.image);
+  return `<section class="local" id="local">
+  <div class="wrap">
+    <h2>${esc(l.title)}</h2>
+    <div class="mosaico${conFotos ? ' con-fotos' : ''}">
+      ${l.items.map((item, i) => `<figure class="mosaico-item${i === 0 ? ' grande' : ''}">
+        ${item.image ? foto(item.image, 'mosaico-foto') : ''}
+        <figcaption><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></figcaption>
+      </figure>`).join('\n      ')}
     </div>
   </div>
 </section>`;
 }
 
-function local(site) {
-  const { local: l, reviews: r } = site;
-  return `<section class="local" id="local">
-  <div class="wrap">
-    <h2>${esc(l.title)}</h2>
-    <ul class="rasgos">
-      ${l.features.map((f) => `<li><h3>${esc(f.title)}</h3><p>${esc(f.text)}</p></li>`).join('\n      ')}
-    </ul>
-    ${r.rating ? `<p class="valoracion"><strong>${esc(r.rating)}</strong> de 5 en Google${r.count ? `, ${esc(r.count)} reseñas` : ''}. <a href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Leer las reseñas</a></p>` : ''}
+// Visítanos: horario agrupado en pocas líneas, "Abierto ahora", dirección y contacto. Con foto de la
+// fachada, la foto ocupa la segunda columna; sin ella, el contacto.
+function visit(site) {
+  const { address: a, visit: v } = site;
+  const contacto = `<ul class="contacto">
+        <li><span>Teléfono y WhatsApp</span><a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a></li>
+        <li><span>Email</span><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li>
+        <li><span>Instagram</span><a href="${esc(instagramUrl(site.instagram))}" rel="noopener" target="_blank">@${esc(site.instagram)}</a></li>
+      </ul>`;
+  const acciones = `<div class="visita-acciones">
+        <a class="btn btn-linea" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Cómo llegar</a>
+        <a class="btn btn-linea" href="tel:+${esc(site.phone)}">Llamar</a>
+        <a class="btn btn-linea" href="${esc(whatsappUrl(site.whatsapp.number))}" rel="noopener" target="_blank">WhatsApp</a>
+      </div>`;
+  return `<section class="visita" id="visitanos">
+  <div class="wrap visita-grid${v.image ? ' con-foto' : ''}">
+    <div class="visita-datos">
+      <h2>${esc(v.title)}</h2>
+      <div class="dato">
+        <h3>Horario</h3>
+        ${estadoAhora(site, 'estado-info')}
+        <ul class="horario-lineas">
+          ${resumen(site.hours.days).map((linea) => `<li>${horasJuntas(esc(linea))}</li>`).join('\n          ')}
+        </ul>
+      </div>
+      <div class="dato">
+        <h3>Dirección</h3>
+        <address>${esc(a.street)}, ${esc(a.postalCode)} ${esc(a.city)}</address>
+        <p class="suave">${esc(v.note)}</p>
+      </div>
+      ${v.image ? contacto : ''}
+      ${acciones}
+    </div>
+    ${v.image ? foto(v.image, 'visita-foto') : `<div class="visita-contacto"><h3>Contacto</h3>${contacto}</div>`}
+  </div>
+</section>`;
+}
+
+// Reseñas: solo si hay valoración de Google copiada de la ficha. Las citas son opcionales (reales y
+// con su autor). Sin valoración, la sección no existe.
+function reviews(site) {
+  const { reviews: r } = site;
+  if (!r.rating) return '';
+  return `<section class="resenas" id="resenas">
+  <div class="wrap resenas-grid">
+    <div class="resenas-nota">
+      <h2 class="sr">Reseñas</h2>
+      <p class="nota-google"><strong>${esc(r.rating)}</strong> de 5 en Google</p>
+      ${r.count ? `<p class="suave">${esc(r.count)} reseñas</p>` : ''}
+      <a class="btn btn-linea" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Leer las reseñas</a>
+    </div>
+    ${(r.quotes || []).slice(0, 3).map((q) => `<blockquote class="cita"><p>${esc(q.text)}</p><footer>${esc(q.author)}, en Google</footer></blockquote>`).join('\n    ')}
   </div>
 </section>`;
 }
@@ -194,8 +219,9 @@ export function renderLanding({ site, config }) {
 ${hero(site)}
 ${featured(site)}
 ${menu(site)}
-${info(site)}
 ${local(site)}
+${visit(site)}
+${reviews(site)}
 ${booking(site)}
 </main>`;
   return layout({

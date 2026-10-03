@@ -1,6 +1,6 @@
 // JavaScript de la portada. Todo es mejora progresiva: sin JavaScript se ve la carta completa,
-// el horario en tabla y los enlaces de llamar y WhatsApp funcionan igual.
-import { DIAS, abreEseDia, estado, horaCanaria, textoEstado } from './horario.js';
+// el horario agrupado y los enlaces de llamar y WhatsApp funcionan igual.
+import { abreEseDia, estado, textoEstado } from './horario.js';
 
 // Pestañas accesibles de la carta (clic, flechas del teclado, Inicio/Fin). Sin JavaScript se ven
 // todas las secciones seguidas.
@@ -40,21 +40,14 @@ document.querySelectorAll('[role="tablist"]').forEach(initTabs);
 // A partir de aquí, cambiar de pestaña lleva un fundido corto (ver .tabs-listas en site.css).
 requestAnimationFrame(() => document.documentElement.classList.add('tabs-listas'));
 
-// "Abierto ahora / Cerrado" con la hora de Canarias, y el día de hoy marcado en la tabla. Se
-// actualiza cada minuto y al volver a la pestaña, para que no se quede desfasado.
+// "Abierto ahora / Cerrado" con la hora de Canarias. Se actualiza cada minuto y al volver a la
+// pestaña, para que no se quede desfasado.
 function pintarEstado() {
   document.querySelectorAll('.estado[data-horario]').forEach((el) => {
     const e = estado(JSON.parse(el.dataset.horario));
     el.querySelector('.estado-texto').textContent = textoEstado(e);
     el.classList.toggle('abierto', e.abierto);
     el.hidden = false;
-  });
-  const hoy = DIAS[horaCanaria(new Date()).dia];
-  document.querySelectorAll('.horario tr').forEach((tr) => {
-    const esHoy = tr.dataset.dia === hoy;
-    tr.classList.toggle('hoy', esHoy);
-    if (esHoy) tr.setAttribute('aria-current', 'date');
-    else tr.removeAttribute('aria-current');
   });
 }
 pintarEstado();

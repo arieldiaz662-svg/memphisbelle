@@ -311,28 +311,53 @@ ul { margin: 0; padding: 0; list-style: none; }
 .plato-texto { margin: .2rem 0 0; font-size: var(--t-s); color: var(--tinta-suave); max-width: 46ch; }
 .carta-nota { margin: 2rem 0 0; font-size: var(--t-s); color: var(--tinta-suave); }
 
-/* ---------- 6. Horario, ubicación y contacto ---------- */
-.info-grid { display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.info h2 { font-size: var(--t-xl); }
-.estado-info { margin-bottom: 1rem; }
-.horario { border-collapse: collapse; width: 100%; max-width: 340px; font-variant-numeric: tabular-nums; }
-.horario th, .horario td { padding: .45rem 0; border-bottom: 1px solid var(--linea); text-align: left; font-weight: 400; }
-.horario td { text-align: right; color: var(--humo); }
-.horario tr.hoy th, .horario tr.hoy td { color: var(--mostaza); font-weight: 600; }
-address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-bottom: .6rem; }
-.info .btn { margin-top: .4rem; }
-.contacto li { display: grid; gap: .1rem; padding: .55rem 0; border-bottom: 1px solid var(--linea); }
-.contacto span { color: var(--humo); font-size: var(--t-s); }
-.contacto a { text-decoration: none; overflow-wrap: break-word; transition: color .15s ease; }
+/* ---------- 6. El local: mosaico de 3 (el primero grande) ----------
+   Con fotos: una grande y dos pequeñas, con el texto debajo de cada una. Sin fotos: la misma
+   composición en versión tipográfica (sin cajas vacías). Nunca tres columnas iguales. */
+.mosaico {
+  display: grid; gap: 2rem 3rem; margin-top: 2.5rem;
+  grid-template-columns: 1.25fr 1fr; grid-template-rows: auto auto;
+}
+.mosaico-item { margin: 0; }
+.mosaico-item.grande { grid-row: 1 / span 2; }
+.mosaico-item h3 { font-family: var(--serif); font-size: var(--t-xl); margin: 0 0 .4rem; }
+.mosaico-item p { color: var(--humo); margin: 0; }
+/* Versión tipográfica: el primero, en grande; los otros dos, separados por una línea fina. */
+.mosaico:not(.con-fotos) { align-items: start; }
+.mosaico:not(.con-fotos) .grande { padding-right: 3rem; border-right: 1px solid var(--linea); }
+.mosaico:not(.con-fotos) .grande h3 { font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1; margin-bottom: 1rem; }
+.mosaico:not(.con-fotos) .grande p { font-size: var(--t-l); max-width: 26ch; color: var(--crema); }
+.mosaico:not(.con-fotos) .mosaico-item:not(.grande) + .mosaico-item { border-top: 1px solid var(--linea); padding-top: 2rem; }
+/* Con fotos */
+.mosaico-foto { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--radio); margin-bottom: .9rem; aspect-ratio: 4 / 3; }
+.mosaico.con-fotos .grande .mosaico-foto { aspect-ratio: 4 / 5; }
 
-/* ---------- 7. El local ---------- */
-.local { background: var(--pared); }
-.rasgos { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 1rem; }
-.rasgos li { border-top: 1px solid var(--mostaza); padding-top: 1.2rem; }
-.rasgos h3 { font-family: var(--serif); font-size: var(--t-xl); }
-.rasgos p { color: var(--humo); margin: 0; }
-.valoracion { margin: 2.5rem 0 0; color: var(--humo); }
-.valoracion strong { font-family: var(--serif); font-size: var(--t-xl); color: var(--mostaza); font-weight: 400; }
+/* ---------- 7. Visítanos: horario agrupado, dirección y contacto ---------- */
+.visita { background: var(--pared); }
+.visita-grid { display: grid; gap: 3rem 4rem; grid-template-columns: 1.2fr 1fr; align-items: start; }
+.visita h3 { font: 600 var(--t-s)/1.3 var(--sans); color: var(--humo); margin: 0 0 .5rem; }
+.dato { margin-bottom: 2rem; }
+.estado-info { margin-bottom: .6rem; }
+.horario-lineas li { font-family: var(--serif); font-size: var(--t-l); line-height: 1.35; font-variant-numeric: tabular-nums; }
+.horario-lineas li + li { margin-top: .3rem; color: var(--humo); }
+address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-bottom: .4rem; }
+.visita-acciones { display: flex; flex-wrap: wrap; gap: .6rem; }
+.visita-foto { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radio); }
+.contacto { margin-bottom: 2rem; }
+.contacto li { display: grid; gap: .1rem; padding: .7rem 0; }
+.contacto li + li { border-top: 1px solid var(--linea); }
+.contacto span { color: var(--humo); font-size: var(--t-s); }
+.contacto a { text-decoration: none; font-size: var(--t-l); overflow-wrap: break-word; transition: color .15s ease; }
+.visita-contacto { padding-top: .2rem; }
+
+/* ---------- 7b. Reseñas (solo si hay valoración de Google) ---------- */
+.resenas-grid { display: grid; gap: 2.5rem 3rem; grid-template-columns: minmax(200px, .8fr) 1fr 1fr; align-items: start; }
+.nota-google { margin: 0 0 .3rem; }
+.nota-google strong { display: block; font-family: var(--serif); font-weight: 400; font-size: clamp(3rem, 7vw, 4.5rem); line-height: 1; }
+.resenas-nota .btn { margin-top: 1rem; }
+.cita { margin: 0; padding-left: 1.2rem; border-left: 2px solid var(--linea); }
+.cita p { font-family: var(--serif); font-size: var(--t-l); line-height: 1.4; margin-bottom: .6rem; }
+.cita footer { color: var(--humo); font-size: var(--t-s); }
 
 /* ---------- 8. Reservas ---------- */
 .reservar-grid { display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
@@ -385,6 +410,11 @@ footer a { text-decoration: none; transition: color .15s ease; }
   }
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
   .formulario .btn { justify-self: stretch; }
+  .mosaico, .visita-grid, .resenas-grid { grid-template-columns: 1fr; }
+  .mosaico-item.grande { grid-row: auto; }
+  .mosaico:not(.con-fotos) .grande { padding-right: 0; border-right: 0; padding-bottom: 2rem; border-bottom: 1px solid var(--linea); }
+  .mosaico:not(.con-fotos) .mosaico-item:not(.grande) + .mosaico-item { border-top: 0; padding-top: 0; }
+  .mosaico.con-fotos .grande .mosaico-foto { aspect-ratio: 4 / 3; }
   .plato-nombre { font-size: 1.15rem; }
   .estrella-grid, .estrella-grid.con-foto { grid-template-columns: 1fr; align-items: start; }
   .estrella-receta ul { grid-template-columns: 1fr 1fr; gap: .55rem 1rem; }

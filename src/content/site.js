@@ -59,15 +59,24 @@ export const site = {
     secondary: 'Ver la carta',
   },
 
-  // EL LOCAL (servicios de la ficha de Google)
+  // EL LOCAL (servicios de la ficha de Google). Mosaico de 3: el primero va grande.
+  // "image" es opcional ({ src: 'img/local/terraza.jpg', alt: '...' }, foto propia en public/img/): sin
+  // fotos, la sección es tipográfica; con alguna, se muestra el mosaico. Nunca hay huecos vacíos.
   local: {
     title: 'El local',
-    features: [
-      { title: 'Cócteles clásicos', text: 'La especialidad de la casa: Dry Martini, Manhattan y los clásicos de la coctelería.' },
-      { title: 'Terraza', text: 'Unas 30 personas fuera y 40 dentro.' },
-      { title: 'Mascotas bienvenidas', text: 'Tu perro puede acompañarte dentro y en la terraza.' },
+    items: [
+      { title: 'Terraza', text: 'Unas 30 personas fuera, en la calle de los Sueños.', image: null },
+      { title: 'Dentro', text: '40 personas, junto a la barra y el mural del bombardero.', image: null },
+      { title: 'Mascotas bienvenidas', text: 'Tu perro puede acompañarte dentro y en la terraza.', image: null },
     ],
-    revisar: 'Completar con los servicios y atributos de la ficha de Google (accesibilidad, pagos, ambiente...)',
+    revisar: 'Completar con los servicios y atributos de la ficha de Google (accesibilidad, pagos, ambiente...) y añadir fotos propias del local',
+  },
+
+  // VISÍTANOS: foto opcional de la fachada o la calle, para reconocer la puerta al llegar.
+  visit: {
+    title: 'Visítanos',
+    note: 'En el centro de Santa Cruz.',
+    image: null, // { src: 'img/local/fachada.jpg', alt: 'Fachada de Memphis Belle en la calle de los Sueños' }
   },
 
   // CÓCTEL ESTRELLA: sección destacada justo después de la portada. Debe estar también en la carta
@@ -142,7 +151,9 @@ export const site = {
 
   // VALORACIÓN EN GOOGLE (opcional). Si rating está vacío no se muestra.
   // Copiarla de la ficha y actualizarla de vez en cuando: un número antiguo resta credibilidad.
-  reviews: { rating: '', count: '', revisar: 'Copiar la valoración y el número de reseñas de la ficha de Google' },
+  // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como
+  // aparece en la reseña), máximo 3 líneas cada una: { text: '...', author: 'Nombre' }.
+  reviews: { rating: '', count: '', quotes: [], revisar: 'Copiar la valoración, el número de reseñas y 2 o 3 citas reales de la ficha de Google' },
 
   // Datos del titular para el aviso legal (LSSI-CE). Mientras "owner" esté vacío, la página
   // "Aviso legal" y su enlace no se publican.

@@ -38,7 +38,9 @@ GitHub Actions (`.github/workflows/ci.yml`) pasa los tests en cada push y pull r
 | Carta, precios y secciones | `src/content/site.js` → `menu` |
 | Horario (una franja por día, hora de Canarias) | `src/content/site.js` → `hours` (debe coincidir con la ficha de Google) |
 | Teléfono, WhatsApp, email, Instagram, dirección | `src/content/site.js` |
-| Valoración de Google | `src/content/site.js` → `reviews` |
+| Fotos y textos de "El local" (mosaico de 3) | `src/content/site.js` → `local.items` (cada uno con `image` opcional) |
+| Foto de la fachada en "Visítanos" | `src/content/site.js` → `visit.image` |
+| Valoración y citas de Google (la sección solo aparece si hay valoración) | `src/content/site.js` → `reviews` |
 | Datos del titular para el aviso legal | `src/content/site.js` → `legal` (mientras esté vacío, el aviso legal no se publica) |
 | Colores y tipografía | `public/css/site.css` → `:root` |
 

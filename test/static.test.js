@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
 
-import { DIAS, abreEseDia, estado, textoEstado } from '../public/js/horario.js';
+import { DIAS, abreEseDia, estado, resumen, textoEstado } from '../public/js/horario.js';
 import { buildStatic } from '../scripts/build-static.js';
 import { pendientes } from '../scripts/pendientes.js';
 import { site } from '../src/content/site.js';
@@ -128,11 +128,16 @@ describe('horario (hora de Canarias)', () => {
     }
   });
 
-  test('la tabla de la web muestra el mismo horario que site.js', () => {
-    for (const d of DIAS) {
-      const fila = new RegExp(`<tr data-dia="${d}"><th scope="row">[^<]+</th><td>([^<]+)</td></tr>`).exec(index);
-      assert.equal(fila[1], dias[d] ? `${dias[d][0]} a ${dias[d][1]}` : 'Cerrado', d);
-    }
+  test('horario agrupado en pocas líneas: primero lo que abre, luego lo cerrado', () => {
+    assert.deepEqual(resumen(tarde), ['De miércoles a domingo, de 18:00 a 02:00', 'Lunes y martes, cerrado']);
+    const variado = { ...tarde, lunes: ['18:00', '02:00'], martes: null, miercoles: null, viernes: ['18:00', '03:00'] };
+    assert.deepEqual(resumen(variado), ['Jueves, de 18:00 a 02:00', 'Viernes, de 18:00 a 03:00', 'De sábado a lunes, de 18:00 a 02:00', 'Martes y miércoles, cerrado']);
+    assert.deepEqual(resumen(Object.fromEntries(DIAS.map((d) => [d, ['10:00', '14:00']]))), ['Todos los días, de 10:00 a 14:00']);
+  });
+
+  test('la web muestra el horario agrupado que sale de site.js', () => {
+    const lineas = [...index.matchAll(/<ul class="horario-lineas">([\s\S]*?)<\/ul>/g)][0][1];
+    assert.deepEqual([...lineas.matchAll(/<li>([^<]+)<\/li>/g)].map((m) => m[1].replace(/&nbsp;/g, ' ')), resumen(dias));
   });
 });
 
@@ -179,6 +184,38 @@ describe('cóctel estrella', () => {
     assert.ok(index.indexOf('id="inicio"') < index.indexOf('id="estrella"'));
     assert.ok(index.indexOf('id="estrella"') < index.indexOf('id="carta"'));
     assert.equal(index.includes('class="estrella-foto"'), Boolean(site.featured.image));
+  });
+});
+
+describe('el local, visítanos y reseñas', () => {
+  const seccion = (id, siguiente) => index.slice(index.indexOf(`id="${id}"`), index.indexOf(`id="${siguiente}"`));
+
+  test('el local: mosaico de 3 con el primero grande, y sin fotos no hay huecos vacíos', () => {
+    const local = seccion('local', 'visitanos');
+    assert.equal((local.match(/class="mosaico-item/g) || []).length, site.local.items.length);
+    assert.match(local, /class="mosaico-item grande"/);
+    for (const item of site.local.items) assert.ok(local.includes(`<h3>${item.title}</h3>`), item.title);
+    const fotos = site.local.items.filter((i) => i.image).length;
+    assert.equal((local.match(/<img /g) || []).length, fotos);
+    assert.equal(local.includes('mosaico con-fotos'), fotos > 0);
+  });
+
+  test('visítanos: dirección, Cómo llegar, Llamar y WhatsApp, y "Abierto ahora"', () => {
+    const visita = seccion('visitanos', site.reviews.rating ? 'resenas' : 'reservar');
+    assert.ok(visita.includes(site.address.street));
+    assert.ok(visita.includes(site.googleMapsUrl.replace(/&/g, '&amp;')));
+    assert.ok(visita.includes(`href="tel:+${site.phone}"`));
+    assert.ok(visita.includes(`href="https://wa.me/${site.whatsapp.number}"`));
+    assert.match(visita, /class="estado estado-info" data-horario=/);
+    assert.equal(visita.includes('class="visita-foto"'), Boolean(site.visit.image));
+  });
+
+  test('las reseñas solo aparecen si hay valoración de Google', () => {
+    assert.equal(index.includes('id="resenas"'), Boolean(site.reviews.rating));
+  });
+
+  test('ya no queda la fila de tres columnas iguales ni la tabla de horario', () => {
+    assert.doesNotMatch(index, /class="(info-grid|rasgos|horario")/);
   });
 });
 
