@@ -158,6 +158,20 @@ export const site = {
 
   // VALORACIÓN EN GOOGLE (opcional). Si rating está vacío no se muestra.
   // Copiarla de la ficha y actualizarla de vez en cuando: un número antiguo resta credibilidad.
+  // DÉJANOS UNA RESEÑA: franja fija bajo "Visítanos" y enlace en el pie. Es lo más importante para el
+  // dueño: cada reseña en Google ayuda a que el bar aparezca antes en las búsquedas.
+  // "writeUrl" es el enlace directo a escribir la reseña. Se saca de la ficha de Google Business:
+  // Perfil de la empresa > "Pedir reseñas" > copiar el enlace (empieza por https://g.page/r/ o
+  // https://search.google.com/local/writereview). Mientras esté vacío, el botón lleva a la ficha del bar
+  // en Google Maps (googleMapsUrl), donde también se puede escribir la reseña.
+  reviewCta: {
+    title: '¿Has estado con nosotros?',
+    text: 'Tu opinión en Google ayuda a que más gente nos encuentre.',
+    button: 'Déjanos una reseña en Google',
+    writeUrl: '',
+    revisar: 'Copiar de la ficha de Google Business el enlace de "Pedir reseñas" en reviewCta.writeUrl para que el botón lleve directo a escribir la reseña',
+  },
+
   // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como
   // aparece en la reseña), máximo 3 líneas cada una: { text: '...', author: 'Nombre' }.
   reviews: { rating: '', count: '', quotes: [], revisar: 'Copiar la valoración, el número de reseñas y 2 o 3 citas reales de la ficha de Google' },

@@ -372,6 +372,22 @@ address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-b
 .contacto a { text-decoration: none; font-size: var(--t-l); overflow-wrap: break-word; transition: color .15s ease; }
 .visita-contacto { padding-top: .2rem; }
 
+/* ---------- 7a. Déjanos una reseña en Google ----------
+   Franja propia, siempre visible: es lo que más le interesa al dueño. Línea fina arriba y abajo, el texto
+   a la izquierda y el botón a la derecha; sin tarjeta. El botón lleva cinco estrellas en el amarillo
+   del logotipo (texto, no imagen) para que se reconozca al instante. */
+.opinion { padding: 3.5rem 0; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+.opinion-grid { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem 3rem; }
+.opinion h2 { font-size: var(--t-xl); margin-bottom: .4rem; }
+.opinion p { margin: 0; color: var(--humo); }
+.btn-resena { display: inline-flex; align-items: center; gap: .75rem; padding: 1rem 1.7rem; border-color: var(--mostaza); font-size: 1.05rem; }
+.estrellas { color: var(--mostaza); letter-spacing: .12em; font-size: .95em; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-resena:hover { background: rgba(232, 190, 69, .1); }
+}
+.pie-resena { margin: 0; }
+.pie-resena a { color: var(--crema); }
+
 /* ---------- 7b. Reseñas (solo si hay valoración de Google) ---------- */
 .resenas-grid { display: grid; gap: 2.5rem 3rem; grid-template-columns: minmax(200px, .8fr) 1fr 1fr; align-items: start; }
 .nota-google { margin: 0 0 .3rem; }
@@ -463,6 +479,9 @@ footer a { text-decoration: none; transition: color .15s ease; }
   }
   .reservar.con-imagen .reservar-grid { grid-template-columns: 1fr; }
   .mosaico, .visita-grid, .resenas-grid { grid-template-columns: 1fr; }
+  .opinion { padding: 3rem 0; }
+  .opinion-grid { flex-direction: column; align-items: stretch; }
+  .btn-resena { justify-content: center; flex-wrap: wrap; }
   .mosaico-item.grande { grid-row: auto; }
   .mosaico:not(.con-fotos) .grande { padding-right: 0; border-right: 0; padding-bottom: 2rem; border-bottom: 1px solid var(--linea); }
   .mosaico:not(.con-fotos) .mosaico-item:not(.grande) + .mosaico-item { border-top: 0; padding-top: 0; }

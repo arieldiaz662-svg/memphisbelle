@@ -18,6 +18,7 @@ import worker from '../worker/index.js';
 import { DOMINIO, redireccion, sinExtension } from '../worker/redireccion.js';
 
 const BASE = 'https://ejemplo.com/memphisbelle';
+const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 const outDir = mkdtempSync(join(tmpdir(), 'memphis-static-'));
 let index;
 const read = (file) => readFileSync(join(outDir, file), 'utf8');
@@ -210,6 +211,19 @@ describe('el local, visítanos y reseñas', () => {
     assert.equal(visita.includes('class="visita-foto"'), Boolean(site.visit.image));
   });
 
+  test('"Déjanos una reseña en Google": franja visible y enlace en el pie, hacia Google', () => {
+    const esperado = site.reviewCta.writeUrl || site.googleMapsUrl;
+    const franja = seccion('opinion', site.reviews.rating ? 'resenas' : 'reservar');
+    assert.ok(franja.includes(site.reviewCta.button));
+    const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener" target="_blank">`).test(html);
+    assert.ok(enlace(franja), 'la franja enlaza a Google');
+    const pie = index.slice(index.indexOf('<footer>'));
+    assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
+    assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|maps\.google\.com)/);
+    // Va entre "Visítanos" y "Reserva tu mesa".
+    assert.ok(index.indexOf('id="visitanos"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="reservar"'));
+  });
+
   test('las reseñas solo aparecen si hay valoración de Google', () => {
     assert.equal(index.includes('id="resenas"'), Boolean(site.reviews.rating));
   });
@@ -237,8 +251,8 @@ describe('portada y móvil', () => {
   });
 
   test('se siente nativa en el móvil: hover solo con ratón, sin destello, sin zoom en campos y zona segura', () => {
-    const bloquesHover = [...css.matchAll(/@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}/g)].map((m) => m[0]).join('');
-    const hoverFuera = css.replace(bloquesHover, '').split('\n').filter((l) => l.includes(':hover'));
+    const sinBloquesHover = css.replace(/@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}/g, '');
+    const hoverFuera = sinBloquesHover.split('\n').filter((l) => l.includes(':hover'));
     assert.deepEqual(hoverFuera, []);
     assert.match(css, /-webkit-tap-highlight-color: transparent/);
     assert.match(css, /\.btn:active \{ transform: scale\(0\.97\)/);

@@ -1,6 +1,6 @@
 import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
-import { esc, escPhone, instagramUrl, layout, whatsappUrl } from './html.js';
+import { esc, escPhone, instagramUrl, layout, reviewUrl, whatsappUrl } from './html.js';
 import { structuredData } from './schema.js';
 
 // Menú de la cabecera, en el orden de las secciones de la página.
@@ -162,6 +162,20 @@ function visit(site) {
 </section>`;
 }
 
+// Franja "Déjanos una reseña en Google": siempre visible, justo después de Visítanos.
+function reviewCta(site) {
+  const c = site.reviewCta;
+  return `<section class="opinion" id="opinion" aria-labelledby="opinion-titulo">
+  <div class="wrap opinion-grid">
+    <div>
+      <h2 id="opinion-titulo">${esc(c.title)}</h2>
+      <p>${esc(c.text)}</p>
+    </div>
+    <a class="btn btn-linea btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank"><span class="estrellas" aria-hidden="true">★★★★★</span>${esc(c.button)}</a>
+  </div>
+</section>`;
+}
+
 // Reseñas: solo si hay valoración de Google copiada de la ficha. Las citas son opcionales (reales y
 // con su autor). Sin valoración, la sección no existe.
 function reviews(site) {
@@ -234,6 +248,7 @@ ${featured(site)}
 ${menu(site)}
 ${local(site)}
 ${visit(site)}
+${reviewCta(site)}
 ${reviews(site)}
 ${booking(site)}
 </main>`;

@@ -2,6 +2,12 @@ import { readFileSync } from 'node:fs';
 
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
+// Enlace para dejar una reseña en Google: el directo de la ficha de Google Business si ya está en
+// site.js; si no, la ficha del bar en Google Maps.
+export function reviewUrl(site) {
+  return (site.reviewCta && site.reviewCta.writeUrl) || site.googleMapsUrl;
+}
+
 export function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, (char) => ESCAPES[char]);
 }
@@ -111,6 +117,7 @@ ${body}
       <span>${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</span>
     </div>
     <p class="pie-alcohol">Bebe con moderación. No servimos alcohol a menores de 18 años.</p>
+    <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener" target="_blank">${esc(site.reviewCta.button)}</a></p>
     <nav aria-label="Información legal">
       ${hasLegalNotice(site) ? `<a href="${to.legal}">Aviso legal</a>` : ''}
       <a href="${to.privacy}">Privacidad</a>
