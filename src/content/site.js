@@ -109,7 +109,7 @@ export const site = {
     title: 'Ladrillo, botellas <em>y luz cálida</em>',
     // Fotos del local (galería). Alt y pie describen lo que se ve.
     gallery: [
-      { src: 'img/ambiente/barra-estanteria', widths: [640, 1024], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde', caption: 'La barra' },
+      { src: 'img/ambiente/barra-estanteria', widths: [640, 1000], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde', caption: 'La barra' },
       { src: 'img/ambiente/ventana', widths: [640], width: 624, height: 1104, alt: 'Interior del bar junto a la ventana', caption: 'Junto a la ventana' },
       { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica', caption: 'Baldosa hidráulica' },
     ],

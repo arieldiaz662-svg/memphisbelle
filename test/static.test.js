@@ -508,3 +508,27 @@ describe('correcciones de la auditoría', () => {
     assert.match(css, /\.pie-fila a \{ padding-block: \.95rem; \}/);
   });
 });
+
+describe('fotos de la galería y de los cócteles', () => {
+  // Lee el tamaño de un JPG (marcador SOF) sin dependencias.
+  const tamano = (file) => {
+    const b = readFileSync(file);
+    for (let i = 2; i < b.length;) {
+      const m = b[i + 1];
+      if (m >= 0xc0 && m <= 0xc3) return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7) };
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+    throw new Error(file);
+  };
+
+  test('cada versión de una foto tiene su ancho y la misma proporción que la declarada en site.js', () => {
+    const fotos = [...site.local.gallery, ...site.bar.photos.map((f) => ({ ...f, widths: [640], width: 624, height: 1104 }))];
+    for (const f of fotos) {
+      for (const w of f.widths) {
+        const { w: ancho, h } = tamano(join(outDir, 'assets', `${f.src}-${w}.jpg`));
+        assert.ok(Math.abs(ancho - w) <= 16, `${f.src}-${w}.jpg mide ${ancho} px`);
+        if (site.local.gallery.includes(f)) assert.ok(Math.abs(ancho / h - f.width / f.height) < 0.03, `${f.src}-${w}.jpg tiene otra proporción (${ancho}×${h}): ¿es otra foto?`);
+      }
+    }
+  });
+});

@@ -680,3 +680,14 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .pie-fila a { padding-block: .95rem; }
 .contacto a { display: inline-block; padding-block: .4rem; }
 .hero-pie a { padding-block: .6rem; }
+
+/* ---------- Galería del local más contenida ----------
+   Las fotos del local miden 640–1000 px: a todo el ancho se ven blandas. Se muestran más pequeñas (casi a su
+   tamaño real) para que se vean nítidas; con fotos de más resolución se puede volver a ampliar. */
+.galeria-grid { max-width: 900px; grid-template-columns: 1.5fr 1fr 1fr; gap: 1rem; }
+.galeria-grid .foto .marco { height: clamp(240px, 26vw, 360px); }
+@media (max-width: 860px) {
+  .galeria-grid { max-width: 560px; }
+  .galeria-grid .foto .marco { height: auto; aspect-ratio: 3 / 4; }
+  .galeria-grid .foto:first-child .marco { aspect-ratio: 16 / 10; }
+}
