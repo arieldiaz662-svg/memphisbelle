@@ -467,3 +467,44 @@ describe('diseño editorial (híbrido)', () => {
     for (const item of NAV) assert.ok(index.includes(`class="enlace" data-s="i${NAV.indexOf(item)}" href="#${item.id}"`), item.id);
   });
 });
+
+describe('correcciones de la auditoría', () => {
+  const niveles = (html) => [...html.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
+  const sinSaltos = (html) => niveles(html).every((n, i, a) => i === 0 || n <= a[i - 1] + 1);
+
+  test('los encabezados no se saltan niveles en ninguna página', () => {
+    for (const file of ['index.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html']) {
+      assert.equal(niveles(read(file))[0], 1, `${file} empieza en h1`);
+      assert.ok(sinSaltos(read(file)), `${file}: ${niveles(read(file)).join('')}`);
+    }
+    assert.equal((read('carta.html').match(/<h1[\s>]/g) || []).length, 1);
+  });
+
+  test('todas las páginas llevan el menú completo hacia la portada (también legales y 404)', () => {
+    for (const file of ['privacidad.html', 'cookies.html', '404.html']) {
+      const html = read(file);
+      for (const item of NAV) assert.ok(html.includes(`href="#${item.id}"`) || html.includes(`#${item.id}"`), `${file} ${item.id}`);
+      assert.equal((html.match(/class="enlace"/g) || []).length, NAV.length, file);
+    }
+  });
+
+  test('los campos de texto del formulario declaran su tipo', () => {
+    assert.doesNotMatch(index, /<input(?![^>]*\stype=)[^>]*>/);
+  });
+
+  test('el JavaScript marca como vistas las entradas que se saltan y deja fuera del menú el enlace de saltar', () => {
+    const js = readFileSync(new URL('../public/js/site.js', import.meta.url), 'utf8');
+    assert.match(js, /getBoundingClientRect\(\)\.bottom < 0/);
+    assert.match(js, /querySelector\('\.saltar'\)/);
+    assert.match(js, /min-width: 1101px/);
+  });
+
+  test('la cabecera pasa a menú móvil antes de que el menú choque con la marca', () => {
+    assert.match(css, /@media \(max-width: 1100px\) \{\s*\.principal \{ display: none; \}/);
+  });
+
+  test('objetivos táctiles de 44 px en marca y enlaces del pie', () => {
+    assert.match(css, /\.marca \{ min-height: 44px; \}/);
+    assert.match(css, /\.pie-fila a \{ padding-block: \.95rem; \}/);
+  });
+});

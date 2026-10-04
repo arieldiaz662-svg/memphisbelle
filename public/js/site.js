@@ -118,6 +118,17 @@ else {
     if (el.classList.contains('carta-fila')) setTimeout(() => el.classList.add('listo'), 1800);
   }), { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
   reveals.forEach((e) => io.observe(e));
+  // Si se salta una parte de la página (enlace de ancla, scroll muy rápido), lo que queda por encima de la
+  // pantalla no se vuelve a ver al subir con el elemento todavía oculto: se marca como visto.
+  let barrido = false;
+  addEventListener('scroll', () => {
+    if (barrido) return;
+    barrido = true;
+    requestAnimationFrame(() => {
+      barrido = false;
+      reveals.forEach((e) => { if (!e.classList.contains('visto') && e.getBoundingClientRect().bottom < 0) e.classList.add('visto'); });
+    });
+  }, { passive: true });
 }
 
 // Cabecera: el cristal aparece solo cuando hay contenido pasando por debajo.
@@ -132,7 +143,7 @@ if (cabecera) {
 const botonMenu = document.querySelector('.menu-btn');
 const menuMovil = document.getElementById('menu-movil');
 if (botonMenu && menuMovil) {
-  const fuera = [document.querySelector('main'), document.querySelector('footer')];
+  const fuera = [document.querySelector('.saltar'), document.querySelector('main'), document.querySelector('footer')].filter(Boolean);
   const textos = { abrir: botonMenu.firstElementChild.textContent, cerrar: root.lang === 'en' ? 'Close' : 'Cerrar' };
   const abrir = () => {
     root.setAttribute('data-menu', '');
@@ -152,7 +163,7 @@ if (botonMenu && menuMovil) {
   botonMenu.addEventListener('click', () => (root.hasAttribute('data-menu') ? cerrar(true) : abrir()));
   menuMovil.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => cerrar(false)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(true); });
-  matchMedia('(min-width: 861px)').addEventListener('change', (e) => { if (e.matches) cerrar(false); });
+  matchMedia('(min-width: 1101px)').addEventListener('change', (e) => { if (e.matches) cerrar(false); });
 }
 
 // Orientación: el punto marca la sección que estás viendo.

@@ -28,13 +28,15 @@ export const rodar = (texto) => `<span class="rodar"><span>${esc(texto)}</span><
 
 export const instagramUrl = (user) => `https://www.instagram.com/${user}/`;
 
-// Logotipo: "Belle" rotulado a mano en amarillo, como en el mural del local. Se genera desde
-// public/img/logo-belle.svg (trazado de la letra Yellowtail) y se incrusta en línea con el color del texto.
-export const LOGO = readFileSync(new URL('../../public/img/logo-belle.svg', import.meta.url), 'utf8')
-  .trim()
-  .replace('<svg ', '<svg class="marca-belle" aria-hidden="true" ')
-  .replace(' role="img" aria-label="Belle"', '')
-  .replace('fill="#E8BE45"', 'fill="currentColor"');
+// Menú de la cabecera, en el orden de las secciones de la portada. Las demás páginas lo usan igual, con enlaces a la portada.
+export const NAV = [
+  { id: 'bar', label: 'El bar' },
+  { id: 'oficio', label: 'El oficio' },
+  { id: 'carta', label: 'La carta' },
+  { id: 'opinion', label: 'Opinión' },
+  { id: 'visitanos', label: 'Visítanos' },
+  { id: 'local', label: 'El local' },
+];
 
 // El aviso legal solo se publica cuando están los datos del titular (site.legal.owner).
 export function hasLegalNotice(site) {
@@ -71,7 +73,7 @@ const PIE = {
 
 // lang: idioma de la página ("es" o "en"). cabecera: HTML propio para la cabecera (la página de la
 // carta usa una mínima, sin menú ni "Reservar mesa", con el selector de idioma).
-export function layout({ site, config, title, description, path = '/', nav = [], body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '' }) {
+export function layout({ site, config, title, description, path = '/', nav = NAV, body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '' }) {
   const to = links(config);
   // og:image necesita URL absoluta: solo se añade cuando se conoce la dirección pública.
   const ogImage = config.publicBaseUrl && site.ogImage ? `${config.publicBaseUrl}/assets/${site.ogImage}` : '';

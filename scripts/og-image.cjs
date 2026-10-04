@@ -18,10 +18,13 @@ const server = http.createServer((req, res) => {
   try { playwright = require('playwright'); } catch { playwright = require(join(execSync('npm root -g').toString().trim(), 'playwright')); }
   await new Promise((resolve) => server.listen(4099, resolve));
   const browser = await playwright.chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1200, height: 760 }, deviceScaleFactor: 1, bypassCSP: true }); // la CSP de la web bloquearía el estilo que oculta el menú
+  const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1, bypassCSP: true }); // la CSP de la web bloquearía el estilo que oculta el menú
   await page.goto('http://localhost:4099/');
   await page.evaluate(() => document.fonts.ready);
-  await page.addStyleTag({ content: '.nav,.barra-movil,.estado{display:none!important}.hero{min-height:630px!important}.hero .wrap>*{animation:none!important}' });
+  // Solo la marca en la cabecera, sin menú ni botones, y con la portada ya entrada (sin esperar a las animaciones de entrada).
+  await page.addStyleTag({ content: '.principal,.acciones,.menu-movil,.barra-movil,.hero-pie,.hero-meta,.hero-ctas{display:none!important}header{background:none!important}.hero{min-height:630px!important;padding-top:6rem!important}.hero *{transition:none!important}' });
+  await page.evaluate(() => document.documentElement.classList.add('cargado'));
+  await page.waitForTimeout(400);
   await page.screenshot({ path: join(__dirname, '..', 'public', 'img', 'og.jpg'), type: 'jpeg', quality: 82, clip: { x: 0, y: 0, width: 1200, height: 630 } });
   await browser.close();
   server.close();

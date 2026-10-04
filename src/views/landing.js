@@ -1,18 +1,10 @@
 import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
-import { esc, escPhone, instagramUrl, layout, reviewUrl, rodar, whatsappUrl } from './html.js';
+import { NAV, esc, escPhone, instagramUrl, layout, reviewUrl, rodar, whatsappUrl } from './html.js';
 import { ANIMS, HUMO, ICONOS, SELLO } from './ilustraciones.js';
 import { structuredData } from './schema.js';
 
-// Menú de la cabecera, en el orden de las secciones de la página.
-export const NAV = [
-  { id: 'bar', label: 'El bar' },
-  { id: 'oficio', label: 'El oficio' },
-  { id: 'carta', label: 'La carta' },
-  { id: 'opinion', label: 'Opinión' },
-  { id: 'visitanos', label: 'Visítanos' },
-  { id: 'local', label: 'El local' },
-];
+export { NAV };
 
 // Retardo escalonado de las entradas al hacer scroll: data-s="i1".. (reglas en site.css; sin estilos en línea por la CSP).
 const d = (n) => ` data-s="i${n}"`;
@@ -199,11 +191,12 @@ export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '', cab
   const nombre = (x) => (en && x.nameEn) || x.name;
   const texto = (x) => (en && x.textEn) || x.text;
   const first = m.sections[0].id;
+  const sub = titulo === 'h1' ? 'h2' : 'h3'; // sin saltarse niveles de encabezado
   const tabs = m.sections.map((s) => `<button type="button" role="tab" id="tab-${esc(s.id)}" aria-controls="carta-${esc(s.id)}" aria-selected="${s.id === first}"${s.id === first ? '' : ' tabindex="-1"'}>${esc(nombre(s))}</button>`).join('\n        ');
   const alergenos = (item) => (item.allergens && item.allergens.length
     ? `<p class="plato-alergenos"><span>${t.alergenos}:</span> ${item.allergens.map((k) => esc(ALERGENOS[k][en ? 1 : 0])).join(', ')}</p>` : '');
   const panels = m.sections.map((s) => `<div class="carta-panel" role="tabpanel" id="carta-${esc(s.id)}" aria-labelledby="tab-${esc(s.id)}" tabindex="0">
-        <h3 class="carta-seccion">${esc(nombre(s))}</h3>
+        <${sub} class="carta-seccion">${esc(nombre(s))}</${sub}>
         <ul>
           ${s.items.map((item) => `<li>
             <div class="plato"><span class="plato-nombre">${esc(nombre(item))}</span><span class="guia" aria-hidden="true"></span><span class="importe">${esc(item.price)}</span></div>
@@ -355,7 +348,7 @@ function booking(site) {
     </div>
     <form id="formulario" class="formulario" data-whatsapp="${esc(site.whatsapp.number)}" data-horario="${horarioJson(site)}" novalidate>
       <label>Tu nombre
-        <input name="nombre" autocomplete="given-name" required enterkeyhint="next">
+        <input type="text" name="nombre" autocomplete="given-name" required enterkeyhint="next">
       </label>
       <div class="fila">
         <label>Personas
@@ -369,7 +362,7 @@ function booking(site) {
         </label>
       </div>
       <label><span>Comentario <span class="suave">(opcional)</span></span>
-        <input name="comentario" placeholder="Terraza, cumpleaños, vamos con perro…" enterkeyhint="send">
+        <input type="text" name="comentario" placeholder="Terraza, cumpleaños, vamos con perro…" enterkeyhint="send">
       </label>
       <p class="form-aviso" id="form-aviso" role="alert" hidden></p>
       <button class="btn btn-claro" type="submit">Reservar mesa</button>
