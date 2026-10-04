@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 import { site } from '../src/content/site.js';
 import { STATIC_CSP, hasLegalNotice, messagePage } from '../src/views/html.js';
+import { renderCarta } from '../src/views/carta.js';
 import { renderLanding } from '../src/views/landing.js';
 import { renderCookies, renderLegalNotice, renderPrivacy } from '../src/views/legal.js';
 
@@ -33,6 +34,8 @@ export function buildStatic({
 
   const pages = {
     'index.html': renderLanding({ site, config }),
+    'carta.html': renderCarta({ site, config, idioma: 'es' }),
+    'carta-en.html': renderCarta({ site, config, idioma: 'en' }),
     ...(hasLegalNotice(site) ? { 'aviso-legal.html': renderLegalNotice({ site, config }) } : {}),
     'privacidad.html': renderPrivacy({ site, config }),
     'cookies.html': renderCookies({ site, config }),

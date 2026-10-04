@@ -11,7 +11,11 @@
     "build": "node scripts/build-static.js",
     "preview": "node scripts/build-static.js && node scripts/preview.js",
     "og-image": "node scripts/og-image.cjs",
+    "pegatinas": "node scripts/pegatinas.cjs",
     "pendientes": "node scripts/pendientes.js",
     "test": "node --test"
+  },
+  "devDependencies": {
+    "qrcode": "^1.5.4"
   }
 }

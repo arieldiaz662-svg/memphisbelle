@@ -98,47 +98,55 @@ export const site = {
   // "text" es opcional (ingredientes o una línea de descripción).
   menu: {
     title: 'La carta',
+    titleEn: 'The menu',
     note: 'Precios con IGIC incluido. Pregunta por los cócteles fuera de carta.',
-    pendiente: 'Carta de ejemplo: sustituir por la carta real con precios',
+    noteEn: 'Prices include IGIC (Canary Islands tax). Ask about cocktails off the menu.',
+    pendiente: 'Carta de ejemplo: sustituir por la carta real con precios y su traducción al inglés',
+    // ALÉRGENOS: aviso general siempre visible en la página de la carta. Por bebida, opcional: añadir
+    // `allergens: ['sulfitos', 'gluten']` (claves de ALERGENOS en src/views/carta.js) y se muestran bajo
+    // el plato con su leyenda. Rellenarlo con la información real de cada bebida; no hay datos de ejemplo
+    // para no dar información falsa sobre alérgenos.
+    allergensNote: 'Si tienes alguna alergia o intolerancia, díselo a quien te atienda: te informamos de los alérgenos de cada bebida.',
+    allergensNoteEn: 'If you have an allergy or intolerance, please tell our staff: we will let you know the allergens in each drink.',
     sections: [
       {
         id: 'clasicos',
-        name: 'Clásicos',
+        name: 'Clásicos', nameEn: 'Classics',
         items: [
-          { name: 'Dry Martini', text: 'Ginebra, vermut seco, aceituna o twist de limón.', price: '9,00 €' },
-          { name: 'Manhattan', text: 'Rye whiskey, vermut rojo, angostura.', price: '9,00 €' },
-          { name: 'Negroni', text: 'Ginebra, Campari, vermut rojo.', price: '9,00 €' },
-          { name: 'Old Fashioned', text: 'Bourbon, azúcar, angostura, piel de naranja.', price: '9,50 €' },
-          { name: 'Daiquiri', text: 'Ron blanco, lima, azúcar.', price: '8,50 €' },
-          { name: 'Margarita', text: 'Tequila, triple seco, lima.', price: '8,50 €' },
-          { name: 'Bloody Mary', text: 'Vodka, tomate, lima, Worcestershire, tabasco, sal de apio.', price: '9,50 €' },
+          { name: 'Dry Martini', text: 'Ginebra, vermut seco, aceituna o twist de limón.', textEn: 'Gin, dry vermouth, olive or lemon twist.', price: '9,00 €' },
+          { name: 'Manhattan', text: 'Rye whiskey, vermut rojo, angostura.', textEn: 'Rye whiskey, sweet vermouth, bitters.', price: '9,00 €' },
+          { name: 'Negroni', text: 'Ginebra, Campari, vermut rojo.', textEn: 'Gin, Campari, sweet vermouth.', price: '9,00 €' },
+          { name: 'Old Fashioned', text: 'Bourbon, azúcar, angostura, piel de naranja.', textEn: 'Bourbon, sugar, bitters, orange peel.', price: '9,50 €' },
+          { name: 'Daiquiri', text: 'Ron blanco, lima, azúcar.', textEn: 'White rum, lime, sugar.', price: '8,50 €' },
+          { name: 'Margarita', text: 'Tequila, triple seco, lima.', textEn: 'Tequila, triple sec, lime.', price: '8,50 €' },
+          { name: 'Bloody Mary', text: 'Vodka, tomate, lima, Worcestershire, tabasco, sal de apio.', textEn: 'Vodka, tomato, lime, Worcestershire, Tabasco, celery salt.', price: '9,50 €' },
         ],
       },
       {
         id: 'de-la-casa',
-        name: 'De la casa',
+        name: 'De la casa', nameEn: 'House cocktails',
         items: [
-          { name: 'Memphis Belle', text: 'El cóctel de la casa.', price: '10,00 €' },
-          { name: 'Calle de los Sueños', text: 'Ron añejo canario, miel de palma, lima.', price: '10,00 €' },
-          { name: 'Espresso Martini', text: 'Vodka, café, licor de café.', price: '9,50 €' },
+          { name: 'Memphis Belle', text: 'El cóctel de la casa.', textEn: 'The house cocktail.', price: '10,00 €' },
+          { name: 'Calle de los Sueños', text: 'Ron añejo canario, miel de palma, lima.', textEn: 'Aged Canarian rum, palm honey, lime.', price: '10,00 €' },
+          { name: 'Espresso Martini', text: 'Vodka, café, licor de café.', textEn: 'Vodka, coffee, coffee liqueur.', price: '9,50 €' },
         ],
       },
       {
         id: 'sin-alcohol',
-        name: 'Sin alcohol',
+        name: 'Sin alcohol', nameEn: 'Alcohol-free',
         items: [
-          { name: 'Virgin Mojito', text: 'Lima, hierbabuena, soda.', price: '6,00 €' },
-          { name: 'Refresco', price: '2,50 €' },
-          { name: 'Agua', price: '2,00 €' },
+          { name: 'Virgin Mojito', text: 'Lima, hierbabuena, soda.', textEn: 'Lime, mint, soda.', price: '6,00 €' },
+          { name: 'Refresco', nameEn: 'Soft drink', price: '2,50 €' },
+          { name: 'Agua', nameEn: 'Water', price: '2,00 €' },
         ],
       },
       {
         id: 'cervezas-y-vinos',
-        name: 'Cervezas y vinos',
+        name: 'Cervezas y vinos', nameEn: 'Beer and wine',
         items: [
-          { name: 'Cerveza', price: '3,00 €' },
-          { name: 'Copa de vino', price: '4,00 €' },
-          { name: 'Copa de cava', price: '5,00 €' },
+          { name: 'Cerveza', nameEn: 'Beer', price: '3,00 €' },
+          { name: 'Copa de vino', nameEn: 'Glass of wine', price: '4,00 €' },
+          { name: 'Copa de cava', nameEn: 'Glass of cava', price: '5,00 €' },
         ],
       },
     ],
@@ -168,6 +176,9 @@ export const site = {
     title: '¿Has estado con nosotros?',
     text: 'Tu opinión en Google ayuda a que más gente nos encuentre.',
     button: 'Déjanos una reseña en Google',
+    titleEn: 'Been with us?',
+    textEn: 'Your Google review helps more people find us.',
+    buttonEn: 'Leave us a Google review',
     writeUrl: '',
     revisar: 'Copiar de la ficha de Google Business el enlace de "Pedir reseñas" en reviewCta.writeUrl para que el botón lleve directo a escribir la reseña',
   },

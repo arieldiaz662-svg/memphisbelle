@@ -45,7 +45,7 @@ requestAnimationFrame(() => document.documentElement.classList.add('tabs-listas'
 function pintarEstado() {
   document.querySelectorAll('.estado[data-horario]').forEach((el) => {
     const e = estado(JSON.parse(el.dataset.horario));
-    el.querySelector('.estado-texto').textContent = textoEstado(e);
+    el.querySelector('.estado-texto').textContent = textoEstado(e, document.documentElement.lang);
     el.classList.toggle('abierto', e.abierto);
     el.hidden = false;
   });

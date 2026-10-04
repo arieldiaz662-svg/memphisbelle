@@ -372,6 +372,25 @@ address { font-style: normal; font-size: var(--t-l); line-height: 1.45; margin-b
 .contacto a { text-decoration: none; font-size: var(--t-l); overflow-wrap: break-word; transition: color .15s ease; }
 .visita-contacto { padding-top: .2rem; }
 
+/* ---------- 6b. Página de la carta (QR de las mesas) ----------
+   Pensada para el móvil de quien ya está sentado: cabecera mínima con el selector de idioma, la carta
+   arriba sin portada y la reseña al final. Sin fotos: carga rápida con poca cobertura. */
+.nav-carta .wrap { justify-content: space-between; }
+.idiomas a { display: inline-block; padding: .5rem 1rem; border: 1px solid var(--linea); border-radius: 999px; font-size: var(--t-s); font-weight: 600; text-decoration: none; transition: border-color .15s ease, transform 160ms var(--ease-out); }
+.idiomas a:active { transform: scale(0.97); }
+.carta-pagina .carta { padding-top: 3rem; }
+.carta-pagina .carta h1 { font-family: var(--serif); font-size: var(--t-2xl); letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.carta-extra { padding: 2.5rem 0 3rem; background: var(--pared); }
+.carta-extra .estado { margin-bottom: 1.2rem; }
+.alergenos-aviso { margin: 0; max-width: 60ch; color: var(--crema); }
+.carta-enlaces { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 1.2rem 0 0; font-size: var(--t-s); }
+.carta-enlaces a { color: var(--tinta); }
+.plato-alergenos { margin: .25rem 0 0; font-size: var(--t-s); color: var(--tinta-suave); }
+.plato-alergenos span { font-weight: 600; }
+@media (hover: hover) and (pointer: fine) {
+  .idiomas a:hover { border-color: var(--humo); }
+}
+
 /* ---------- 7a. Déjanos una reseña en Google ----------
    Franja propia, siempre visible: es lo que más le interesa al dueño. Línea fina arriba y abajo, el texto
    a la izquierda y el botón a la derecha; sin tarjeta. El botón lleva cinco estrellas en el amarillo

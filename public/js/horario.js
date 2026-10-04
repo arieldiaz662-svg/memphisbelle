@@ -50,7 +50,22 @@ export function estado(dias, fecha = new Date()) {
   return { abierto: false };
 }
 
-export function textoEstado(e) {
+const DIAS_EN = {
+  lunes: 'Monday', martes: 'Tuesday', miercoles: 'Wednesday', jueves: 'Thursday',
+  viernes: 'Friday', sabado: 'Saturday', domingo: 'Sunday',
+};
+
+// "Abierto ahora, hasta las 02:00" (o en inglés: "Open now, until 02:00").
+export function textoEstado(e, idioma = 'es') {
+  if (idioma === 'en') {
+    if (e.abierto) return `Open now, until ${e.cierra}`;
+    if (e.abre) {
+      const dia = Object.keys(NOMBRES).find((d) => `el ${NOMBRES[d]}` === e.cuando);
+      const cuando = e.cuando === 'hoy' ? 'today' : e.cuando === 'mañana' ? 'tomorrow' : `on ${DIAS_EN[dia]}`;
+      return `Closed. We open ${cuando} at ${e.abre}`;
+    }
+    return 'Closed';
+  }
   if (e.abierto) return `Abierto ahora, hasta las ${e.cierra}`;
   if (e.abre) return `Cerrado. Abrimos ${e.cuando} a las ${e.abre}`;
   return 'Cerrado';

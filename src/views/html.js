@@ -58,15 +58,24 @@ const FONTS = ['fonts/dm-serif-display.woff2', 'fonts/instrument-sans.woff2', 'f
 // baseHref: para páginas que se sirven desde cualquier ruta (la página 404), fija la base de los
 // enlaces relativos en la raíz de la web. head: HTML extra para <head> (p. ej. datos estructurados).
 // after: HTML tras el pie (la barra fija de reservar del móvil).
-export function layout({ site, config, title, description, path = '/', nav = [], body, scripts = [], baseHref = '', head = '', after = '' }) {
+// Textos fijos del pie en cada idioma.
+const PIE = {
+  es: { alcohol: 'Bebe con moderación. No servimos alcohol a menores de 18 años.', legal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', info: 'Información legal', resena: (s) => s.reviewCta.button },
+  en: { alcohol: 'Please drink responsibly. We do not serve alcohol to anyone under 18.', legal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', info: 'Legal information', resena: (s) => s.reviewCta.buttonEn },
+};
+
+// lang: idioma de la página ("es" o "en"). cabecera: HTML propio para la cabecera (la página de la
+// carta usa una mínima, sin menú ni "Reservar mesa", con el selector de idioma).
+export function layout({ site, config, title, description, path = '/', nav = [], body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '' }) {
   const to = links(config);
   // og:image necesita URL absoluta: solo se añade cuando se conoce la dirección pública.
   const ogImage = config.publicBaseUrl && site.ogImage ? `${config.publicBaseUrl}/assets/${site.ogImage}` : '';
   const canonical = config.publicBaseUrl ? `${config.publicBaseUrl}/${to.page(path)}` : '';
   const year = new Date().getFullYear();
   const home = path === '/' ? '' : to.home;
+  const t = PIE[lang];
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -80,7 +89,7 @@ ${canonical ? `<link rel="canonical" href="${esc(canonical)}">
 ` : ''}<meta property="og:type" content="website">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
-<meta property="og:locale" content="es_ES">
+<meta property="og:locale" content="${lang === 'en' ? 'en_GB' : 'es_ES'}">
 <meta property="og:site_name" content="${esc(site.fullName)}">
 ${ogImage ? `<meta property="og:image" content="${esc(ogImage)}">
 <meta property="og:image:width" content="1200">
@@ -95,7 +104,7 @@ ${FONTS.map((font) => `<link rel="preload" href="${to.asset(font)}" as="font" ty
 ${head}</head>
 <body>
 
-<header class="nav">
+${cabecera || `<header class="nav">
   <div class="wrap">
     <a class="marca" href="${home}#inicio" aria-label="${esc(site.fullName)}, inicio">
       <span class="marca-memphis" aria-hidden="true">Memphis</span>
@@ -106,7 +115,7 @@ ${head}</head>
     </ul>
     <a class="btn btn-mostaza btn-nav" href="${home}#reservar">Reservar mesa</a>
   </div>
-</header>
+</header>`}
 
 ${body}
 
@@ -116,12 +125,12 @@ ${body}
       <strong>${esc(site.fullName)}</strong>
       <span>${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</span>
     </div>
-    <p class="pie-alcohol">Bebe con moderación. No servimos alcohol a menores de 18 años.</p>
-    <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener" target="_blank">${esc(site.reviewCta.button)}</a></p>
-    <nav aria-label="Información legal">
-      ${hasLegalNotice(site) ? `<a href="${to.legal}">Aviso legal</a>` : ''}
-      <a href="${to.privacy}">Privacidad</a>
-      <a href="${to.cookies}">Cookies</a>
+    <p class="pie-alcohol">${esc(t.alcohol)}</p>
+    <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener" target="_blank">${esc(t.resena(site))}</a></p>
+    <nav aria-label="${esc(t.info)}">
+      ${hasLegalNotice(site) ? `<a href="${to.legal}">${esc(t.legal)}</a>` : ''}
+      <a href="${to.privacy}">${esc(t.privacidad)}</a>
+      <a href="${to.cookies}">${esc(t.cookies)}</a>
     </nav>
     <div class="pie-año">© ${year} ${esc(site.fullName)}</div>
   </div>

@@ -19,6 +19,14 @@ npm run pendientes   # lista los datos sin confirmar con el local o la ficha de 
 npm run og-image     # regenera la imagen para compartir (tras cambiar la portada; necesita Playwright)
 ```
 
+## Carta para el QR de las mesas
+
+- `carta.html` (español) y `carta-en.html` (inglés): solo la carta, sin portada ni reservas, y al final el enlace para dejar una reseña en Google. El QR apunta a `/carta`; el cambio de idioma está en la propia página.
+- Alérgenos: cada plato admite `allergens: ['gluten', 'sulfitos', …]` en `src/content/site.js` (14 de la normativa UE, claves en `ALERGENOS`) y la carta los muestra en el idioma de la página. Falta rellenarlos con los datos reales.
+- Pegatinas: `npm run pegatinas -- https://tudominio.com` genera en `pegatinas/` (no se sube a git) los QR en SVG y las pegatinas de 70 × 90 mm (PDF vectorial y PNG a 300 ppp): una de carta y otra de reseña.
+- **No imprimas nada hasta tener el dominio propio y definitivo**: un QR impreso no se puede cambiar. Con `*.workers.dev` o un dominio provisional, las pegatinas quedan inservibles si cambia.
+- La pegatina de reseña usa `reviewCta.writeUrl`; sin él, usa la ficha de Google Maps (QR más denso, más difícil de leer con poca luz). Conviene poner el enlace corto de «Pedir reseñas» de Google Business.
+
 ## Antes de publicar
 
 Los datos que no se han podido confirmar llevan `pendiente` en `src/content/site.js`. **Mientras quede alguno, Cloudflare no publica la web**: su comando de construcción ejecuta los tests con `CHECK_PUBLICACION=1`, y `test/publicacion.test.js` falla si queda alguno. Los marcados con `revisar` conviene completarlos, pero no bloquean. `npm run pendientes` los lista.

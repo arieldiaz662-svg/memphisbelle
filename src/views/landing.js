@@ -32,7 +32,7 @@ const horarioJson = (site) => esc(JSON.stringify(site.hours.days));
 
 // Estado "Abierto ahora / Cerrado": lo rellena el navegador con la hora de Canarias (public/js/site.js).
 // Sin JavaScript queda oculto y se ve el horario en texto.
-const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraClass}" data-horario="${horarioJson(site)}" hidden><span class="estado-punto" aria-hidden="true"></span><span class="estado-texto"></span></p>`;
+export const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraClass}" data-horario="${horarioJson(site)}" hidden><span class="estado-punto" aria-hidden="true"></span><span class="estado-texto"></span></p>`;
 
 function hero(site) {
   const { hero: h } = site;
@@ -78,32 +78,61 @@ function featured(site) {
 </section>`;
 }
 
-function menu(site) {
+// Alérgenos de la normativa de la UE. Las claves son las que se usan en `allergens` de site.js.
+export const ALERGENOS = {
+  gluten: ['gluten', 'gluten'], crustaceos: ['crustáceos', 'crustaceans'], huevos: ['huevos', 'eggs'],
+  pescado: ['pescado', 'fish'], cacahuetes: ['cacahuetes', 'peanuts'], soja: ['soja', 'soy'],
+  lacteos: ['lácteos', 'milk'], frutos_secos: ['frutos de cáscara', 'tree nuts'], apio: ['apio', 'celery'],
+  mostaza: ['mostaza', 'mustard'], sesamo: ['sésamo', 'sesame'], sulfitos: ['sulfitos', 'sulphites'],
+  altramuces: ['altramuces', 'lupin'], moluscos: ['moluscos', 'molluscs'],
+};
+
+const TEXTOS_CARTA = {
+  es: { secciones: 'Secciones de la carta', ejemplo: 'Carta de ejemplo: pendiente de la carta real del local.', alergenos: 'Alérgenos' },
+  en: { secciones: 'Menu sections', ejemplo: 'Sample menu: the real menu is still to be added.', alergenos: 'Allergens' },
+};
+
+// La carta como un papel impreso, con pestañas. idioma: "es" o "en". titulo: etiqueta del encabezado
+// (h2 en la portada, h1 en la página de la carta). El inglés usa nameEn/textEn/noteEn y, si falta, el español.
+export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '' } = {}) {
   const { menu: m } = site;
+  const en = idioma === 'en';
+  const t = TEXTOS_CARTA[idioma];
+  const nombre = (x) => (en && x.nameEn) || x.name;
+  const texto = (x) => (en && x.textEn) || x.text;
   const first = m.sections[0].id;
-  const tabs = m.sections.map((s) => `<button type="button" role="tab" id="tab-${esc(s.id)}" aria-controls="carta-${esc(s.id)}" aria-selected="${s.id === first}"${s.id === first ? '' : ' tabindex="-1"'}>${esc(s.name)}</button>`).join('\n        ');
+  const tabs = m.sections.map((s) => `<button type="button" role="tab" id="tab-${esc(s.id)}" aria-controls="carta-${esc(s.id)}" aria-selected="${s.id === first}"${s.id === first ? '' : ' tabindex="-1"'}>${esc(nombre(s))}</button>`).join('\n        ');
+  const alergenos = (item) => (item.allergens && item.allergens.length
+    ? `<p class="plato-alergenos"><span>${t.alergenos}:</span> ${item.allergens.map((k) => esc(ALERGENOS[k][en ? 1 : 0])).join(', ')}</p>` : '');
   const panels = m.sections.map((s) => `<div class="carta-panel" role="tabpanel" id="carta-${esc(s.id)}" aria-labelledby="tab-${esc(s.id)}" tabindex="0">
-        <h3 class="carta-seccion">${esc(s.name)}</h3>
+        <h3 class="carta-seccion">${esc(nombre(s))}</h3>
         <ul>
           ${s.items.map((item) => `<li>
-            <div class="plato"><span class="plato-nombre">${esc(item.name)}</span><span class="guia" aria-hidden="true"></span><span class="importe">${esc(item.price)}</span></div>
-            ${item.text ? `<p class="plato-texto">${esc(item.text)}</p>` : ''}
+            <div class="plato"><span class="plato-nombre">${esc(nombre(item))}</span><span class="guia" aria-hidden="true"></span><span class="importe">${esc(item.price)}</span></div>
+            ${texto(item) ? `<p class="plato-texto">${esc(texto(item))}</p>` : ''}
+            ${alergenos(item)}
           </li>`).join('\n          ')}
         </ul>
       </div>`).join('\n      ');
   return `<section class="carta" id="carta">
   <div class="wrap">
-    <h2>${esc(m.title)}</h2>
+    <${titulo}>${esc((en && m.titleEn) || m.title)}</${titulo}>
     <div class="papel">
-      ${m.pendiente ? '<p class="aviso-ejemplo">Carta de ejemplo: pendiente de la carta real del local.</p>' : ''}
-      <div class="carta-tabs" role="tablist" aria-label="Secciones de la carta" hidden>
+      ${m.pendiente ? `<p class="aviso-ejemplo">${t.ejemplo}</p>` : ''}
+      <div class="carta-tabs" role="tablist" aria-label="${t.secciones}" hidden>
         ${tabs}
       </div>
       ${panels}
-      <p class="carta-nota">${esc(m.note)}</p>
+      <p class="carta-nota">${esc((en && m.noteEn) || m.note)}</p>
+      ${enlaces}
     </div>
   </div>
 </section>`;
+}
+
+// Carta de la portada: en español, con enlace a la versión para el móvil y al inglés.
+function menu(site) {
+  return menuHtml(site, { enlaces: '<p class="carta-enlaces"><a href="carta.html">Ver la carta en pantalla completa</a> <a href="carta-en.html" lang="en" hreflang="en">Menu in English</a></p>' });
 }
 
 // El local: mosaico de 3 (el primero grande) con el texto debajo de cada foto. Si todavía no hay
@@ -163,15 +192,16 @@ function visit(site) {
 }
 
 // Franja "Déjanos una reseña en Google": siempre visible, justo después de Visítanos.
-function reviewCta(site) {
+export function reviewCta(site, idioma = 'es') {
   const c = site.reviewCta;
+  const en = idioma === 'en';
   return `<section class="opinion" id="opinion" aria-labelledby="opinion-titulo">
   <div class="wrap opinion-grid">
     <div>
-      <h2 id="opinion-titulo">${esc(c.title)}</h2>
-      <p>${esc(c.text)}</p>
+      <h2 id="opinion-titulo">${esc(en ? c.titleEn : c.title)}</h2>
+      <p>${esc(en ? c.textEn : c.text)}</p>
     </div>
-    <a class="btn btn-linea btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank"><span class="estrellas" aria-hidden="true">★★★★★</span>${esc(c.button)}</a>
+    <a class="btn btn-linea btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank"><span class="estrellas" aria-hidden="true">★★★★★</span>${esc(en ? c.buttonEn : c.button)}</a>
   </div>
 </section>`;
 }

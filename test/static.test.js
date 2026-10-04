@@ -12,7 +12,7 @@ import { buildStatic } from '../scripts/build-static.js';
 import { pendientes } from '../scripts/pendientes.js';
 import { site } from '../src/content/site.js';
 import { STATIC_CSP } from '../src/views/html.js';
-import { NAV, featuredItem } from '../src/views/landing.js';
+import { ALERGENOS, NAV, featuredItem, menuHtml } from '../src/views/landing.js';
 import { parsePrice, structuredDataObject } from '../src/views/schema.js';
 import worker from '../worker/index.js';
 import { DOMINIO, redireccion, sinExtension } from '../worker/redireccion.js';
@@ -33,7 +33,7 @@ after(() => rmSync(outDir, { recursive: true, force: true }));
 
 describe('construcción y publicación', () => {
   test('genera las páginas, el sitemap y las cabeceras de seguridad', () => {
-    for (const file of ['index.html', 'privacidad.html', 'cookies.html', '404.html', 'robots.txt', 'sitemap.xml', '_headers']) {
+    for (const file of ['index.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html', 'robots.txt', 'sitemap.xml', '_headers']) {
       assert.ok(statSync(join(outDir, file)).isFile(), file);
     }
     assert.ok(read('_headers').includes(`Content-Security-Policy: ${STATIC_CSP}; frame-ancestors 'none'`));
@@ -340,5 +340,62 @@ describe('datos pendientes', () => {
   test('se encuentran en cualquier nivel de site.js', () => {
     const encontrados = pendientes('pendiente', { a: { pendiente: 'x' }, b: [{ pendiente: '' }, { c: { pendiente: 'y' } }] });
     assert.deepEqual(encontrados, [{ donde: 'a', que: 'x' }, { donde: 'b.1.c', que: 'y' }]);
+  });
+});
+
+describe('página de la carta (QR de las mesas)', () => {
+  const es = () => read('carta.html');
+  const en = () => read('carta-en.html');
+
+  test('declara su idioma y enlaza con la otra versión', () => {
+    assert.match(es(), /<html lang="es"/);
+    assert.match(en(), /<html lang="en"/);
+    assert.match(es(), /href="carta-en\.html"/);
+    assert.match(en(), /href="carta\.html"/);
+    for (const html of [es(), en()]) {
+      assert.match(html, new RegExp(`<link rel="alternate" hreflang="es" href="${escapeRe(BASE)}/carta\\.html">`));
+      assert.match(html, new RegExp(`<link rel="alternate" hreflang="en" href="${escapeRe(BASE)}/carta-en\\.html">`));
+    }
+    assert.match(read('sitemap.xml'), /carta-en\.html/);
+  });
+
+  test('es solo la carta: sin portada, reservas ni navegación de la web', () => {
+    for (const html of [es(), en()]) {
+      assert.doesNotMatch(html, /class="hero/);
+      assert.doesNotMatch(html, /id="reservar"/);
+      assert.doesNotMatch(html, /barra-movil/);
+      assert.match(html, /<h1[^>]*>/);
+    }
+  });
+
+  test('lleva todos los platos con su precio, en ambos idiomas', () => {
+    for (const item of items) {
+      assert.ok(es().includes(item.name), item.name);
+      assert.ok(en().includes(item.nameEn || item.name), item.name);
+      if (item.textEn) assert.ok(en().includes(item.textEn), item.name);
+    }
+    assert.equal((es().match(/class="plato"/g) || []).length, items.length);
+    assert.equal((en().match(/class="plato"/g) || []).length, items.length);
+  });
+
+  test('termina con el enlace para dejar una reseña en Google', () => {
+    for (const html of [es(), en()]) {
+      assert.ok(html.includes(`href="${site.reviewCta.writeUrl || site.googleMapsUrl}"`));
+    }
+    assert.match(es(), /Déjanos una reseña en Google/);
+    assert.match(en(), /Leave us a Google review/);
+  });
+
+  test('los alérgenos de cada plato salen en el idioma de la página', () => {
+    const conAlergenos = { ...site, menu: { ...site.menu, sections: site.menu.sections.map((s, i) => (i ? s : { ...s, items: s.items.map((it, j) => (j ? it : { ...it, allergens: ['gluten', 'sulfitos'] })) })) } };
+    const html = (idioma) => menuHtml(conAlergenos, { idioma, titulo: 'h1' });
+    assert.ok(html('es').includes(ALERGENOS.gluten[0]) && html('es').includes(ALERGENOS.sulfitos[0]));
+    assert.ok(html('en').includes(ALERGENOS.gluten[1]) && html('en').includes(ALERGENOS.sulfitos[1]));
+  });
+
+  test('el estado «abierto ahora» también está en inglés', () => {
+    const e = estado(site.hours.days, new Date('2026-01-07T19:00:00Z'));
+    assert.match(textoEstado(e, 'es'), /[AaCc]/);
+    assert.notEqual(textoEstado(e, 'en'), textoEstado(e, 'es'));
   });
 });
