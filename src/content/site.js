@@ -57,6 +57,9 @@ export const site = {
     lead: 'Los mejores clásicos de coctelería, en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
     cta: 'Reservar mesa',
     secondary: 'Ver la carta',
+    // Fondo de la portada: el B-17 al atardecer (generada con Gemini a partir de docs/PROMPTS-HIGGSFIELD.md,
+    // P1). Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
+    image: { src: 'img/portada/b17', widths: [640, 1024, 1376], width: 1376, height: 768 },
   },
 
   // EL LOCAL (servicios de la ficha de Google). Mosaico de 3: el primero va grande.

@@ -13,12 +13,13 @@ export const NAV = [
 
 // Imagen de ambiente de fondo, decorativa (alt vacío): WebP y JPG en varios anchos, el navegador
 // elige el más ligero que le sirve. "lazy" porque va bajo la portada.
-const fondo = (image, clase) => {
+// prioridad: para la portada (es lo primero que se ve): se descarga enseguida, sin "lazy".
+const fondo = (image, clase, { prioridad = false } = {}) => {
   const srcset = (ext) => image.widths.map((w) => `assets/${esc(image.src)}-${w}.${ext} ${w}w`).join(', ');
   const medio = image.widths[Math.floor(image.widths.length / 2)];
   return `<picture class="${clase}">
     <source type="image/webp" srcset="${srcset('webp')}" sizes="100vw">
-    <img src="assets/${esc(image.src)}-${medio}.jpg" srcset="${srcset('jpg')}" sizes="100vw" alt="" width="${image.width}" height="${image.height}" loading="lazy" decoding="async">
+    <img src="assets/${esc(image.src)}-${medio}.jpg" srcset="${srcset('jpg')}" sizes="100vw" alt="" width="${image.width}" height="${image.height}" ${prioridad ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>
   </picture>`;
 };
 
@@ -35,8 +36,8 @@ const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraClass}" 
 
 function hero(site) {
   const { hero: h } = site;
-  return `<section class="hero" id="inicio">
-  ${BOMBARDERO}
+  return `<section class="hero${h.image ? ' con-foto' : ''}" id="inicio">
+  ${h.image ? fondo(h.image, 'hero-foto', { prioridad: true }) : BOMBARDERO}
   <div class="wrap">
     <h1 class="hero-titulo">Memphis <span class="belle">Belle</span></h1>
     <p class="hero-lead">${esc(h.lead)}</p>

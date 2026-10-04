@@ -248,16 +248,22 @@ describe('portada y móvil', () => {
     assert.match(css, /env\(safe-area-inset-bottom/);
   });
 
-  test('el bombardero de la portada es decorativo y solo se mueve si el sistema lo permite', () => {
+  test('la portada: foto del B-17 (o, sin foto, el bombardero vectorial), decorativa y quieta si se pide', () => {
     const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('id="estrella"'));
-    assert.match(hero, /<div class="bombardero" aria-hidden="true">/);
-    const logoPath = /<path[^>]* d="([^"]+)"/.exec(readFileSync(new URL('../public/img/logo-belle.svg', import.meta.url), 'utf8'))[1];
-    assert.ok(hero.includes(`d="${logoPath}"`), 'el nombre del morro es el trazado del logotipo');
-    const animaciones = /@media \(prefers-reduced-motion: no-preference\) \{\s*\.bombardero-vuelo \{ animation: flotar/;
-    assert.match(css, animaciones);
-    // Fuera de ese bloque no hay ninguna animación del avión.
+    if (site.hero.image) {
+      assert.match(hero, /<picture class="hero-foto">/);
+      assert.match(hero, /<img [^>]*alt="" [^>]*fetchpriority="high">/); // decorativa y lo primero que se descarga
+      assert.doesNotMatch(hero, /loading="lazy"/);
+      assert.doesNotMatch(hero, /class="bombardero"/);
+      for (const w of site.hero.image.widths) assert.ok(hero.includes(`${site.hero.image.src}-${w}.webp ${w}w`), w);
+    } else {
+      assert.match(hero, /<div class="bombardero" aria-hidden="true">/);
+      const logoPath = /<path[^>]* d="([^"]+)"/.exec(readFileSync(new URL('../public/img/logo-belle.svg', import.meta.url), 'utf8'))[1];
+      assert.ok(hero.includes(`d="${logoPath}"`), 'el nombre del morro es el trazado del logotipo');
+    }
+    // Ninguna animación de la portada fuera de "prefers-reduced-motion: no-preference".
     const fuera = css.replace(/@media \(prefers-reduced-motion: no-preference\) \{[\s\S]*?\n\}/g, '');
-    assert.doesNotMatch(fuera, /animation: (flotar|girar)/);
+    assert.doesNotMatch(fuera, /animation: (flotar|girar|nubes|acercar)/);
   });
 
   test('las animaciones respetan "reducir movimiento" y no se usa transition: all', () => {

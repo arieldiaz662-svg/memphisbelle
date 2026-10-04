@@ -43,7 +43,7 @@ text, letters, numbers, words, watermark, logo, brand labels, signature, frame, 
 | # | Archivo | Sección de la web | Formato | Prioridad |
 |---|---|---|---|---|
 | A1 | `A1-barra.png` | Fondo de "Reserva tu mesa" y **referencia de estilo** | 4:5 | **Hecha** (3:2, en la web) |
-| P1 | `P1-portada-b17.png` | Portada, escritorio | 16:9 | 1 (prueba) |
+| P1 | `P1-portada-b17.png` | Portada, escritorio | 16:9 | **Hecha** (Gemini, en la web) |
 | O1 | `O1-martini.png` | Fondo de "La carta" | 3:2 | 1 (prueba) |
 | P2 | `P2-portada-b17-movil.png` | Portada, móvil | 4:5 | 2 |
 | P3 | `P3-portada-pinup.png` | Variante de portada con pin-up en el morro | 16:9 | 2 |

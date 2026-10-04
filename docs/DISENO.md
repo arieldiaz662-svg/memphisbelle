@@ -21,6 +21,7 @@ Portada (cartel del B-17), Cóctel estrella, La carta, El local, Visítanos, Res
 
 ## Imágenes
 
+- **Portada**: foto del B-17 al atardecer (P1, generada con Gemini a partir de `docs/PROMPTS-HIGGSFIELD.md`), decorativa (`alt` vacío) y con carga prioritaria. Un velo oscurece la izquierda y una sombra suave separa el título del morro, como en un cartel de cine. Movimiento: acercamiento de cámara muy lento (24 s, ida y vuelta); con "reducir movimiento", quieta. En el móvil, franja bajo los botones. WebP y JPG a 640, 1024 y 1376 px en `public/img/portada/`. Si se quita `hero.image` de `site.js`, vuelve la ilustración vectorial (`src/views/bombardero.js`).
 - **Reserva tu mesa**: fondo con la imagen de ambiente A1 (una barra en penumbra con una copa, generada con ChatGPT a partir de `docs/PROMPTS-HIGGSFIELD.md`). No es el local: va con `alt` vacío y sin pie de foto. El texto y el formulario van sobre la zona oscura de la izquierda; un degradado fijo asegura el contraste. En el móvil, la foto es una franja arriba que se funde en el fondo. Versiones WebP y JPG a 640, 1024 y 1536 px en `public/img/ambiente/`.
 - "El local" y "Visítanos" solo con fotos reales del bar.
 
