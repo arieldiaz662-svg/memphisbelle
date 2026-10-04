@@ -147,10 +147,10 @@ export const site = {
     intro: 'Dinos cuántos sois y cuándo venís. Se abre WhatsApp con el mensaje escrito: solo tienes que enviarlo y te confirmamos.',
     maxPeople: 12,
     groupsNote: 'Para grupos de más de 12 personas, llámanos.',
-    // Imagen de ambiente de fondo (generada con IA: una barra genérica, NO es el local). Va sin pie de
-    // foto y con alt vacío, porque es decorativa. Versiones en public/img/ambiente/barra-<ancho>.webp/.jpg.
+    // Imagen de ambiente de fondo (generada con ChatGPT: una barra genérica, NO es el local; según los
+    // términos de OpenAI, la imagen generada es nuestra y admite uso comercial). Va sin pie de foto y con
+    // alt vacío, porque es decorativa. Versiones en public/img/ambiente/barra-<ancho>.webp/.jpg.
     image: { src: 'img/ambiente/barra', widths: [640, 1024, 1536], width: 1536, height: 1024 },
-    revisar: 'Confirmar que la herramienta con la que se generó la imagen de fondo de reservas permite uso comercial',
   },
 
   // VALORACIÓN EN GOOGLE (opcional). Si rating está vacío no se muestra.
