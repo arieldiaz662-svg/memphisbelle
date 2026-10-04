@@ -697,3 +697,10 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .mosaico-fotos { max-width: 520px; gap: 1rem; justify-self: end; width: 100%; }
 .mosaico-fotos .columna { gap: 1rem; }
 @media (max-width: 980px) { .mosaico-fotos { max-width: 460px; justify-self: start; } }
+
+/* Un poco más pequeñas todavía (fotos de 624–1000 px: así se ven nítidas) */
+.mosaico-fotos { max-width: 400px; }
+@media (max-width: 980px) { .mosaico-fotos { max-width: 340px; } }
+.galeria-grid { max-width: 720px; }
+.galeria-grid .foto .marco { height: clamp(200px, 21vw, 290px); }
+@media (max-width: 860px) { .galeria-grid { max-width: 440px; } .galeria-grid .foto .marco { height: auto; } }
