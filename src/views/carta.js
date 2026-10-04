@@ -1,4 +1,5 @@
-import { LOGO, esc, layout } from './html.js';
+import { esc, layout } from './html.js';
+import { MARCA } from './ilustraciones.js';
 import { estadoAhora, menuHtml, reviewCta } from './landing.js';
 
 // Página de la carta para el QR de las mesas, en español (carta.html) y en inglés (carta-en.html).
@@ -13,14 +14,11 @@ const TEXTOS = {
 
 function cabecera(site, idioma) {
   const t = TEXTOS[idioma];
-  return `<header class="nav nav-carta">
-  <div class="wrap">
-    <a class="marca" href="./" aria-label="${esc(site.fullName)}, ${esc(t.inicio)}">
-      <span class="marca-memphis" aria-hidden="true">Memphis</span>
-      ${LOGO}
-    </a>
+  return `<header class="cabecera-carta">
+  <div class="wrap barra">
+    <a class="marca" href="./" aria-label="${esc(site.fullName)}, ${esc(t.inicio)}">${MARCA}<span>Memphis Belle</span></a>
     <nav class="idiomas" aria-label="${esc(t.idioma)}">
-      <a href="${t.enlace}" lang="${t.otroLang}" hreflang="${t.otroLang}">${esc(t.otro)}</a>
+      <a class="btn btn-borde btn-sm" href="${t.enlace}" lang="${t.otroLang}" hreflang="${t.otroLang}">${esc(t.otro)}</a>
     </nav>
   </div>
 </header>`;
@@ -31,7 +29,7 @@ export function renderCarta({ site, config, idioma = 'es' }) {
   const en = idioma === 'en';
   const base = config.publicBaseUrl;
   const aviso = (en ? site.menu.allergensNoteEn : site.menu.allergensNote) || '';
-  const body = `<main class="carta-pagina">
+  const body = `<main id="contenido" tabindex="-1" class="carta-pagina">
 ${menuHtml(site, { idioma, titulo: 'h1' })}
 <section class="carta-extra">
   <div class="wrap">

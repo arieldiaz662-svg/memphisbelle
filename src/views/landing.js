@@ -1,25 +1,38 @@
 import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
-import { esc, escPhone, instagramUrl, layout, reviewUrl, whatsappUrl } from './html.js';
+import { esc, escPhone, instagramUrl, layout, reviewUrl, rodar, whatsappUrl } from './html.js';
+import { ANIMS, HUMO, ICONOS, SELLO } from './ilustraciones.js';
 import { structuredData } from './schema.js';
 
 // Menú de la cabecera, en el orden de las secciones de la página.
 export const NAV = [
-  { id: 'carta', label: 'Carta' },
+  { id: 'bar', label: 'El bar' },
+  { id: 'oficio', label: 'El oficio' },
+  { id: 'carta', label: 'La carta' },
   { id: 'local', label: 'El local' },
   { id: 'visitanos', label: 'Visítanos' },
-  { id: 'reservar', label: 'Reservar' },
 ];
+
+// Retardo escalonado de las entradas al hacer scroll: data-s="i1".. (reglas en site.css; sin estilos en línea por la CSP).
+const d = (n) => ` data-s="i${n}"`;
+const flecha = '<svg class="flecha" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>';
+const enlaceExterno = '<svg class="flecha" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 11 11 3M5 3h6v6"/></svg>';
+
+// Cabecera de sección: número, nombre y nota a la derecha.
+const cabeceraSeccion = (n, nombre, nota) => `<div class="cabecera-seccion"><span class="etiqueta"><b>${n}</b> — ${nombre}</span>${nota ? `<span class="etiqueta">${nota}</span>` : ''}</div>`;
+
+// Titular que sube desde detrás de una máscara. El HTML (<em>) viene de site.js, que es contenido propio.
+const titular = (html, clase = '') => `<h2 class="mascara${clase}" data-reveal="mascara"><span>${html}</span></h2>`;
 
 // Imagen de ambiente de fondo, decorativa (alt vacío): WebP y JPG en varios anchos, el navegador
 // elige el más ligero que le sirve. "lazy" porque va bajo la portada.
 // prioridad: para la portada (es lo primero que se ve): se descarga enseguida, sin "lazy".
-const fondo = (image, clase, { prioridad = false } = {}) => {
+const fondo = (image, clase, { prioridad = false, sizes = '100vw', alt = '' } = {}) => {
   const srcset = (ext) => image.widths.map((w) => `assets/${esc(image.src)}-${w}.${ext} ${w}w`).join(', ');
   const medio = image.widths[Math.floor(image.widths.length / 2)];
   return `<picture class="${clase}">
-    <source type="image/webp" srcset="${srcset('webp')}" sizes="100vw">
-    <img src="assets/${esc(image.src)}-${medio}.jpg" srcset="${srcset('jpg')}" sizes="100vw" alt="" width="${image.width}" height="${image.height}" ${prioridad ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>
+    <source type="image/webp" srcset="${srcset('webp')}" sizes="${sizes}">
+    <img src="assets/${esc(image.src)}-${medio}.jpg" srcset="${srcset('jpg')}" sizes="${sizes}" alt="${esc(alt)}" width="${image.width}" height="${image.height}" ${prioridad ? 'fetchpriority="high"' : 'loading="lazy" decoding="async"'}>
   </picture>`;
 };
 
@@ -36,18 +49,37 @@ export const estadoAhora = (site, extraClass = '') => `<p class="estado ${extraC
 
 function hero(site) {
   const { hero: h } = site;
-  return `<section class="hero${h.image ? ' con-foto' : ''}" id="inicio">
-  ${h.image ? fondo(h.image, 'hero-foto', { prioridad: true }) : BOMBARDERO}
+  return `<section class="hero" id="inicio" aria-label="Portada">
   <div class="wrap">
-    <h1 class="hero-titulo">Memphis <span class="belle">Belle</span></h1>
-    <p class="hero-lead">${esc(h.lead)}</p>
-    ${estadoAhora(site)}
-    <div class="hero-acciones">
-      <a class="btn btn-mostaza" href="#reservar">${esc(h.cta)}</a>
-      <a class="btn btn-linea" href="#carta">${esc(h.secondary)}</a>
+    <div class="hero-meta">
+      <span class="etiqueta" data-reveal>${esc(h.kicker)}</span>
+      <span class="etiqueta" data-reveal${d(1)}>${esc(h.kickerRight)}</span>
+    </div>
+    <div class="hero-texto">
+      <h1>${h.title.map((linea, n) => `<span class="linea"><span${d(n)}>${n ? `<em>${esc(linea)}</em>` : esc(linea)}</span></span>`).join('')}</h1>
+      <p class="hero-sub" data-reveal${d(4)}>${esc(h.lead)}</p>
+      <div class="hero-ctas" data-reveal${d(5)}>
+        <a class="btn btn-claro" href="#reservar">${rodar(h.cta)}${flecha}</a>
+        <a class="btn btn-borde" href="#carta">${rodar(h.secondary)}</a>
+      </div>
+    </div>
+    <figure class="hero-figura${h.image ? '' : ' vectorial'}">
+      ${h.image ? fondo(h.image, 'hero-foto', { prioridad: true, sizes: '(max-width: 980px) 100vw, 45vw', alt: h.imageAlt }) : BOMBARDERO}
+      ${h.imageCaption ? `<figcaption class="etiqueta">${esc(h.imageCaption)}</figcaption>` : ''}
+    </figure>
+    <div class="hero-pie etiqueta" data-reveal${d(6)}>
+      ${estadoAhora(site, 'estado-hero')}
+      ${h.foot.map((t) => `<span>${esc(t)}</span>`).join('\n      ')}
+      <a href="#bar">Desliza ↓</a>
     </div>
   </div>
-</section>`;
+</section>
+
+<div class="cinta" aria-hidden="true">
+  <div class="cinta-pista">
+    ${[0, 1].map(() => site.cinta.map((t) => `<span>${esc(t)} <i>·</i></span>`).join('')).join('\n    ')}
+  </div>
+</div>`;
 }
 
 // Cóctel estrella: el precio sale de la carta, para que no pueda ser distinto en las dos secciones.
@@ -78,6 +110,71 @@ function featured(site) {
 </section>`;
 }
 
+// Foto en WebP y JPG a su ancho (las fotos de cócteles solo existen a 640 px, su tamaño real).
+const fotoPar = (src, alt, extra = '') => `<picture><source type="image/webp" srcset="assets/${esc(src)}-640.webp"><img${extra} src="assets/${esc(src)}-640.jpg" alt="${esc(alt)}" width="640" height="1100" loading="lazy" decoding="async"></picture>`;
+
+// 01 · El bar: texto fijo a la izquierda y mosaico de cuatro fotos de cócteles a la derecha.
+function bar(site) {
+  const b = site.bar;
+  const fig = (f, i) => `<figure class="foto" data-reveal="foto"${d(i)}><div class="marco">${fotoPar(f.src, f.alt, f.pos ? ` class="pos-${esc(f.pos)}"` : '')}</div><figcaption class="etiqueta"><b>0${i + 1}</b> — ${esc(f.caption)}</figcaption></figure>`;
+  const col = (par) => b.photos.map((f, i) => [f, i]).filter(([, i]) => i % 2 === par).map(([f, i]) => fig(f, i)).join('\n          ');
+  return `<section id="bar">
+  <div class="wrap">
+    ${cabeceraSeccion('01', 'El bar', 'Santa Cruz')}
+    <div class="bar-grid">
+      <div class="bar-texto">
+        ${titular(b.title)}
+        <p class="declaracion" data-reveal${d(1)}>${esc(b.declaration)}</p>
+        <p data-reveal${d(2)}>${esc(b.text)}</p>
+      </div>
+      <div class="mosaico-fotos">
+        <div class="columna">
+          ${col(0)}
+        </div>
+        <div class="columna">
+          ${col(1)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+}
+
+// 02 · El oficio: escenas de barra dibujadas. Se mueven solo mientras se ven y se pueden pausar todas.
+function oficio(site) {
+  const o = site.oficio;
+  const dibujo = (id) => (id === 'humo' ? HUMO : ANIMS[id]);
+  return `<section id="oficio">
+  <div class="wrap">
+    <div class="cabecera-seccion"><span class="etiqueta"><b>02</b> — El oficio</span><button class="pausa-anim" type="button" aria-pressed="false" hidden>Pausar animaciones</button></div>
+    <div class="titulo-fila">
+      ${titular(o.title)}
+      <p data-reveal${d(1)}>${esc(o.text)}</p>
+    </div>
+    <div class="oficio-grid">
+      ${o.items.map((item, n) => `<figure class="oficio-item${n === 0 ? ' destacado' : ''}" data-reveal${d(n)}>
+        <div class="lienzo">${dibujo(item.id)}</div>
+        <figcaption class="oficio-pie"><span class="etiqueta"><b>0${n + 1}</b></span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></figcaption>
+      </figure>`).join('\n      ')}
+    </div>
+  </div>
+</section>`;
+}
+
+// Clásicos destacados de la carta, con su icono. El precio sale de la carta para no repetirlo a mano.
+function destacados(site) {
+  const todos = site.menu.sections.flatMap((s) => s.items);
+  return `<ol class="carta-destacada">
+      ${site.highlights.map((h, n) => `<li class="carta-fila" data-reveal${d(n)}>
+        <span class="etiqueta">0${n + 1}</span>
+        ${ICONOS[h.icon]}
+        <div class="carta-nombre"><h3>${esc(h.name)}</h3><p>${esc(h.text)}</p></div>
+        <span class="etiqueta carta-ingredientes">${esc(h.ingredients)}</span>
+        <span class="etiqueta carta-epoca">${esc(h.epoch)} <b>· ${esc(todos.find((i) => i.name === h.name).price)}</b></span>
+      </li>`).join('\n      ')}
+    </ol>`;
+}
+
 // Alérgenos de la normativa de la UE. Las claves son las que se usan en `allergens` de site.js.
 export const ALERGENOS = {
   gluten: ['gluten', 'gluten'], crustaceos: ['crustáceos', 'crustaceans'], huevos: ['huevos', 'eggs'],
@@ -94,7 +191,7 @@ const TEXTOS_CARTA = {
 
 // La carta como un papel impreso, con pestañas. idioma: "es" o "en". titulo: etiqueta del encabezado
 // (h2 en la portada, h1 en la página de la carta). El inglés usa nameEn/textEn/noteEn y, si falta, el español.
-export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '' } = {}) {
+export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '', cabecera = '', antes = '', completa = '' } = {}) {
   const { menu: m } = site;
   const en = idioma === 'en';
   const t = TEXTOS_CARTA[idioma];
@@ -116,7 +213,10 @@ export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '' } = 
       </div>`).join('\n      ');
   return `<section class="carta" id="carta">
   <div class="wrap">
+    ${cabecera}
     <${titulo}>${esc((en && m.titleEn) || m.title)}</${titulo}>
+    ${antes}
+    ${completa}
     <div class="papel">
       ${m.pendiente ? `<p class="aviso-ejemplo">${t.ejemplo}</p>` : ''}
       <div class="carta-tabs" role="tablist" aria-label="${t.secciones}" hidden>
@@ -132,20 +232,28 @@ export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '' } = 
 
 // Carta de la portada: en español, con enlace a la versión para el móvil y al inglés.
 function menu(site) {
-  return menuHtml(site, { enlaces: '<p class="carta-enlaces"><a href="carta.html">Ver la carta en pantalla completa</a> <a href="carta-en.html" lang="en" hreflang="en">Menu in English</a></p>' });
+  return menuHtml(site, {
+    cabecera: cabeceraSeccion('03', 'La carta', 'Clásicos'),
+    antes: destacados(site),
+    completa: '<div class="cabecera-seccion cabecera-completa"><span class="etiqueta"><b>—</b> Carta completa</span><span class="etiqueta">Precios en euros</span></div>', enlaces: '<p class="carta-enlaces"><a href="carta.html">Ver la carta en pantalla completa</a> <a href="carta-en.html" lang="en" hreflang="en">Menu in English</a></p>' });
 }
 
-// El local: mosaico de 3 (el primero grande) con el texto debajo de cada foto. Si todavía no hay
-// fotos, la misma composición en versión tipográfica, sin cajas vacías.
+// El local: galería de fotos y, debajo, tres datos (terraza, interior, mascotas). Si todavía no hay
+// fotos, solo los tres datos, en versión tipográfica y sin cajas vacías.
 function local(site) {
   const { local: l } = site;
-  const conFotos = l.items.some((i) => i.image);
+  const fotos = (l.gallery || []).filter((g) => g.src);
   return `<section class="local" id="local">
   <div class="wrap">
-    <h2>${esc(l.title)}</h2>
-    <div class="mosaico${conFotos ? ' con-fotos' : ''}">
-      ${l.items.map((item, i) => `<figure class="mosaico-item${i === 0 ? ' grande' : ''}">
-        ${item.image ? foto(item.image, 'mosaico-foto') : ''}
+    ${cabeceraSeccion('04', 'El local', 'Santa Cruz')}
+    <div class="titulo-fila">
+      ${titular(l.title)}
+    </div>
+    ${fotos.length ? `<div class="galeria-grid">
+      ${fotos.map((g, n) => `<figure class="foto" data-reveal="foto"${d(n)}><div class="marco">${fondo(g, '', { sizes: '(max-width: 860px) 50vw, 33vw', alt: g.alt }).replace('fetchpriority="high"', '')}</div><figcaption class="etiqueta"><b>0${n + 1}</b> — ${esc(g.caption)}</figcaption></figure>`).join('\n      ')}
+    </div>` : ''}
+    <div class="mosaico${fotos.length ? ' con-fotos' : ''}">
+      ${l.items.map((item, i) => `<figure class="mosaico-item${i === 0 ? ' grande' : ''}" data-reveal${d(i)}>
         <figcaption><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></figcaption>
       </figure>`).join('\n      ')}
     </div>
@@ -163,11 +271,14 @@ function visit(site) {
         <li><span>Instagram</span><a href="${esc(instagramUrl(site.instagram))}" rel="noopener" target="_blank">@${esc(site.instagram)}</a></li>
       </ul>`;
   const acciones = `<div class="visita-acciones">
-        <a class="btn btn-linea" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Cómo llegar</a>
-        <a class="btn btn-linea" href="tel:+${esc(site.phone)}">Llamar</a>
-        <a class="btn btn-linea" href="${esc(whatsappUrl(site.whatsapp.number))}" rel="noopener" target="_blank">WhatsApp</a>
+        <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${rodar('Cómo llegar')}</a>
+        <a class="btn btn-borde" href="tel:+${esc(site.phone)}">Llamar</a>
+        <a class="btn btn-borde" href="${esc(whatsappUrl(site.whatsapp.number))}" rel="noopener" target="_blank">WhatsApp</a>
       </div>`;
   return `<section class="visita" id="visitanos">
+  <div class="wrap">
+    ${cabeceraSeccion('05', 'Visítanos', 'Calle de los Sueños')}
+  </div>
   <div class="wrap visita-grid${v.image ? ' con-foto' : ''}">
     <div class="visita-datos">
       <h2>${esc(v.title)}</h2>
@@ -201,7 +312,7 @@ export function reviewCta(site, idioma = 'es') {
       <h2 id="opinion-titulo">${esc(en ? c.titleEn : c.title)}</h2>
       <p>${esc(en ? c.textEn : c.text)}</p>
     </div>
-    <a class="btn btn-linea btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank"><span class="estrellas" aria-hidden="true">★★★★★</span>${esc(en ? c.buttonEn : c.button)}</a>
+    <a class="btn btn-borde btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank"><span class="estrellas" aria-hidden="true">★★★★★</span>${esc(en ? c.buttonEn : c.button)}</a>
   </div>
 </section>`;
 }
@@ -217,7 +328,7 @@ function reviews(site) {
       <h2 class="sr">Reseñas</h2>
       <p class="nota-google"><strong>${esc(r.rating)}</strong> de 5 en Google</p>
       ${r.count ? `<p class="suave">${esc(r.count)} reseñas</p>` : ''}
-      <a class="btn btn-linea" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Leer las reseñas</a>
+      <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">Leer las reseñas</a>
     </div>
     ${(r.quotes || []).slice(0, 3).map((q) => `<blockquote class="cita"><p>${esc(q.text)}</p><footer>${esc(q.author)}, en Google</footer></blockquote>`).join('\n    ')}
   </div>
@@ -230,11 +341,15 @@ function booking(site) {
     .map((n) => `<option value="${n}"${n === 2 ? ' selected' : ''}>${n} ${n === 1 ? 'persona' : 'personas'}</option>`).join('');
   return `<section class="reservar${b.image ? ' con-imagen' : ''}" id="reservar">
   ${b.image ? fondo(b.image, 'reservar-fondo') : ''}
+  <div class="wrap">
+    ${cabeceraSeccion('06', 'Reservas', 'WhatsApp')}
+  </div>
   <div class="wrap reservar-grid">
-    <div>
-      <h2>${esc(b.title)}</h2>
-      <p>${esc(b.intro)}</p>
+    <div class="reservar-texto">
+      ${titular(esc(b.title))}
+      <p data-reveal${d(1)}>${esc(b.intro)}</p>
       <p class="suave">${esc(b.groupsNote)} <a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a></p>
+      ${SELLO}
     </div>
     <form id="formulario" class="formulario" data-whatsapp="${esc(site.whatsapp.number)}" data-horario="${horarioJson(site)}" novalidate>
       <label>Tu nombre
@@ -255,7 +370,7 @@ function booking(site) {
         <input name="comentario" placeholder="Terraza, cumpleaños, vamos con perro…" enterkeyhint="send">
       </label>
       <p class="form-aviso" id="form-aviso" role="alert" hidden></p>
-      <button class="btn btn-mostaza" type="submit">Reservar mesa</button>
+      <button class="btn btn-claro" type="submit">Reservar mesa</button>
       <p class="form-nota suave">Esta web no guarda tus datos: el mensaje solo se envía si tú lo mandas desde WhatsApp.</p>
     </form>
   </div>
@@ -265,16 +380,18 @@ function booking(site) {
 // Barra fija del móvil: reservar y llamar siempre a mano. En pantallas grandes no se muestra.
 function barraMovil(site) {
   return `<nav class="barra-movil" aria-label="Acciones rápidas">
-  <a class="btn btn-linea" href="tel:+${esc(site.phone)}">Llamar</a>
-  <a class="btn btn-mostaza" href="#reservar">Reservar mesa</a>
+  <a class="btn btn-borde" href="tel:+${esc(site.phone)}">Llamar</a>
+  <a class="btn btn-claro" href="#reservar">Reservar mesa</a>
 </nav>
 `;
 }
 
 export function renderLanding({ site, config }) {
-  const body = `<main>
+  const body = `<main id="contenido" tabindex="-1">
 ${hero(site)}
 ${featured(site)}
+${bar(site)}
+${oficio(site)}
 ${menu(site)}
 ${local(site)}
 ${visit(site)}

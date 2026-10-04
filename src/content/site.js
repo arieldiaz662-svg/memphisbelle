@@ -54,19 +54,65 @@ export const site = {
 
   // PORTADA
   hero: {
+    kicker: 'Coctelería · Santa Cruz de Tenerife',
+    kickerRight: 'Clásicos de coctelería',
+    title: ['Coctelería', 'de verdad'],
     lead: 'Los mejores clásicos de coctelería, en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
     cta: 'Reservar mesa',
     secondary: 'Ver la carta',
     // Fondo de la portada: el B-17 al atardecer (generada con Gemini a partir de docs/PROMPTS-HIGGSFIELD.md,
     // P1). Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
     image: { src: 'img/portada/b17', widths: [640, 1024, 1376], width: 1376, height: 768 },
+    imageCaption: 'Memphis Belle, B-17',
+    // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
+    foot: ['Clásicos y cócteles de la casa', 'Terraza en la calle de los Sueños'],
   },
+  // Cinta de la portada: nombres que pasan en bucle (decorativa). Los cócteles salen de la carta.
+  cinta: ['Dry Martini', 'Manhattan', 'Negroni', 'Old Fashioned', 'Daiquiri', 'Margarita', 'Bloody Mary', 'Mié–dom hasta las 2:00'],
+  // 01 · El bar: titular y texto de presentación, con cuatro fotos de cócteles.
+  bar: {
+    title: 'Cócteles de autor, <em>sin prisa</em>',
+    declaration: 'Cada copa se prepara al momento, con hielo de verdad, técnica clásica y un toque propio.',
+    text: 'Pasa por la barra, pide lo que te apetezca o déjate aconsejar: siempre hay algo en la carta que no esperabas.',
+    photos: [
+      { src: 'img/ambiente/coctel-naranja', alt: 'Cóctel naranja con rodaja de lima en copa de martini', caption: 'Naranja, lima y copa escarchada', pos: 'a' },
+      { src: 'img/ambiente/coctel-espuma', alt: 'Cóctel con espuma blanca y romero', caption: 'Espuma y romero', pos: 'b' },
+      { src: 'img/ambiente/coctel-tiki', alt: 'Cócteles tiki en vasos de cerámica sobre la barra', caption: 'Tiki en cerámica', pos: 'c' },
+      { src: 'img/ambiente/coctel-canela', alt: 'Cóctel con espuma, canela y rodajas de naranja deshidratada', caption: 'Espuma, canela y naranja', pos: 'b' },
+    ],
+    revisar: 'Confirmar con el local que los textos de presentación describen su forma de trabajar y que las fotos de cócteles son suyas o de uso libre',
+  },
+  // 02 · El oficio: cuatro escenas de barra dibujadas (animación decorativa) y el cóctel ahumado.
+  oficio: {
+    title: 'El oficio, <em>en movimiento</em>',
+    text: 'Así nacen algunas de las copas que ves en las fotos. Técnica de barra, sin atajos.',
+    items: [
+      { id: 'humo', title: 'Ahumado al soplete', text: 'La llama toca el borde, salta la chispa y el humo perfuma la copa antes del primer trago.' },
+      { id: 'colar', title: 'Agitado y colado', text: 'Hielo, coctelera y un colado fino directo a la copa escarchada.' },
+      { id: 'espuma', title: 'Espuma de seda', text: 'Agitado en seco para montar la espuma y una rama de romero para el aroma.' },
+      { id: 'tiki', title: 'Swizzle tiki', text: 'Hielo picado y la varilla girando hasta que la taza escarcha.' },
+      { id: 'canela', title: 'Canela al momento', text: 'Canela rallada sobre la espuma y naranja deshidratada al lado.' },
+    ],
+    revisar: 'Confirmar que estas técnicas (ahumado, espuma, tiki, canela) se usan de verdad en la barra; si no, quitar las que sobren',
+  },
+  // 03 · La carta: tres clásicos destacados con su icono (el precio sale de la carta).
+  highlights: [
+    { name: 'Dry Martini', icon: 'martini', text: 'Tres ingredientes y cien años de debate sobre la proporción exacta. Aquí, la nuestra.', ingredients: 'Ginebra · vermut · aceituna', epoch: 'Principios del s. XX' },
+    { name: 'Manhattan', icon: 'manhattan', text: 'La fórmula que no envejece. Perfecto antes de cenar o después de cualquier cosa.', ingredients: 'Whisky · vermut rojo · bitters', epoch: 'Década de 1880' },
+    { name: 'Daiquiri', icon: 'daiquiri', text: 'El trago que hizo famoso El Floridita de La Habana, en su versión más pura.', ingredients: 'Ron blanco · lima · azúcar', epoch: 'Popular desde los años 30' },
+  ],
 
   // EL LOCAL (servicios de la ficha de Google). Mosaico de 3: el primero va grande.
   // "image" es opcional ({ src: 'img/local/terraza.jpg', alt: '...' }, foto propia en public/img/): sin
   // fotos, la sección es tipográfica; con alguna, se muestra el mosaico. Nunca hay huecos vacíos.
   local: {
-    title: 'El local',
+    title: 'Ladrillo, botellas <em>y luz cálida</em>',
+    // Fotos del local (galería). Alt y pie describen lo que se ve.
+    gallery: [
+      { src: 'img/ambiente/barra-estanteria', widths: [640, 1024], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde', caption: 'La barra' },
+      { src: 'img/ambiente/ventana', widths: [640], width: 624, height: 1104, alt: 'Interior del bar junto a la ventana', caption: 'Junto a la ventana' },
+      { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica', caption: 'Baldosa hidráulica' },
+    ],
     items: [
       { title: 'Terraza', text: 'Unas 30 personas fuera, en la calle de los Sueños.', image: null },
       { title: 'Dentro', text: '40 personas, junto a la barra y el mural del bombardero.', image: null },

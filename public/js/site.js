@@ -1,4 +1,4 @@
-// JavaScript de la portada. Todo es mejora progresiva: sin JavaScript se ve la carta completa,
+// JavaScript de la web. Todo es mejora progresiva: sin JavaScript se ve la carta completa,
 // el horario agrupado y los enlaces de llamar y WhatsApp funcionan igual.
 import { abreEseDia, estado, textoEstado } from './horario.js';
 
@@ -96,4 +96,93 @@ if (form) {
     if (win) win.opener = null;
     else location.href = url; // si el navegador bloquea la pestaña nueva, se abre en la misma
   });
+}
+
+// ---------- Movimiento y navegación (mejora progresiva: sin JavaScript todo se ve desde el principio) ----------
+const root = document.documentElement;
+const hayIO = 'IntersectionObserver' in window;
+
+// Portada: el titular y la foto entran en cuanto la página está pintada.
+requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('cargado')));
+
+// Entradas al hacer scroll (una sola vez por elemento).
+const reveals = [...document.querySelectorAll('[data-reveal]')];
+if (!hayIO) reveals.forEach((e) => e.classList.add('visto', 'listo'));
+else {
+  const io = new IntersectionObserver((entradas) => entradas.forEach((entrada) => {
+    if (!entrada.isIntersecting) return;
+    const el = entrada.target;
+    el.classList.add('visto');
+    io.unobserve(el);
+    // Cuando termina la entrada de la carta, el hover usa tiempos cortos y sin retardo.
+    if (el.classList.contains('carta-fila')) setTimeout(() => el.classList.add('listo'), 1800);
+  }), { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  reveals.forEach((e) => io.observe(e));
+}
+
+// Cabecera: el cristal aparece solo cuando hay contenido pasando por debajo.
+const cabecera = document.querySelector('header');
+if (cabecera) {
+  const marcarScroll = () => cabecera.toggleAttribute('data-scrolled', scrollY > 8);
+  addEventListener('scroll', marcarScroll, { passive: true });
+  marcarScroll();
+}
+
+// Menú móvil a pantalla completa.
+const botonMenu = document.querySelector('.menu-btn');
+const menuMovil = document.getElementById('menu-movil');
+if (botonMenu && menuMovil) {
+  const fuera = [document.querySelector('main'), document.querySelector('footer')];
+  const textos = { abrir: botonMenu.firstElementChild.textContent, cerrar: root.lang === 'en' ? 'Close' : 'Cerrar' };
+  const abrir = () => {
+    root.setAttribute('data-menu', '');
+    botonMenu.setAttribute('aria-expanded', 'true');
+    botonMenu.firstElementChild.textContent = textos.cerrar;
+    fuera.forEach((e) => { e.inert = true; });
+    menuMovil.querySelector('a').focus({ preventScroll: true });
+  };
+  const cerrar = (foco) => {
+    if (!root.hasAttribute('data-menu')) return;
+    root.removeAttribute('data-menu');
+    botonMenu.setAttribute('aria-expanded', 'false');
+    botonMenu.firstElementChild.textContent = textos.abrir;
+    fuera.forEach((e) => { e.inert = false; });
+    if (foco) botonMenu.focus();
+  };
+  botonMenu.addEventListener('click', () => (root.hasAttribute('data-menu') ? cerrar(true) : abrir()));
+  menuMovil.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => cerrar(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(true); });
+  matchMedia('(min-width: 861px)').addEventListener('change', (e) => { if (e.matches) cerrar(false); });
+}
+
+// Orientación: el punto marca la sección que estás viendo.
+if (hayIO) {
+  const enlaces = new Map([...document.querySelectorAll('.principal a')].map((a) => [a.hash.slice(1), a]));
+  if (enlaces.size) {
+    const espia = new IntersectionObserver((entradas) => entradas.forEach((entrada) => {
+      const a = enlaces.get(entrada.target.id);
+      if (!a) return;
+      if (entrada.isIntersecting) { enlaces.forEach((x) => x.removeAttribute('aria-current')); a.setAttribute('aria-current', 'location'); }
+      else if (a.hasAttribute('aria-current')) a.removeAttribute('aria-current');
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    enlaces.forEach((_, id) => { const seccion = document.getElementById(id); if (seccion) espia.observe(seccion); });
+  }
+}
+
+// Pausar / reanudar todo lo que se mueve en bucle.
+const pausa = document.querySelector('.pausa-anim');
+if (pausa) {
+  pausa.hidden = false;
+  pausa.addEventListener('click', () => {
+    const quieto = root.toggleAttribute('data-quieto');
+    pausa.setAttribute('aria-pressed', String(quieto));
+    pausa.textContent = quieto ? 'Reanudar animaciones' : 'Pausar animaciones';
+  });
+}
+
+// Los bucles solo corren mientras se ven.
+const bucles = document.querySelectorAll('.ilustracion-coctel, .ilustracion-anim, .cinta, .sello-giro');
+if (bucles.length && hayIO) {
+  const visibles = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle('en-pantalla', e.isIntersecting)));
+  bucles.forEach((b) => visibles.observe(b));
 }

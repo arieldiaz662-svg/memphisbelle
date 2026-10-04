@@ -5,7 +5,7 @@ import { esc, escPhone, layout } from './html.js';
 const contactLine = (site) => `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a> o el teléfono <a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a>`;
 
 function page({ site, config, path, title, sections }) {
-  const body = `<main class="pagina-simple legal"><div class="wrap">
+  const body = `<main id="contenido" tabindex="-1" class="pagina-simple legal"><div class="wrap">
   <h1>${esc(title)}</h1>
   <p class="suave">Última actualización: ${esc(site.legal.lastUpdated)}</p>
   ${sections.map(([heading, text]) => `<h2>${esc(heading)}</h2>\n  ${text}`).join('\n  ')}

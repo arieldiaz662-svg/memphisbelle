@@ -191,14 +191,16 @@ describe('cóctel estrella', () => {
 describe('el local, visítanos y reseñas', () => {
   const seccion = (id, siguiente) => index.slice(index.indexOf(`id="${id}"`), index.indexOf(`id="${siguiente}"`));
 
-  test('el local: mosaico de 3 con el primero grande, y sin fotos no hay huecos vacíos', () => {
+  test('el local: galería de fotos y tres datos debajo, sin cajas vacías', () => {
     const local = seccion('local', 'visitanos');
+    const fotos = site.local.gallery.length;
+    assert.equal((local.match(/<figure class="foto"/g) || []).length, fotos);
+    assert.equal((local.match(/<img /g) || []).length, fotos);
+    for (const g of site.local.gallery) assert.ok(local.includes(`alt="${g.alt}"`), g.alt);
     assert.equal((local.match(/class="mosaico-item/g) || []).length, site.local.items.length);
     assert.match(local, /class="mosaico-item grande"/);
     for (const item of site.local.items) assert.ok(local.includes(`<h3>${item.title}</h3>`), item.title);
-    const fotos = site.local.items.filter((i) => i.image).length;
-    assert.equal((local.match(/<img /g) || []).length, fotos);
-    assert.equal(local.includes('mosaico con-fotos'), fotos > 0);
+    assert.ok(local.includes('mosaico con-fotos'));
   });
 
   test('visítanos: dirección, Cómo llegar, Llamar y WhatsApp, y "Abierto ahora"', () => {
@@ -251,7 +253,7 @@ describe('portada y móvil', () => {
   });
 
   test('se siente nativa en el móvil: hover solo con ratón, sin destello, sin zoom en campos y zona segura', () => {
-    const sinBloquesHover = css.replace(/@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}/g, '');
+    const sinBloquesHover = css.replace(/@media \(hover: hover\) and \(pointer: fine\)(?: and \([a-z-]+: [a-z-]+\))? \{[\s\S]*?\n\}/g, '');
     const hoverFuera = sinBloquesHover.split('\n').filter((l) => l.includes(':hover'));
     assert.deepEqual(hoverFuera, []);
     assert.match(css, /-webkit-tap-highlight-color: transparent/);
@@ -266,7 +268,7 @@ describe('portada y móvil', () => {
     const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('id="estrella"'));
     if (site.hero.image) {
       assert.match(hero, /<picture class="hero-foto">/);
-      assert.match(hero, /<img [^>]*alt="" [^>]*fetchpriority="high">/); // decorativa y lo primero que se descarga
+      assert.match(hero, /<img [^>]*alt="[^"]*" [^>]*fetchpriority="high">/); // lo primero que se descarga
       assert.doesNotMatch(hero, /loading="lazy"/);
       assert.doesNotMatch(hero, /class="bombardero"/);
       for (const w of site.hero.image.widths) assert.ok(hero.includes(`${site.hero.image.src}-${w}.webp ${w}w`), w);
@@ -277,11 +279,13 @@ describe('portada y móvil', () => {
     }
     // Ninguna animación de la portada fuera de "prefers-reduced-motion: no-preference".
     const fuera = css.replace(/@media \(prefers-reduced-motion: no-preference\) \{[\s\S]*?\n\}/g, '');
-    assert.doesNotMatch(fuera, /animation: (flotar|girar|nubes|acercar)/);
+    assert.doesNotMatch(fuera, /animation: (flotar|girar 160ms|nubes|acercar)/);
   });
 
   test('las animaciones respetan "reducir movimiento" y no se usa transition: all', () => {
-    assert.match(css, /@media \(prefers-reduced-motion: no-preference\) \{\s*\.hero/);
+    const reducido = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: reduce)'));
+    assert.match(reducido, /\.cinta-pista, \.sello-anillo \{ animation: none; \}/);
+    assert.match(reducido, /html\.js:not\(\.cargado\) \.hero-figura \{ clip-path: none; \}/);
     assert.doesNotMatch(css, /transition:\s*all/);
   });
 
@@ -397,5 +401,68 @@ describe('página de la carta (QR de las mesas)', () => {
     const e = estado(site.hours.days, new Date('2026-01-07T19:00:00Z'));
     assert.match(textoEstado(e, 'es'), /[AaCc]/);
     assert.notEqual(textoEstado(e, 'en'), textoEstado(e, 'es'));
+  });
+});
+
+describe('diseño editorial (híbrido)', () => {
+  test('sin estilos en línea ni scripts en línea: la CSP no los admite', () => {
+    for (const file of ['index.html', 'carta.html', 'carta-en.html', 'privacidad.html', '404.html']) {
+      const html = read(file);
+      assert.doesNotMatch(html, /\sstyle="/, file);
+      assert.doesNotMatch(html, /<style[\s>]/, file);
+      assert.doesNotMatch(html, /<script(?![^>]*(?:\ssrc=|application\/ld\+json))[^>]*>/, file);
+    }
+  });
+
+  test('las tipografías están alojadas en la web y precargadas', () => {
+    for (const f of ['instrument-serif', 'instrument-serif-italic', 'geist', 'geist-mono']) {
+      assert.ok(statSync(join(outDir, 'assets/fonts', `${f}.woff2`)).isFile(), f);
+      assert.match(index, new RegExp(`rel="preload" href="assets/fonts/${f}\\.woff2`));
+      assert.ok(css.includes(`../fonts/${f}.woff2`), f);
+    }
+    assert.match(index, /<script src="assets\/js\/ini\.js/);
+  });
+
+  test('los retardos de las ilustraciones salen de reglas data-s del CSS', () => {
+    const usados = new Set([...index.matchAll(/data-s="(\d+)"/g)].map((m) => m[1]));
+    assert.ok(usados.size > 0);
+    for (const n of usados) assert.ok(css.includes(`[data-s="${n}"]`), `data-s=${n}`);
+    for (const n of new Set([...index.matchAll(/data-s="(i\d)"/g)].map((m) => m[1]))) assert.ok(css.includes(`[data-s="${n}"]`), n);
+  });
+
+  test('El oficio: una escena por elemento de site.js y botón para pausar (oculto hasta que hay JavaScript)', () => {
+    const oficio = index.slice(index.indexOf('id="oficio"'), index.indexOf('id="carta"'));
+    assert.equal((oficio.match(/class="oficio-item/g) || []).length, site.oficio.items.length);
+    assert.match(oficio, /class="pausa-anim"[^>]*hidden/);
+    for (const item of site.oficio.items) assert.ok(oficio.includes(`<h3>${item.title}</h3>`), item.title);
+    assert.equal((oficio.match(/<svg[^>]*role="img"[^>]*aria-label=/g) || []).length, site.oficio.items.length);
+  });
+
+  test('los clásicos destacados llevan el precio de la carta', () => {
+    const carta = index.slice(index.indexOf('class="carta-destacada"'), index.indexOf('class="papel"'));
+    for (const h of site.highlights) {
+      const precio = items.find((i) => i.name === h.name).price;
+      assert.ok(carta.includes(`<h3>${h.name}</h3>`), h.name);
+      assert.ok(carta.includes(`· ${precio}`), `${h.name} ${precio}`);
+    }
+  });
+
+  test('la cinta de la portada es decorativa y sus nombres salen de site.js', () => {
+    const cinta = index.slice(index.indexOf('class="cinta"'), index.indexOf('id="estrella"'));
+    assert.match(cinta, /class="cinta" aria-hidden="true"/);
+    for (const t of site.cinta) assert.ok(cinta.includes(t), t);
+  });
+
+  test('las fotos existen en WebP y JPG', () => {
+    const fotos = [...site.bar.photos.map((f) => ({ src: f.src, widths: [640] })), ...site.local.gallery];
+    for (const f of fotos) for (const w of f.widths) for (const ext of ['webp', 'jpg']) assert.ok(statSync(join(outDir, 'assets', `${f.src}-${w}.${ext}`)).isFile(), `${f.src}-${w}.${ext}`);
+  });
+
+  test('menú móvil a pantalla completa y enlace para saltar al contenido', () => {
+    assert.match(index, /class="saltar" href="#contenido"/);
+    assert.match(index, /<main id="contenido"/);
+    assert.match(index, /class="menu-movil" id="menu-movil"/);
+    assert.match(index, /aria-controls="menu-movil"/);
+    for (const item of NAV) assert.ok(index.includes(`class="enlace" data-s="i${NAV.indexOf(item)}" href="#${item.id}"`), item.id);
   });
 });

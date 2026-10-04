@@ -56,7 +56,7 @@ GitHub Actions (`.github/workflows/ci.yml`) pasa los tests en cada push y pull r
 
 ```
 src/content/site.js     contenido editable (una sola fuente de textos, carta y horario)
-src/views/              plantillas: portada (landing.js), base (html.js), legales (legal.js), datos para Google (schema.js)
+src/views/              plantillas: portada (landing.js), carta del QR (carta.js), base (html.js), ilustraciones (ilustraciones.js), legales (legal.js), datos para Google (schema.js)
 public/js/horario.js    "Abierto ahora" en hora de Canarias; lo usan el navegador, la construcción y los tests
 public/js/site.js       pestañas de la carta, estado del horario y formulario de reservas
 public/                 CSS, tipografías (OFL) e imágenes

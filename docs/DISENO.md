@@ -1,5 +1,32 @@
 # Diseño: Memphis Belle
 
+> **Diseño actual: editorial (híbrido).** Desde octubre de 2026 la web combina la propuesta editorial de la
+> otra landing (negro cálido, marfil y oro viejo, titulares serif en grande, etiquetas mono, entradas al hacer
+> scroll, "El oficio" con piezas dibujadas) con lo propio de este proyecto: el B-17 en la portada, la carta con
+> precios y pestañas, los datos reales de la ficha de Google, el formulario de reserva por WhatsApp, la reseña de
+> Google y la carta bilingüe para el QR. Las secciones de más abajo (Idea, Colores…) describen la primera
+> versión (papel y amarillo del mural) y quedan como historia; lo vigente está aquí.
+
+## Diseño vigente
+
+- **Tipografía** (alojada, OFL): Instrument Serif (titulares, nombres de cócteles), Geist (texto) y Geist Mono
+  (etiquetas, precios). Ficheros en `public/fonts/`.
+- **Color**: fondo `#0B0A09`, marfil `#F2EDE4`, oro viejo `#C9A961` (acentos, precios, cursiva de los titulares) y
+  el amarillo del mural `#E8BE45` solo para "Belle" del pie y las estrellas de la reseña. Tokens en `:root`.
+- **Orden de la página**: portada (título, B-17, estado "Abierto ahora") → cinta → cóctel estrella → 01 El bar →
+  02 El oficio → 03 La carta (clásicos con icono + carta completa con pestañas) → 04 El local (galería + datos) →
+  05 Visítanos → Déjanos una reseña en Google → reseñas (si hay valoración) → 06 Reservas → pie.
+- **Contenido** en `src/content/site.js` (`hero`, `cinta`, `bar`, `oficio`, `highlights`, `local.gallery`). Los
+  textos de presentación (`bar`, `oficio`) están marcados `revisar`: hay que confirmarlos con el local.
+- **Ilustraciones** de línea (cóctel ahumado, cuatro escenas de barra, iconos de la carta, sello): `src/views/ilustraciones.js`.
+  Sus retardos van en atributos `data-s="N"` con reglas en el CSS, porque la CSP no admite estilos en línea.
+- **Movimiento**: titulares con máscara, fotos con cortina, carta que se llena; todo se apaga con
+  `prefers-reduced-motion`. Los bucles solo corren mientras se ven y hay un botón "Pausar animaciones".
+  `ini.js` (en `<head>`) marca `html.js` para que sin JavaScript todo sea visible.
+- **Fotos** (WebP + JPG): `public/img/ambiente/` (cócteles y local, a 640 px, su tamaño real; si se sustituyen por
+  las del propio bar, conviene subirlas a 1024 px o más) y `public/img/portada/` (B-17).
+
+
 Notas de diseño para mantener la web coherente en futuros cambios.
 
 ## Idea
