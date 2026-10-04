@@ -9,8 +9,9 @@ export const NAV = [
   { id: 'bar', label: 'El bar' },
   { id: 'oficio', label: 'El oficio' },
   { id: 'carta', label: 'La carta' },
-  { id: 'local', label: 'El local' },
+  { id: 'opinion', label: 'Opinión' },
   { id: 'visitanos', label: 'Visítanos' },
+  { id: 'local', label: 'El local' },
 ];
 
 // Retardo escalonado de las entradas al hacer scroll: data-s="i1".. (reglas en site.css; sin estilos en línea por la CSP).
@@ -245,7 +246,7 @@ function local(site) {
   const fotos = (l.gallery || []).filter((g) => g.src);
   return `<section class="local" id="local">
   <div class="wrap">
-    ${cabeceraSeccion('04', 'El local', 'Santa Cruz')}
+    ${cabeceraSeccion('06', 'El local', 'Santa Cruz')}
     <div class="titulo-fila">
       ${titular(l.title)}
     </div>
@@ -303,11 +304,12 @@ function visit(site) {
 }
 
 // Franja "Déjanos una reseña en Google": siempre visible, justo después de Visítanos.
-export function reviewCta(site, idioma = 'es') {
+export function reviewCta(site, idioma = 'es', { numero = '' } = {}) {
   const c = site.reviewCta;
   const en = idioma === 'en';
   return `<section class="opinion" id="opinion" aria-labelledby="opinion-titulo">
-  <div class="wrap opinion-grid">
+  ${numero ? `<div class="wrap">${cabeceraSeccion(numero, 'Tu opinión', 'Google')}</div>
+  ` : ''}<div class="wrap opinion-grid">
     <div>
       <h2 id="opinion-titulo">${esc(en ? c.titleEn : c.title)}</h2>
       <p>${esc(en ? c.textEn : c.text)}</p>
@@ -342,7 +344,7 @@ function booking(site) {
   return `<section class="reservar${b.image ? ' con-imagen' : ''}" id="reservar">
   ${b.image ? fondo(b.image, 'reservar-fondo') : ''}
   <div class="wrap">
-    ${cabeceraSeccion('06', 'Reservas', 'WhatsApp')}
+    ${cabeceraSeccion('07', 'Reservas', 'WhatsApp')}
   </div>
   <div class="wrap reservar-grid">
     <div class="reservar-texto">
@@ -393,9 +395,9 @@ ${featured(site)}
 ${bar(site)}
 ${oficio(site)}
 ${menu(site)}
-${local(site)}
+${reviewCta(site, 'es', { numero: '04' })}
 ${visit(site)}
-${reviewCta(site)}
+${local(site)}
 ${reviews(site)}
 ${booking(site)}
 </main>`;

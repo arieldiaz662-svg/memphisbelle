@@ -192,7 +192,7 @@ describe('el local, visítanos y reseñas', () => {
   const seccion = (id, siguiente) => index.slice(index.indexOf(`id="${id}"`), index.indexOf(`id="${siguiente}"`));
 
   test('el local: galería de fotos y tres datos debajo, sin cajas vacías', () => {
-    const local = seccion('local', 'visitanos');
+    const local = seccion('local', site.reviews.rating ? 'resenas' : 'reservar');
     const fotos = site.local.gallery.length;
     assert.equal((local.match(/<figure class="foto"/g) || []).length, fotos);
     assert.equal((local.match(/<img /g) || []).length, fotos);
@@ -204,7 +204,7 @@ describe('el local, visítanos y reseñas', () => {
   });
 
   test('visítanos: dirección, Cómo llegar, Llamar y WhatsApp, y "Abierto ahora"', () => {
-    const visita = seccion('visitanos', site.reviews.rating ? 'resenas' : 'reservar');
+    const visita = seccion('visitanos', 'local');
     assert.ok(visita.includes(site.address.street));
     assert.ok(visita.includes(site.googleMapsUrl.replace(/&/g, '&amp;')));
     assert.ok(visita.includes(`href="tel:+${site.phone}"`));
@@ -215,15 +215,16 @@ describe('el local, visítanos y reseñas', () => {
 
   test('"Déjanos una reseña en Google": franja visible y enlace en el pie, hacia Google', () => {
     const esperado = site.reviewCta.writeUrl || site.googleMapsUrl;
-    const franja = seccion('opinion', site.reviews.rating ? 'resenas' : 'reservar');
+    const franja = seccion('opinion', 'visitanos');
     assert.ok(franja.includes(site.reviewCta.button));
     const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener" target="_blank">`).test(html);
     assert.ok(enlace(franja), 'la franja enlaza a Google');
     const pie = index.slice(index.indexOf('<footer>'));
     assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
     assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|maps\.google\.com)/);
-    // Va entre "Visítanos" y "Reserva tu mesa".
-    assert.ok(index.indexOf('id="visitanos"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="reservar"'));
+    // Es la sección 04: va entre la carta y "Visítanos".
+    assert.ok(index.indexOf('id="carta"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="visitanos"'));
+    assert.match(franja, /<b>04<\/b> — Tu opinión/);
   });
 
   test('las reseñas solo aparecen si hay valoración de Google', () => {

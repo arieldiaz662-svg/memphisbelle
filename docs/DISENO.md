@@ -14,8 +14,8 @@
 - **Color**: fondo `#0B0A09`, marfil `#F2EDE4`, oro viejo `#C9A961` (acentos, precios, cursiva de los titulares) y
   el amarillo del mural `#E8BE45` solo para "Belle" del pie y las estrellas de la reseña. Tokens en `:root`.
 - **Orden de la página**: portada (título, B-17, estado "Abierto ahora") → cinta → cóctel estrella → 01 El bar →
-  02 El oficio → 03 La carta (clásicos con icono + carta completa con pestañas) → 04 El local (galería + datos) →
-  05 Visítanos → Déjanos una reseña en Google → reseñas (si hay valoración) → 06 Reservas → pie.
+  02 El oficio → 03 La carta (clásicos con icono + carta completa con pestañas) → 04 Déjanos una reseña en Google →
+  05 Visítanos → 06 El local (galería + datos) → reseñas (si hay valoración) → 07 Reservas → pie.
 - **Contenido** en `src/content/site.js` (`hero`, `cinta`, `bar`, `oficio`, `highlights`, `local.gallery`). Los
   textos de presentación (`bar`, `oficio`) están marcados `revisar`: hay que confirmarlos con el local.
 - **Ilustraciones** de línea (cóctel ahumado, cuatro escenas de barra, iconos de la carta, sello): `src/views/ilustraciones.js`.

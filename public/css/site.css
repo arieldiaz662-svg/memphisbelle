@@ -587,6 +587,7 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 @media (max-width: 860px) { .visita-grid { grid-template-columns: 1fr; } .contacto li { grid-template-columns: 1fr; gap: .1rem; } }
 
 /* ---------- Déjanos una reseña en Google ---------- */
+.opinion .wrap > .cabecera-seccion { margin-bottom: clamp(2rem, 4vw, 3rem); }
 .opinion { padding-block: clamp(3.5rem, 7vw, 6rem); border-block: 1px solid var(--linea); background: var(--superficie); }
 .opinion-grid { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem 3rem; }
 .opinion h2 { font-size: clamp(2rem, 4.2vw, 3.6rem); line-height: 1; letter-spacing: -.02em; margin-bottom: .6rem; }
