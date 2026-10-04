@@ -284,7 +284,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: var(--papel); color: var(--tinta);
   border-radius: 6px;
   padding: clamp(1.5rem, 5vw, 3.5rem);
-  max-width: 760px;
+  max-width: 980px;
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .7), 0 2px 0 rgba(0, 0, 0, .25);
   /* Doble filete de carta impresa */
   outline: 1px solid rgba(34, 27, 20, .22); outline-offset: -12px;
@@ -319,8 +319,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 .tabs-listas .carta-panel:not([hidden]) { animation: fundido 180ms var(--ease-out); }
 @keyframes fundido { from { opacity: 0; } }
 
-.carta-panel li { padding: .85rem 0; border-bottom: 1px dashed rgba(34, 27, 20, .16); }
+.carta-panel li { padding: .85rem 0; border-bottom: 1px dashed rgba(34, 27, 20, .16); break-inside: avoid; }
 .carta-panel li:last-child { border-bottom: 0; }
+/* En escritorio los platos van en dos columnas, como una carta impresa: el papel llena la sección. */
+@media (min-width: 900px) {
+  .carta-panel ul { column-count: 2; column-gap: 3.5rem; }
+  .carta-panel li:nth-last-child(-n+1) { border-bottom: 0; }
+}
 .plato { display: flex; align-items: baseline; gap: .6rem; }
 .plato-nombre { font-family: var(--serif); font-size: 1.3rem; line-height: 1.2; }
 .guia { flex: 1; border-bottom: 1.5px dotted rgba(34, 27, 20, .35); transform: translateY(-.3em); min-width: 1.5rem; }
