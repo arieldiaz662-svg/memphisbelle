@@ -691,3 +691,9 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
   .galeria-grid .foto .marco { height: auto; aspect-ratio: 3 / 4; }
   .galeria-grid .foto:first-child .marco { aspect-ratio: 16 / 10; }
 }
+
+/* ---------- Fotos de cócteles (El bar) más pequeñas ----------
+   Miden unos 640 px de ancho: a la anchura de la columna se ven blandas. Se muestran a cerca de la mitad. */
+.mosaico-fotos { max-width: 520px; gap: 1rem; justify-self: end; width: 100%; }
+.mosaico-fotos .columna { gap: 1rem; }
+@media (max-width: 980px) { .mosaico-fotos { max-width: 460px; justify-self: start; } }
