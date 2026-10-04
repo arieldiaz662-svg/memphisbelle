@@ -42,7 +42,7 @@ text, letters, numbers, words, watermark, logo, brand labels, signature, frame, 
 
 | # | Archivo | Sección de la web | Formato | Prioridad |
 |---|---|---|---|---|
-| A1 | `A1-barra.png` | Fondo de "Reserva tu mesa" y **referencia de estilo** | 4:5 | 1 (prueba) |
+| A1 | `A1-barra.png` | Fondo de "Reserva tu mesa" y **referencia de estilo** | 4:5 | **Hecha** (3:2, en la web) |
 | P1 | `P1-portada-b17.png` | Portada, escritorio | 16:9 | 1 (prueba) |
 | O1 | `O1-martini.png` | Fondo de "La carta" | 3:2 | 1 (prueba) |
 | P2 | `P2-portada-b17-movil.png` | Portada, móvil | 4:5 | 2 |

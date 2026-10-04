@@ -19,6 +19,11 @@ Portada (cartel del B-17), Cóctel estrella, La carta, El local, Visítanos, Res
 - **El local**: mosaico de 3 (el primero grande). Sin fotos, la misma composición en versión tipográfica; las fotos aparecen solas al añadirlas en `site.js`. Nunca cajas vacías ni tres columnas iguales.
 - **Visítanos**: el horario agrupado en pocas líneas (`resumen()` en `public/js/horario.js`), "Abierto ahora", dirección y contacto, con Cómo llegar, Llamar y WhatsApp.
 
+## Imágenes
+
+- **Reserva tu mesa**: fondo con la imagen de ambiente A1 (una barra en penumbra con una copa, generada con IA a partir de `docs/PROMPTS-HIGGSFIELD.md`). No es el local: va con `alt` vacío y sin pie de foto. El texto y el formulario van sobre la zona oscura de la izquierda; un degradado fijo asegura el contraste. En el móvil, la foto es una franja arriba que se funde en el fondo. Versiones WebP y JPG a 640, 1024 y 1536 px en `public/img/ambiente/`.
+- "El local" y "Visítanos" solo con fotos reales del bar.
+
 ## Colores (`public/css/site.css` → `:root`)
 
 Tomados de la foto del mural y aclarados lo justo para leerse en pantalla. Un solo color de acción: el amarillo.

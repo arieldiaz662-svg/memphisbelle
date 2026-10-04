@@ -11,6 +11,17 @@ export const NAV = [
   { id: 'reservar', label: 'Reservar' },
 ];
 
+// Imagen de ambiente de fondo, decorativa (alt vacío): WebP y JPG en varios anchos, el navegador
+// elige el más ligero que le sirve. "lazy" porque va bajo la portada.
+const fondo = (image, clase) => {
+  const srcset = (ext) => image.widths.map((w) => `assets/${esc(image.src)}-${w}.${ext} ${w}w`).join(', ');
+  const medio = image.widths[Math.floor(image.widths.length / 2)];
+  return `<picture class="${clase}">
+    <source type="image/webp" srcset="${srcset('webp')}" sizes="100vw">
+    <img src="assets/${esc(image.src)}-${medio}.jpg" srcset="${srcset('jpg')}" sizes="100vw" alt="" width="${image.width}" height="${image.height}" loading="lazy" decoding="async">
+  </picture>`;
+};
+
 // "de 18:00 a 02:00" no se parte entre dos líneas en el móvil.
 const horasJuntas = (texto) => texto.replace(/de (\d\d:\d\d) a (\d\d:\d\d)/, 'de&nbsp;$1&nbsp;a&nbsp;$2');
 
@@ -172,7 +183,8 @@ function booking(site) {
   const { booking: b } = site;
   const personas = Array.from({ length: b.maxPeople }, (_, i) => i + 1)
     .map((n) => `<option value="${n}"${n === 2 ? ' selected' : ''}>${n} ${n === 1 ? 'persona' : 'personas'}</option>`).join('');
-  return `<section class="reservar" id="reservar">
+  return `<section class="reservar${b.image ? ' con-imagen' : ''}" id="reservar">
+  ${b.image ? fondo(b.image, 'reservar-fondo') : ''}
   <div class="wrap reservar-grid">
     <div>
       <h2>${esc(b.title)}</h2>
