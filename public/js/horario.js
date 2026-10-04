@@ -74,7 +74,8 @@ export function textoEstado(e, idioma = 'es') {
 // Horario agrupado en pocas líneas, para leerlo de un vistazo: primero los días que abre y luego los
 // que cierra. ["De miércoles a domingo, de 18:00 a 02:00", "Lunes y martes, cerrado"].
 // Junta los días seguidos con la misma franja, también de domingo a lunes (p. ej. "De sábado a lunes").
-export function resumen(dias) {
+export function resumen(dias, idioma = 'es') {
+  const en = idioma === 'en';
   const clave = (d) => (dias[d] ? dias[d].join('-') : 'cerrado');
   const grupos = [];
   DIAS.forEach((d, i) => {
@@ -86,17 +87,17 @@ export function resumen(dias) {
   if (grupos.length > 1 && grupos[0].clave === grupos[grupos.length - 1].clave) {
     grupos[0].dias = [...grupos.pop().dias, ...grupos[0].dias];
   }
-  const nombre = (i) => NOMBRES[DIAS[i]];
+  const nombre = (i) => (en ? DIAS_EN[DIAS[i]] : NOMBRES[DIAS[i]]);
   const capital = (t) => `${t[0].toUpperCase()}${t.slice(1)}`;
   const cuando = (ds) => {
     if (ds.length === 1) return capital(nombre(ds[0]));
-    if (ds.length === 2) return `${capital(nombre(ds[0]))} y ${nombre(ds[1])}`;
-    if (ds.length === 7) return 'Todos los días';
-    return `De ${nombre(ds[0])} a ${nombre(ds[ds.length - 1])}`;
+    if (ds.length === 2) return `${capital(nombre(ds[0]))} ${en ? 'and' : 'y'} ${nombre(ds[1])}`;
+    if (ds.length === 7) return en ? 'Every day' : 'Todos los días';
+    return en ? `${capital(nombre(ds[0]))} to ${nombre(ds[ds.length - 1])}` : `De ${nombre(ds[0])} a ${nombre(ds[ds.length - 1])}`;
   };
   const linea = (g) => (g.clave === 'cerrado'
-    ? `${cuando(g.dias)}, cerrado`
-    : `${cuando(g.dias)}, de ${dias[DIAS[g.dias[0]]][0]} a ${dias[DIAS[g.dias[0]]][1]}`);
+    ? `${cuando(g.dias)}, ${en ? 'closed' : 'cerrado'}`
+    : `${cuando(g.dias)}, ${en ? '' : 'de '}${dias[DIAS[g.dias[0]]][0]} ${en ? 'to' : 'a'} ${dias[DIAS[g.dias[0]]][1]}`);
   const porDia = (a, b) => a.dias[0] - b.dias[0];
   const abiertos = grupos.filter((g) => g.clave !== 'cerrado').sort(porDia);
   const cerrados = grupos.filter((g) => g.clave === 'cerrado').sort(porDia);

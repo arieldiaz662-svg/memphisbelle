@@ -13,6 +13,7 @@
   (etiquetas, precios). Ficheros en `public/fonts/`.
 - **Color**: fondo `#0B0A09`, marfil `#F2EDE4`, oro viejo `#C9A961` (acentos, precios, cursiva de los titulares) y
   el amarillo del mural `#E8BE45` solo para "Belle" del pie y las estrellas de la reseña. Tokens en `:root`.
+- **Idiomas**: `index.html` (español) y `en.html` (inglés), con selector ES / EN en la cabecera. El inglés sale de `site.en` (en `src/content/site.js`), que se mezcla sobre el español; la carta usa `nameEn`/`textEn`. Las páginas legales siguen en español.
 - **Orden de la página**: portada (título, B-17, estado "Abierto ahora") → cinta → cóctel estrella → 01 El bar →
   02 El oficio → 03 La carta (clásicos con icono + carta completa con pestañas) → 04 Déjanos una reseña en Google →
   05 Visítanos → 06 El local (galería + datos) → reseñas (si hay valoración) → 07 Reservas → pie.

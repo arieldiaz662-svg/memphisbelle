@@ -37,6 +37,7 @@ export function buildStatic({
     'carta.html': renderCarta({ site, config, idioma: 'es' }),
     'carta-en.html': renderCarta({ site, config, idioma: 'en' }),
     ...(hasLegalNotice(site) ? { 'aviso-legal.html': renderLegalNotice({ site, config }) } : {}),
+    'en.html': renderLanding({ site, config, idioma: 'en' }),
     'privacidad.html': renderPrivacy({ site, config }),
     'cookies.html': renderCookies({ site, config }),
     // Cloudflare sirve 404.html en cualquier ruta inexistente: <base href="/"> hace que estilos y enlaces

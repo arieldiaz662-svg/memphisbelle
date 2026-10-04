@@ -704,3 +704,10 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .galeria-grid { max-width: 720px; }
 .galeria-grid .foto .marco { height: clamp(200px, 21vw, 290px); }
 @media (max-width: 860px) { .galeria-grid { max-width: 440px; } .galeria-grid .foto .marco { height: auto; } }
+
+/* ---------- Selector de idioma (ES / EN) ---------- */
+.idioma { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; height: 2.75rem; padding: 0 .8rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); font: 500 .7rem/1 var(--mono); letter-spacing: .14em; color: var(--texto); transition: border-color 200ms ease, transform 160ms var(--ease-out); }
+.idioma:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .idioma:hover { border-color: var(--texto); }
+}

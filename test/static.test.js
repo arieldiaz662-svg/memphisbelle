@@ -33,7 +33,7 @@ after(() => rmSync(outDir, { recursive: true, force: true }));
 
 describe('construcción y publicación', () => {
   test('genera las páginas, el sitemap y las cabeceras de seguridad', () => {
-    for (const file of ['index.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html', 'robots.txt', 'sitemap.xml', '_headers']) {
+    for (const file of ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html', 'robots.txt', 'sitemap.xml', '_headers']) {
       assert.ok(statSync(join(outDir, file)).isFile(), file);
     }
     assert.ok(read('_headers').includes(`Content-Security-Policy: ${STATIC_CSP}; frame-ancestors 'none'`));
@@ -530,5 +530,59 @@ describe('fotos de la galería y de los cócteles', () => {
         if (site.local.gallery.includes(f)) assert.ok(Math.abs(ancho / h - f.width / f.height) < 0.03, `${f.src}-${w}.jpg tiene otra proporción (${ancho}×${h}): ¿es otra foto?`);
       }
     }
+  });
+});
+
+describe('selector de idioma: español / inglés', () => {
+  const en = () => read('en.html');
+  const ids = (html) => [...html.matchAll(/\sid="([a-z-]+)"/g)].map((m) => m[1]).filter((id) => !id.startsWith('tab-') && !id.startsWith('carta-') && !id.startsWith('mb-'));
+
+  test('la portada tiene versión en inglés con su idioma, hreflang y sitemap', () => {
+    assert.match(en(), /<html lang="en"/);
+    assert.match(index, /<html lang="es"/);
+    for (const html of [index, en()]) {
+      assert.match(html, new RegExp(`<link rel="alternate" hreflang="es" href="${escapeRe(BASE)}/">`));
+      assert.match(html, new RegExp(`<link rel="alternate" hreflang="en" href="${escapeRe(BASE)}/en\\.html">`));
+    }
+    assert.match(en(), new RegExp(`<link rel="canonical" href="${escapeRe(BASE)}/en\\.html">`));
+    assert.match(read('sitemap.xml'), /en\.html/);
+  });
+
+  test('el selector está en la cabecera de las dos versiones y lleva a la otra', () => {
+    assert.match(index, /<a class="idioma" href="en\.html" lang="en" hreflang="en" aria-label="View in English">EN<\/a>/);
+    assert.match(en(), /<a class="idioma" href="\.\/" lang="es" hreflang="es" aria-label="Ver en español">ES<\/a>/);
+  });
+
+  test('en inglés se traduce el contenido y la interfaz, y la estructura es la misma', () => {
+    const h = en();
+    assert.ok(h.includes(site.en.hero.title[0]) && h.includes(site.en.hero.lead));
+    assert.ok(h.includes(site.en.title));
+    for (const item of site.en.oficio.items) assert.ok(h.includes(item.title) && h.includes(`aria-label="${item.aria}"`), item.title);
+    for (const x of site.en.highlights) assert.ok(h.includes(x.text), x.text);
+    for (const x of site.en.local.items) assert.ok(h.includes(x.title), x.title);
+    for (const t of ['Book a table', 'Your name', 'Guests', 'Phone and WhatsApp', 'Get directions', 'Opening hours', 'Wednesday to Sunday, 18:00 to 02:00']) assert.ok(h.includes(t), t);
+    for (const sp of ['Reservar mesa', 'Tu nombre', 'Cómo llegar', 'De miércoles a domingo', 'Visítanos']) assert.ok(!h.includes(sp), `queda en español: ${sp}`);
+    assert.deepEqual(ids(h), ids(index));
+    assert.ok(h.includes('Leave us a Google review') && h.includes('href="carta-en.html"'));
+  });
+
+  test('cada elemento traducido de site.en corresponde a uno del español (mismo número de piezas)', () => {
+    assert.equal(site.en.oficio.items.length, site.oficio.items.length);
+    assert.equal(site.en.highlights.length, site.highlights.length);
+    assert.equal(site.en.local.items.length, site.local.items.length);
+    assert.equal(site.en.local.gallery.length, site.local.gallery.length);
+    assert.equal(site.en.bar.photos.length, site.bar.photos.length);
+    assert.equal(site.en.hero.foot.length, site.hero.foot.length);
+    assert.equal(site.en.cinta.length, site.cinta.length);
+    assert.equal(site.en.featured.ingredients.length, site.featured.ingredients.length);
+  });
+
+  test('el formulario y la pausa también hablan inglés', () => {
+    const js = readFileSync(new URL('../public/js/site.js', import.meta.url), 'utf8');
+    for (const t of ['Enter your name.', 'We are closed that day.', "I'd like to book a table", 'Pause animations']) assert.ok(js.includes(t), t);
+  });
+
+  test('el horario agrupado también sale en inglés', () => {
+    assert.deepEqual(resumen(site.hours.days, 'en'), ['Wednesday to Sunday, 18:00 to 02:00', 'Monday and Tuesday, closed']);
   });
 });

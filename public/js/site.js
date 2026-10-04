@@ -54,6 +54,21 @@ pintarEstado();
 setInterval(pintarEstado, 60 * 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) pintarEstado(); });
 
+// Textos del formulario y de la pausa según el idioma de la página.
+const IDIOMA = document.documentElement.lang === 'en' ? 'en' : 'es';
+const TXT = {
+  es: {
+    cerrado: 'Ese día estamos cerrados. Elige otro día.', nombre: 'Escribe tu nombre.', dia: 'Elige el día.', pasada: 'Esa fecha ya ha pasado.', hora: 'Elige la hora.',
+    pausar: 'Pausar animaciones', reanudar: 'Reanudar animaciones', cerrar: 'Cerrar', locale: 'es-ES',
+    mensaje: (n, p, fecha, hora, c) => `Hola, soy ${n}. Quería reservar mesa para ${p} ${p === 1 ? 'persona' : 'personas'} el ${fecha} a las ${hora}.${c ? ` ${c}` : ''}`,
+  },
+  en: {
+    cerrado: 'We are closed that day. Please pick another day.', nombre: 'Enter your name.', dia: 'Pick a date.', pasada: 'That date has already passed.', hora: 'Pick a time.',
+    pausar: 'Pause animations', reanudar: 'Resume animations', cerrar: 'Close', locale: 'en-GB',
+    mensaje: (n, p, fecha, hora, c) => `Hi, I'm ${n}. I'd like to book a table for ${p} ${p === 1 ? 'guest' : 'guests'} on ${fecha} at ${hora}.${c ? ` ${c}` : ''}`,
+  },
+}[IDIOMA];
+
 // Formulario de reserva: compone el mensaje y abre WhatsApp (la web no guarda ningún dato).
 // Se abre dentro del propio evento submit para que el navegador no lo trate como ventana emergente.
 const form = document.getElementById('formulario');
@@ -71,25 +86,25 @@ if (form) {
     if (campo) campo.focus();
   };
   el.dia.addEventListener('change', () => {
-    avisar(el.dia.value && !abreEseDia(dias, el.dia.value) ? 'Ese día estamos cerrados. Elige otro día.' : '');
+    avisar(el.dia.value && !abreEseDia(dias, el.dia.value) ? TXT.cerrado : '');
   });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const nombre = el.nombre.value.trim();
-    if (!nombre) return avisar('Escribe tu nombre.', el.nombre);
-    if (!el.dia.value) return avisar('Elige el día.', el.dia);
-    if (el.dia.value < hoyISO) return avisar('Esa fecha ya ha pasado.', el.dia);
-    if (!abreEseDia(dias, el.dia.value)) return avisar('Ese día estamos cerrados. Elige otro día.', el.dia);
-    if (!el.hora.value) return avisar('Elige la hora.', el.hora);
+    if (!nombre) return avisar(TXT.nombre, el.nombre);
+    if (!el.dia.value) return avisar(TXT.dia, el.dia);
+    if (el.dia.value < hoyISO) return avisar(TXT.pasada, el.dia);
+    if (!abreEseDia(dias, el.dia.value)) return avisar(TXT.cerrado, el.dia);
+    if (!el.hora.value) return avisar(TXT.hora, el.hora);
     avisar('');
 
     const [a, m, d] = el.dia.value.split('-').map(Number);
-    const formato = (opciones) => new Intl.DateTimeFormat('es-ES', { ...opciones, timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, d)));
+    const formato = (opciones) => new Intl.DateTimeFormat(TXT.locale, { ...opciones, timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, d)));
     const fecha = `${formato({ weekday: 'long' })} ${formato({ day: 'numeric', month: 'long' })}`; // "viernes 9 de octubre"
     const personas = Number(el.personas.value);
     const comentario = el.comentario.value.trim();
-    const text = `Hola, soy ${nombre}. Quería reservar mesa para ${personas} ${personas === 1 ? 'persona' : 'personas'} el ${fecha} a las ${el.hora.value}.${comentario ? ` ${comentario}` : ''}`;
+    const text = TXT.mensaje(nombre, personas, fecha, el.hora.value, comentario);
     const url = `https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(text)}`;
     // Con "noopener" window.open siempre devuelve null, así que se corta el opener a mano.
     const win = window.open(url, '_blank');
@@ -144,7 +159,7 @@ const botonMenu = document.querySelector('.menu-btn');
 const menuMovil = document.getElementById('menu-movil');
 if (botonMenu && menuMovil) {
   const fuera = [document.querySelector('.saltar'), document.querySelector('main'), document.querySelector('footer')].filter(Boolean);
-  const textos = { abrir: botonMenu.firstElementChild.textContent, cerrar: root.lang === 'en' ? 'Close' : 'Cerrar' };
+  const textos = { abrir: botonMenu.firstElementChild.textContent, cerrar: TXT.cerrar };
   const abrir = () => {
     root.setAttribute('data-menu', '');
     botonMenu.setAttribute('aria-expanded', 'true');
@@ -187,7 +202,7 @@ if (pausa) {
   pausa.addEventListener('click', () => {
     const quieto = root.toggleAttribute('data-quieto');
     pausa.setAttribute('aria-pressed', String(quieto));
-    pausa.textContent = quieto ? 'Reanudar animaciones' : 'Pausar animaciones';
+    pausa.textContent = quieto ? TXT.reanudar : TXT.pausar;
   });
 }
 

@@ -87,11 +87,11 @@ export const site = {
     title: 'El oficio, <em>en movimiento</em>',
     text: 'Así nacen algunas de las copas que ves en las fotos. Técnica de barra, sin atajos.',
     items: [
-      { id: 'humo', title: 'Ahumado al soplete', text: 'La llama toca el borde, salta la chispa y el humo perfuma la copa antes del primer trago.' },
-      { id: 'colar', title: 'Agitado y colado', text: 'Hielo, coctelera y un colado fino directo a la copa escarchada.' },
-      { id: 'espuma', title: 'Espuma de seda', text: 'Agitado en seco para montar la espuma y una rama de romero para el aroma.' },
-      { id: 'tiki', title: 'Swizzle tiki', text: 'Hielo picado y la varilla girando hasta que la taza escarcha.' },
-      { id: 'canela', title: 'Canela al momento', text: 'Canela rallada sobre la espuma y naranja deshidratada al lado.' },
+      { id: 'humo', title: 'Ahumado al soplete', text: 'La llama toca el borde, salta la chispa y el humo perfuma la copa antes del primer trago.', aria: 'Cóctel ahumándose con un soplete: la llama toca el borde del vaso, saltan chispas y sube el humo' },
+      { id: 'colar', title: 'Agitado y colado', text: 'Hielo, coctelera y un colado fino directo a la copa escarchada.', aria: 'Coctelera inclinada colando un cóctel en una copa de martini escarchada que se va llenando' },
+      { id: 'espuma', title: 'Espuma de seda', text: 'Agitado en seco para montar la espuma y una rama de romero para el aroma.', aria: 'Coctelera agitándose con fuerza junto a un vaso con espuma blanca y una rama de romero' },
+      { id: 'tiki', title: 'Swizzle tiki', text: 'Hielo picado y la varilla girando hasta que la taza escarcha.', aria: 'Varilla swizzle girando dentro de una taza tiki con hielo picado mientras el vaso escarcha' },
+      { id: 'canela', title: 'Canela al momento', text: 'Canela rallada sobre la espuma y naranja deshidratada al lado.', aria: 'Rama de canela rallándose sobre un vaso alto con espuma; el polvo cae sobre la espuma' },
     ],
     revisar: 'Confirmar que estas técnicas (ahumado, espuma, tiki, canela) se usan de verdad en la barra; si no, quitar las que sobren',
   },
@@ -242,5 +242,74 @@ export const site = {
     registry: '', // datos registrales, si es sociedad
     lastUpdated: '2 de octubre de 2026',
     pendiente: 'Datos del titular (nombre o razón social, NIF/CIF y dirección) para el aviso legal',
+  },
+
+  // VERSIÓN EN INGLÉS de la portada (en.html). Cada bloque se mezcla sobre el español: lo que no se traduce
+  // aquí se queda como está (nombres de cócteles, fotos, números). La carta tiene sus propios campos nameEn/textEn.
+  en: {
+    title: 'Memphis Belle Cocktail Bar | Classic cocktails in Santa Cruz de Tenerife',
+    description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and all the classics, with a terrace and pets welcome. See the menu and opening hours, and book by WhatsApp.',
+    hero: {
+      kicker: 'Cocktail bar · Santa Cruz de Tenerife',
+      kickerRight: 'Classic cocktails',
+      title: ['Cocktails', 'done right'],
+      lead: 'The best classic cocktails in the heart of Santa Cruz. Dry Martini, Manhattan and a terrace.',
+      cta: 'Book a table',
+      secondary: 'See the menu',
+      imageCaption: 'Memphis Belle, B-17',
+      foot: ['Classics and house cocktails', 'Terrace on Calle de los Sueños'],
+    },
+    cinta: ['Dry Martini', 'Manhattan', 'Negroni', 'Old Fashioned', 'Daiquiri', 'Margarita', 'Bloody Mary', 'Wed–Sun until 2:00'],
+    featured: {
+      label: 'Signature cocktail',
+      text: 'The classic of vodka and tomato, with the heat and the salt our way. Served long, with plenty of ice and its celery stick.',
+      ingredients: ['Vodka', 'Tomato juice', 'Lime', 'Worcestershire sauce', 'Tabasco', 'Celery salt and black pepper'],
+    },
+    bar: {
+      title: 'Craft cocktails, <em>no rush</em>',
+      declaration: 'Every drink is made to order, with real ice, classic technique and a touch of our own.',
+      text: 'Come to the bar, order what you fancy or let us advise you: there is always something on the menu you did not expect.',
+      photos: [
+        { alt: 'Orange cocktail with a slice of lime in a martini glass', caption: 'Orange, lime and a frosted glass' },
+        { alt: 'Cocktail with white foam and rosemary', caption: 'Foam and rosemary' },
+        { alt: 'Tiki cocktails in ceramic mugs on the bar', caption: 'Tiki in ceramic' },
+        { alt: 'Cocktail with foam, cinnamon and dehydrated orange slices', caption: 'Foam, cinnamon and orange' },
+      ],
+    },
+    oficio: {
+      title: 'The craft, <em>in motion</em>',
+      text: 'This is how some of the drinks in the photos are born. Bar technique, no shortcuts.',
+      items: [
+        { title: 'Smoked with a torch', text: 'The flame touches the rim, a spark flies and the smoke perfumes the glass before the first sip.', aria: 'Cocktail being smoked with a torch: the flame touches the rim of the glass, sparks fly and smoke rises' },
+        { title: 'Shaken and strained', text: 'Ice, shaker and a fine strain straight into the frosted glass.', aria: 'Tilted shaker straining a cocktail into a frosted martini glass that slowly fills' },
+        { title: 'Silky foam', text: 'Dry shaken to build the foam, with a sprig of rosemary for the aroma.', aria: 'Shaker being shaken hard next to a glass with white foam and a sprig of rosemary' },
+        { title: 'Tiki swizzle', text: 'Crushed ice and the swizzle stick spinning until the mug frosts.', aria: 'Swizzle stick spinning inside a tiki mug of crushed ice while the glass frosts' },
+        { title: 'Fresh cinnamon', text: 'Cinnamon grated over the foam and dehydrated orange on the side.', aria: 'Cinnamon stick being grated over a tall glass with foam; the powder falls onto the foam' },
+      ],
+    },
+    highlights: [
+      { text: 'Three ingredients and a hundred years of debate over the exact proportion. Here, ours.', ingredients: 'Gin · vermouth · olive', epoch: 'Early 20th century' },
+      { text: 'The formula that never ages. Perfect before dinner or after anything.', ingredients: 'Whiskey · red vermouth · bitters', epoch: '1880s' },
+      { text: 'The drink that made El Floridita in Havana famous, in its purest version.', ingredients: 'White rum · lime · sugar', epoch: 'Popular since the 1930s' },
+    ],
+    local: {
+      title: 'Brick, bottles <em>and warm light</em>',
+      gallery: [
+        { alt: 'Wooden bar and shelves of bottles under green light', caption: 'The bar' },
+        { alt: 'Inside the bar by the window', caption: 'By the window' },
+        { alt: 'High tables and hydraulic tile floor', caption: 'Hydraulic tiles' },
+      ],
+      items: [
+        { title: 'Terrace', text: 'About 30 people outside, on Calle de los Sueños.' },
+        { title: 'Inside', text: '40 people, by the bar and the bomber mural.' },
+        { title: 'Pets welcome', text: 'Your dog is welcome inside and on the terrace.' },
+      ],
+    },
+    visit: { title: 'Visit us', note: 'In the centre of Santa Cruz.' },
+    booking: {
+      title: 'Book your table',
+      intro: 'Tell us how many of you there are and when you are coming. WhatsApp opens with the message already written: just send it and we will confirm.',
+      groupsNote: 'For groups of more than 12 people, call us.',
+    },
   },
 };
