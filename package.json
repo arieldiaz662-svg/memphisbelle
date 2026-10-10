@@ -12,6 +12,7 @@
     "preview": "node scripts/build-static.js && node scripts/preview.js",
     "og-image": "node scripts/og-image.cjs",
     "pegatinas": "node scripts/pegatinas.cjs",
+    "tarjeta": "node scripts/tarjeta-resena.cjs",
     "pendientes": "node scripts/pendientes.js",
     "test": "node --test"
   },
