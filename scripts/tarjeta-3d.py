@@ -320,6 +320,9 @@ def main():
         # Dentro de la placa y sin solaparse: lo amarillo manda donde se tocan.
         marfil = marfil.intersection(placa).difference(amarillo)
         amarillo = amarillo.intersection(placa)
+        # Une partes que se rozan en un punto (dan aristas no válidas en el modelo) y quita astillas.
+        marfil = marfil.buffer(0.03, join_style="round").buffer(-0.03, join_style="round").simplify(0.005)
+        amarillo = amarillo.buffer(0.03, join_style="round").buffer(-0.03, join_style="round").simplify(0.005)
         m_base = mallas(placa, 0, BASE_Z)
         m_marfil = mallas(marfil, BASE_Z - 0.02, RELIEVE + 0.02)
         m_amarillo = mallas(amarillo, BASE_Z - 0.02, RELIEVE + 0.02)
