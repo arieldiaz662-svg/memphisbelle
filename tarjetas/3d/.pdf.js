@@ -1,0 +1,1 @@
+const {chromium}=require(process.argv[2]);(async()=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('file://'+process.argv[3]);await p.pdf({path:process.argv[4],format:'A4',printBackground:true,margin:{top:0,right:0,bottom:0,left:0}});await b.close()})()
