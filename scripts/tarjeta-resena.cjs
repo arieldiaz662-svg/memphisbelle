@@ -37,7 +37,7 @@ const estrella = (() => {
 const ESTRELLAS = `<svg class="estrellas" viewBox="-12 -12 124 24" aria-hidden="true">${[0, 25, 50, 75, 100].map((x) => `<g transform="translate(${x} 0)">${estrella}</g>`).join('')}</svg>`;
 
 // Símbolo NFC: un punto y tres ondas.
-const NFC = `<svg class="nfc" viewBox="0 0 60 60" aria-hidden="true"><circle cx="9" cy="30" r="4.2"/>${[12, 22, 32].map((r) => {
+const NFC = `<svg class="nfc" viewBox="3.8 7.2 40.3 45.6" aria-hidden="true"><circle cx="9" cy="30" r="4.2"/>${[12, 22, 32].map((r) => {
   const a = (Math.PI / 180) * 38;
   const x = (30 - 21) + 0; // el centro de las ondas es el punto
   const cx = 9; const cy = 30;
@@ -60,20 +60,20 @@ const cara = (t) => `<!doctype html>
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 80mm; height: 125mm; background: transparent; }
 body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.tarjeta { position: relative; width: 80mm; height: 125mm; border-radius: 6mm; overflow: hidden; background: #0B0A09; color: #F2EDE4; font-family: "Geist", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 9mm 7mm 9mm; }
+.tarjeta { position: relative; width: 80mm; height: 125mm; border-radius: 6mm; overflow: hidden; background: #0B0A09; color: #F2EDE4; font-family: "Geist", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 7mm 7mm 0; }
 /* Filete interior en oro viejo, como una placa grabada */
 .tarjeta::before { content: ""; position: absolute; inset: 3mm; border: .35mm solid rgba(201, 169, 97, .55); border-radius: 3.6mm; pointer-events: none; }
 .marca { display: flex; align-items: baseline; justify-content: center; gap: 1.4mm; }
 .marca b { font: 400 6.6mm/1 "Instrument Serif", serif; letter-spacing: -.01em; }
 .marca .belle { height: 8.6mm; width: auto; transform: rotate(-4deg) translateY(.6mm); }
-.centro { text-align: center; margin-top: 13mm; }
-.estrellas { width: 44mm; height: auto; fill: #E8BE45; display: block; margin: 0 auto 4.2mm; }
-h1 { font: 400 11.2mm/.98 "Instrument Serif", serif; letter-spacing: -.025em; }
+.centro { text-align: center; margin-top: 3.5mm; }
+.estrellas { width: 34mm; height: auto; fill: #E8BE45; display: block; margin: 0 auto 2.6mm; }
+h1 { font: 400 9.4mm/.98 "Instrument Serif", serif; letter-spacing: -.025em; }
 h1 em { font-style: italic; color: #E8BE45; }
-.acciones { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4mm; width: 100%; padding: 0 2mm; }
-.hueco { width: ${SLOT_MM}mm; height: ${SLOT_MM}mm; background: #F2EDE4; border-radius: 2mm; }
-.tocar { display: grid; place-items: center; }
-.nfc { width: 22mm; height: 22mm; fill: #E8BE45; stroke: #E8BE45; }
+/* La pastilla NFC está incrustada en el centro de la tarjeta (40 mm × 62,5 mm): el símbolo va justo encima. */
+.nfc { position: absolute; left: 50%; top: 62.5mm; width: 14.7mm; height: 16.6mm; transform: translate(-50%, -50%); fill: #E8BE45; stroke: #E8BE45; }
+/* Hueco liso para pegar la pegatina del QR, centrado bajo el símbolo. */
+.hueco { position: absolute; left: 50%; bottom: 13mm; width: ${SLOT_MM}mm; height: ${SLOT_MM}mm; transform: translateX(-50%); background: #F2EDE4; border-radius: 2mm; }
 </style>
 <body>
 <div class="tarjeta">
@@ -82,10 +82,8 @@ h1 em { font-style: italic; color: #E8BE45; }
     ${ESTRELLAS}
     <h1>${t.titulo}</h1>
   </div>
-  <div class="acciones">
-    <div class="hueco" role="img" aria-label="Espacio para la pegatina del QR"></div>
-    <div class="tocar">${NFC}</div>
-  </div>
+  ${NFC}
+  <div class="hueco" role="img" aria-label="Espacio para la pegatina del QR"></div>
 </div>
 </body></html>`;
 
