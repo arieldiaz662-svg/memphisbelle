@@ -3,7 +3,7 @@
 //
 // Uso:  npm run tarjeta
 //
-// Qué lleva: marca, cinco estrellas, titular, "Acerca tu móvil" con el símbolo NFC y un hueco liso (SLOT_MM) donde
+// Qué lleva: marca, cinco estrellas, titular, el símbolo NFC y un hueco liso (SLOT_MM) donde
 // se pega la pegatina del QR. El QR no va impreso: sale aparte en qr-resena.svg, con el mismo enlace que la etiqueta
 // NFC (reviewCta.writeUrl de src/content/site.js; sin él, la ficha de Google Maps). Conviene poner el enlace corto
 // de "Pedir reseñas" de Google Business: el QR sale mucho más sencillo y se lee mejor con poca luz.
@@ -45,8 +45,8 @@ const NFC = `<svg class="nfc" viewBox="0 0 60 60" aria-hidden="true"><circle cx=
 }).join('')}</svg>`;
 
 const TEXTOS = {
-  es: { lang: 'es', titulo: 'Déjanos tu reseña<br>en <em>Google</em>', nfc: 'Acerca tu móvil' },
-  en: { lang: 'en', titulo: 'Leave us a<br>review on <em>Google</em>', nfc: 'Tap your phone' },
+  es: { lang: 'es', titulo: 'Déjanos tu reseña<br>en <em>Google</em>' },
+  en: { lang: 'en', titulo: 'Leave us a<br>review on <em>Google</em>' },
 };
 
 const cara = (t) => `<!doctype html>
@@ -72,9 +72,8 @@ h1 { font: 400 11.2mm/.98 "Instrument Serif", serif; letter-spacing: -.025em; }
 h1 em { font-style: italic; color: #E8BE45; }
 .acciones { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4mm; width: 100%; padding: 0 2mm; }
 .hueco { width: ${SLOT_MM}mm; height: ${SLOT_MM}mm; background: #F2EDE4; border-radius: 2mm; }
-.tocar { display: grid; justify-items: start; gap: 1.6mm; }
-.nfc { width: 15mm; height: 15mm; fill: #E8BE45; stroke: #E8BE45; }
-.tocar strong { font: 400 5mm/1 "Instrument Serif", serif; }
+.tocar { display: grid; place-items: center; }
+.nfc { width: 22mm; height: 22mm; fill: #E8BE45; stroke: #E8BE45; }
 </style>
 <body>
 <div class="tarjeta">
@@ -85,7 +84,7 @@ h1 em { font-style: italic; color: #E8BE45; }
   </div>
   <div class="acciones">
     <div class="hueco" role="img" aria-label="Espacio para la pegatina del QR"></div>
-    <div class="tocar">${NFC}<strong>${t.nfc}</strong></div>
+    <div class="tocar">${NFC}</div>
   </div>
 </div>
 </body></html>`;
