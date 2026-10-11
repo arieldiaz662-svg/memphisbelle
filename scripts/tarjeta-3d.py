@@ -15,7 +15,7 @@ Uso:  pip install fonttools brotli shapely trimesh mapbox-earcut uharfbuzz svgpa
 
 Diseño pensado para imprimir: base de 2,0 mm y relieve de 0,8 mm (se imprime todo de una vez cambiando de
 filamento en la capa 2,0 mm, o con una impresora multicolor). Los trazos finos de las letras se engrosan hasta
-un mínimo de 0,6 mm (una pasada y media de una boquilla de 0,4) para que se impriman bien. Sin QR: el NFC va incrustado.
+un mínimo de 0,6 mm (una pasada y media de una boquilla de 0,4) para que se impriman bien. El símbolo NFC va sobre la pastilla, en el centro de la tarjeta; el QR es una pegatina que se pega en un hueco rebajado.
 """
 import io
 import json
@@ -44,11 +44,16 @@ ANCHO, ALTO, RADIO = 80.0, 125.0, 6.0
 BASE_Z = 2.0          # grosor de la base
 RELIEVE = 0.8         # altura del texto y los dibujos
 MIN_TRAZO = 0.6       # trazo mínimo que se busca (una pasada y media de boquilla de 0,4)
+NFC_X, NFC_Y = 40.0, 62.5   # centro de la tarjeta: ahí está incrustada la pastilla NFC
+SLOT = 30.0                 # lado de la pegatina del QR
+SLOT_Y = 95.0               # centro del hueco de la pegatina (hacia abajo desde el borde superior)
+REBAJE = 0.4                # profundidad del hueco para que la pegatina quede a ras
+HOLGURA = 0.4               # el hueco es un poco mayor que la pegatina
 COLORES = {"base": "#0B0A09", "marfil": "#F2EDE4", "amarillo": "#E8BE45"}
 
 TEXTOS = {
-    "es": {"linea1": "Déjanos tu reseña", "en": "en ", "google": "Google", "nfc": ["Acerca tu", "móvil"]},
-    "en": {"linea1": "Leave us a", "en": "review on ", "google": "Google", "nfc": ["Tap your", "phone"]},
+    "es": {"linea1": "Déjanos tu reseña", "en": "en ", "google": "Google"},
+    "en": {"linea1": "Leave us a", "en": "review on ", "google": "Google"},
 }
 
 
@@ -221,42 +226,38 @@ def disenar(idioma, fuentes):
         return g2
 
     # Marca: "Memphis" (marfil) + "Belle" (amarillo, inclinado), centrados juntos.
-    mem, w_mem = texto_y_abajo(serif, "Memphis", 9.6)
+    mem, w_mem = texto_y_abajo(serif, "Memphis", 8.8)
     mem = E(mem)
-    belle = colocar(logo_belle(), alto_obj=13.5, giro=0)
+    belle = colocar(logo_belle(), alto_obj=12.0, giro=0)
     belle = E(belle)
     belle = affinity.rotate(belle, -4, origin="center")  # inclinado hacia arriba, como en el logotipo
     bx0, by0, bx1, by1 = belle.bounds
     gap = 2.2
     total = w_mem + gap + (bx1 - bx0)
     x0 = cx - total / 2
-    y_marca = 21.0
+    y_marca = 16.0
     marfil.append(affinity.translate(mem, x0, y_marca))
     amarillo.append(affinity.translate(belle, x0 + w_mem + gap - bx0, y_marca + 1.6 - by1))
 
     # Estrellas
     for i in range(5):
-        amarillo.append(estrella(cx + (i - 2) * 13.2, 36.0, 5.6))
+        amarillo.append(estrella(cx + (i - 2) * 10.6, 26.0, 4.4))
 
     # Titular: línea 1 en marfil; línea 2 "en " en marfil y "Google" en cursiva amarilla.
-    tam = 11.4
+    tam = 9.4
     l1, w1 = texto_y_abajo(serif, t["linea1"], tam)
     l1 = E(l1)
-    marfil.append(affinity.translate(l1, cx - w1 / 2, 61.0))
+    marfil.append(affinity.translate(l1, cx - w1 / 2, 42.0))
     pre, wp = texto_y_abajo(serif, t["en"], tam)
     pre = E(pre)
     goo, wg = texto_y_abajo(cursiva, t["google"], tam)
     goo = E(goo)
     x2 = cx - (wp + wg) / 2
-    marfil.append(affinity.translate(pre, x2, 74.5))
-    amarillo.append(affinity.translate(goo, x2 + wp, 74.5))
+    marfil.append(affinity.translate(pre, x2, 52.0))
+    amarillo.append(affinity.translate(goo, x2 + wp, 52.0))
 
-    # Mensaje del NFC (texto a la izquierda) e icono (a la derecha)
-    for i, linea in enumerate(t["nfc"]):
-        g, _ = texto_y_abajo(serif, linea, 7.4)
-        g = E(g)
-        marfil.append(affinity.translate(g, 10.0, 98.0 + i * 9.0))
-    amarillo.append(icono_nfc(57.5, 100.0, 26.0))
+    # Símbolo NFC justo sobre la pastilla incrustada (centro de la tarjeta)
+    amarillo.append(icono_nfc(NFC_X, NFC_Y, 22.0))
 
     # Filete interior (a 3 mm del borde, 1 mm de ancho)
     exterior = box(3, 3, ANCHO - 3, ALTO - 3).buffer(0)
@@ -323,7 +324,10 @@ def main():
         # Une partes que se rozan en un punto (dan aristas no válidas en el modelo) y quita astillas.
         marfil = marfil.buffer(0.03, join_style="round").buffer(-0.03, join_style="round").simplify(0.005)
         amarillo = amarillo.buffer(0.03, join_style="round").buffer(-0.03, join_style="round").simplify(0.005)
-        m_base = mallas(placa, 0, BASE_Z)
+        # Base con el hueco rebajado para la pegatina del QR (queda a ras de la superficie)
+        lado = SLOT + HOLGURA
+        hueco = Polygon(rounded(NFC_X - lado / 2, SLOT_Y - lado / 2, NFC_X + lado / 2, SLOT_Y + lado / 2, 2.0))
+        m_base = mallas(placa, 0, BASE_Z).difference(mallas(hueco, BASE_Z - REBAJE, REBAJE + 0.2), engine="manifold")
         m_marfil = mallas(marfil, BASE_Z - 0.02, RELIEVE + 0.02)
         m_amarillo = mallas(amarillo, BASE_Z - 0.02, RELIEVE + 0.02)
         for nombre, m in (("1-base-negro", m_base), ("2-relieve-marfil", m_marfil), ("3-relieve-amarillo", m_amarillo)):
@@ -333,7 +337,7 @@ def main():
         escena.add_geometry(m_marfil, node_name="2 relieve marfil", geom_name="marfil")
         escena.add_geometry(m_amarillo, node_name="3 relieve amarillo", geom_name="amarillo")
         escena.export(SALIDA / f"tarjeta-resena-{idioma}.3mf")
-        (SALIDA / f"{idioma}-capa-1-base-negro.svg").write_text(svg_pagina(a_svg(placa, COLORES["base"])))
+        (SALIDA / f"{idioma}-capa-1-base-negro.svg").write_text(svg_pagina(a_svg(placa, COLORES["base"]) + a_svg(hueco, "#555")))
         (SALIDA / f"{idioma}-capa-2-marfil.svg").write_text(svg_pagina(a_svg(marfil, "#000")))
         (SALIDA / f"{idioma}-capa-3-amarillo.svg").write_text(svg_pagina(a_svg(amarillo, "#000")))
         info[idioma] = {
@@ -343,7 +347,8 @@ def main():
             "volumen_mm3": {k: round(float(m.volume), 1) for k, m in (("base", m_base), ("marfil", m_marfil), ("amarillo", m_amarillo))},
         }
         # Vista previa en color para el PDF
-        prev = a_svg(placa, COLORES["base"]) + a_svg(marfil, COLORES["marfil"]) + a_svg(amarillo, COLORES["amarillo"])
+        marca_hueco = a_svg(hueco, "#2a2723")  # el hueco rebajado de la pegatina, algo más claro en la vista previa
+        prev = a_svg(placa, COLORES["base"]) + marca_hueco + a_svg(marfil, COLORES["marfil"]) + a_svg(amarillo, COLORES["amarillo"])
         (SALIDA / f".prev-{idioma}.svg").write_text(svg_pagina(prev, borde=False))
     (SALIDA / ".info.json").write_text(json.dumps(info, indent=1))
     print(json.dumps(info, indent=1))
@@ -380,9 +385,10 @@ def pdf():
       <tr><th>Orientación</th><td>Plana, con el relieve hacia arriba. No hacen falta soportes.</td></tr>
       <tr><th>Cambio de filamento</th><td>Base negra hasta 2,0 mm (la capa donde empieza el relieve). A partir de ahí, marfil y amarillo. Con AMS / multicolor: abre el 3MF y asigna un filamento a cada pieza. Impresora de un solo color: cambia el filamento con pausa (M600) en la capa de 2,0 mm e imprime primero el marfil y luego el amarillo, o imprime cada color por separado y pega.</td></tr>
       <tr><th>Primera capa</th><td>Lenta y bien calibrada; la base es una placa grande de 80 × 125 mm: usa borde de adhesión o lámina PEI limpia para evitar que se curve.</td></tr>
-      <tr><th>NFC</th><td>Si vas a incrustar la etiqueta NFC, pausa la impresión tras la capa de 1,0 – 1,2 mm de la base, coloca la pastilla bajo el símbolo NFC (a 57 mm del borde izquierdo y 25 mm del borde inferior) y continúa. Con 2,0 mm de base entra una pastilla fina; si es más gruesa, hay que ahuecar la base. Dime el diámetro y el grosor y lo preparo.</td></tr></table>
+      <tr><th>NFC</th><td>La pastilla va incrustada en el centro de la tarjeta (40 mm del borde izquierdo y 62,5 mm del superior), justo bajo el símbolo NFC. Pausa la impresión cuando la base llegue a 1,0 – 1,2 mm, coloca la pastilla, y continúa. Con 2,0 mm de base entra una pastilla fina; si es más gruesa, dime su diámetro y grosor y preparo el hueco.</td></tr>
+      <tr><th>Pegatina del QR</th><td>Hueco rebajado de 30,4 × 30,4 mm y 0,4 mm de profundidad, centrado bajo el símbolo NFC (de 80 a 110 mm desde el borde superior). La pegatina de 30 × 30 mm queda a ras. Si es de otro tamaño, cambia SLOT en scripts/tarjeta-3d.py.</td></tr></td></tr></table>
       <h2>Por qué este diseño imprime bien</h2>
-      <p>Sin QR (el NFC va incrustado), con texto grande y en relieve de 0,8 mm, y con los trazos finos de las letras engrosados hasta un mínimo de 0,6 mm para que no se rompan. Los modelos son sólidos y estancos (comprobado).</p>
+      <p>Sin QR impreso (es una pegatina), con texto grande y en relieve de 0,8 mm, y con los trazos finos de las letras engrosados hasta un mínimo de 0,6 mm para que no se rompan. Los modelos son sólidos y estancos (comprobado).</p>
       <p class="nota">Archivos: tarjeta-resena-es.3mf, tarjeta-resena-en.3mf y, por pieza, los STL (1 base negro, 2 relieve marfil, 3 relieve amarillo). Un PDF no se puede imprimir en 3D: este documento es la guía y la referencia a escala; el modelo está en los 3MF / STL.</p></section>''')
     html = f'''<!doctype html><meta charset="utf-8"><style>
     @page {{ size: A4; margin: 0 }} * {{ box-sizing: border-box }} body {{ margin: 0; font: 11pt/1.45 -apple-system, "Segoe UI", Arial, sans-serif; color: #1a1a1a }}
