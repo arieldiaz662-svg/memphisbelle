@@ -1,16 +1,16 @@
 // Tarjeta de "Déjanos una reseña en Google" para enseñar a los clientes (80 × 125 mm, dos caras: español e inglés),
-// con NFC y un QR de respaldo. Salida en tarjetas/ (se sube a git: el enlace de reseñas no depende del dominio).
+// con NFC y un hueco liso para pegar la pegatina del QR. Salida en tarjetas/ (se sube a git: el enlace de reseñas no depende del dominio).
 //
 // Uso:  npm run tarjeta
 //
-// Qué lleva: marca, cinco estrellas, titular, aviso de NFC y QR. El QR (y la etiqueta NFC, que se programa
-// aparte con el mismo enlace) usa reviewCta.writeUrl de src/content/site.js; sin él, la ficha de Google Maps.
-// Conviene poner el enlace corto de "Pedir reseñas" de Google Business: el QR sale mucho más sencillo y se lee
-// mejor con poca luz.
+// Qué lleva: marca, cinco estrellas, titular, "Acerca tu móvil" con el símbolo NFC y un hueco liso (SLOT_MM) donde
+// se pega la pegatina del QR. El QR no va impreso: sale aparte en qr-resena.svg, con el mismo enlace que la etiqueta
+// NFC (reviewCta.writeUrl de src/content/site.js; sin él, la ficha de Google Maps). Conviene poner el enlace corto
+// de "Pedir reseñas" de Google Business: el QR sale mucho más sencillo y se lee mejor con poca luz.
 //
 // Salida:  tarjeta-resena-es.png / -en.png      300 ppp, cada cara
 //          tarjeta-resena.pdf                    PDF a tamaño real, 2 páginas (cara ES y cara EN), esquinas redondeadas
-//          qr-resena.svg                         el QR suelto, vectorial
+//          qr-resena.svg                         el QR suelto, vectorial (para hacer la pegatina)
 //          tarjeta-resena-es.html / -en.html     las caras (editables)
 // Necesita Playwright con Chromium (como npm run og-image).
 const { execSync } = require('node:child_process');
@@ -19,6 +19,7 @@ const { join, resolve } = require('node:path');
 const { pathToFileURL } = require('node:url');
 const QRCode = require('qrcode');
 
+const SLOT_MM = 30; // lado del hueco para la pegatina del QR (cámbialo si la pegatina es de otro tamaño)
 const RAIZ = join(__dirname, '..');
 const SALIDA = join(RAIZ, 'tarjetas');
 const FUENTES = pathToFileURL(join(RAIZ, 'public', 'fonts')).href;
@@ -44,11 +45,11 @@ const NFC = `<svg class="nfc" viewBox="0 0 60 60" aria-hidden="true"><circle cx=
 }).join('')}</svg>`;
 
 const TEXTOS = {
-  es: { lang: 'es', kicker: 'Tu opinión nos importa', titulo: 'Déjanos tu reseña<br>en <em>Google</em>', nfc: 'Acerca tu móvil', qr: 'o escanea el código', pie: 'Gracias por venir' },
-  en: { lang: 'en', kicker: 'Your opinion matters', titulo: 'Leave us a<br>review on <em>Google</em>', nfc: 'Tap your phone', qr: 'or scan the code', pie: 'Thank you for coming' },
+  es: { lang: 'es', titulo: 'Déjanos tu reseña<br>en <em>Google</em>', nfc: 'Acerca tu móvil', pie: 'Gracias por venir' },
+  en: { lang: 'en', titulo: 'Leave us a<br>review on <em>Google</em>', nfc: 'Tap your phone', pie: 'Thank you for coming' },
 };
 
-const cara = (t, qr, direccion) => `<!doctype html>
+const cara = (t, direccion) => `<!doctype html>
 <html lang="${t.lang}"><meta charset="utf-8">
 <style>
 @font-face { font-family: "Instrument Serif"; src: url("${FUENTES}/instrument-serif.woff2") format("woff2"); font-style: normal; }
@@ -67,16 +68,13 @@ body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .marca .belle { height: 8.6mm; width: auto; transform: rotate(-4deg) translateY(.6mm); }
 .centro { text-align: center; }
 .estrellas { width: 44mm; height: auto; fill: #E8BE45; display: block; margin: 0 auto 4.2mm; }
-.kicker { font: 500 2.3mm/1.4 "Geist Mono", monospace; letter-spacing: .22em; text-transform: uppercase; color: #C9A961; margin-bottom: 2.6mm; }
 h1 { font: 400 11.2mm/.98 "Instrument Serif", serif; letter-spacing: -.025em; }
 h1 em { font-style: italic; color: #E8BE45; }
 .acciones { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4mm; width: 100%; padding: 0 2mm; }
-.qr { width: 27mm; height: 27mm; background: #fff; border-radius: 2mm; padding: .6mm; }
-.qr svg { display: block; width: 100%; height: 100%; }
+.hueco { width: ${SLOT_MM}mm; height: ${SLOT_MM}mm; background: #F2EDE4; border-radius: 2mm; }
 .tocar { display: grid; justify-items: start; gap: 1.6mm; }
 .nfc { width: 15mm; height: 15mm; fill: #E8BE45; stroke: #E8BE45; }
 .tocar strong { font: 400 5mm/1 "Instrument Serif", serif; }
-.tocar span { font: 500 2.3mm/1.3 "Geist Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #C9A961; }
 .pie span { color: rgba(242, 237, 228, .45); }
 .pie { font: 500 2.3mm/1.7 "Geist Mono", monospace; letter-spacing: .18em; text-transform: uppercase; color: rgba(242, 237, 228, .7); text-align: center; }
 </style>
@@ -85,12 +83,11 @@ h1 em { font-style: italic; color: #E8BE45; }
   <div class="marca"><b>Memphis</b>${BELLE}</div>
   <div class="centro">
     ${ESTRELLAS}
-    <div class="kicker">${t.kicker}</div>
     <h1>${t.titulo}</h1>
   </div>
   <div class="acciones">
-    <div class="qr">${qr}</div>
-    <div class="tocar">${NFC}<strong>${t.nfc}</strong><span>${t.qr}</span></div>
+    <div class="hueco" role="img" aria-label="Espacio para la pegatina del QR"></div>
+    <div class="tocar">${NFC}<strong>${t.nfc}</strong></div>
   </div>
   <div class="pie">${t.pie}<br><span>${direccion}</span></div>
 </div>
@@ -110,7 +107,7 @@ h1 em { font-style: italic; color: #E8BE45; }
   const browser = await playwright.chromium.launch();
   const paginas = [];
   for (const [id, t] of Object.entries(TEXTOS)) {
-    const html = cara(t, qr, direccion);
+    const html = cara(t, direccion);
     const archivo = join(SALIDA, `tarjeta-resena-${id}.html`);
     writeFileSync(archivo, html);
     paginas.push(html);
