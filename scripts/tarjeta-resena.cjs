@@ -45,11 +45,11 @@ const NFC = `<svg class="nfc" viewBox="0 0 60 60" aria-hidden="true"><circle cx=
 }).join('')}</svg>`;
 
 const TEXTOS = {
-  es: { lang: 'es', titulo: 'Déjanos tu reseña<br>en <em>Google</em>', nfc: 'Acerca tu móvil', pie: 'Gracias por venir' },
-  en: { lang: 'en', titulo: 'Leave us a<br>review on <em>Google</em>', nfc: 'Tap your phone', pie: 'Thank you for coming' },
+  es: { lang: 'es', titulo: 'Déjanos tu reseña<br>en <em>Google</em>', nfc: 'Acerca tu móvil' },
+  en: { lang: 'en', titulo: 'Leave us a<br>review on <em>Google</em>', nfc: 'Tap your phone' },
 };
 
-const cara = (t, direccion) => `<!doctype html>
+const cara = (t) => `<!doctype html>
 <html lang="${t.lang}"><meta charset="utf-8">
 <style>
 @font-face { font-family: "Instrument Serif"; src: url("${FUENTES}/instrument-serif.woff2") format("woff2"); font-style: normal; }
@@ -60,23 +60,21 @@ const cara = (t, direccion) => `<!doctype html>
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 80mm; height: 125mm; background: transparent; }
 body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.tarjeta { position: relative; width: 80mm; height: 125mm; border-radius: 6mm; overflow: hidden; background: #0B0A09; color: #F2EDE4; font-family: "Geist", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 8mm 7mm 7mm; }
+.tarjeta { position: relative; width: 80mm; height: 125mm; border-radius: 6mm; overflow: hidden; background: #0B0A09; color: #F2EDE4; font-family: "Geist", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 9mm 7mm 9mm; }
 /* Filete interior en oro viejo, como una placa grabada */
 .tarjeta::before { content: ""; position: absolute; inset: 3mm; border: .35mm solid rgba(201, 169, 97, .55); border-radius: 3.6mm; pointer-events: none; }
 .marca { display: flex; align-items: baseline; justify-content: center; gap: 1.4mm; }
 .marca b { font: 400 6.6mm/1 "Instrument Serif", serif; letter-spacing: -.01em; }
 .marca .belle { height: 8.6mm; width: auto; transform: rotate(-4deg) translateY(.6mm); }
-.centro { text-align: center; }
+.centro { text-align: center; margin-top: 13mm; }
 .estrellas { width: 44mm; height: auto; fill: #E8BE45; display: block; margin: 0 auto 4.2mm; }
 h1 { font: 400 11.2mm/.98 "Instrument Serif", serif; letter-spacing: -.025em; }
 h1 em { font-style: italic; color: #E8BE45; }
-.acciones { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4mm; width: 100%; padding: 0 2mm; }
+.acciones { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4mm; width: 100%; padding: 0 2mm; }
 .hueco { width: ${SLOT_MM}mm; height: ${SLOT_MM}mm; background: #F2EDE4; border-radius: 2mm; }
 .tocar { display: grid; justify-items: start; gap: 1.6mm; }
 .nfc { width: 15mm; height: 15mm; fill: #E8BE45; stroke: #E8BE45; }
 .tocar strong { font: 400 5mm/1 "Instrument Serif", serif; }
-.pie span { color: rgba(242, 237, 228, .45); }
-.pie { font: 500 2.3mm/1.7 "Geist Mono", monospace; letter-spacing: .18em; text-transform: uppercase; color: rgba(242, 237, 228, .7); text-align: center; }
 </style>
 <body>
 <div class="tarjeta">
@@ -89,7 +87,6 @@ h1 em { font-style: italic; color: #E8BE45; }
     <div class="hueco" role="img" aria-label="Espacio para la pegatina del QR"></div>
     <div class="tocar">${NFC}<strong>${t.nfc}</strong></div>
   </div>
-  <div class="pie">${t.pie}<br><span>${direccion}</span></div>
 </div>
 </body></html>`;
 
@@ -100,14 +97,13 @@ h1 em { font-style: italic; color: #E8BE45; }
   // Negro sobre blanco y margen de 2 módulos (la tarjeta ya deja aire alrededor): es lo que mejor se lee.
   const qr = await QRCode.toString(enlace, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#000000', light: '#FFFFFF' } });
   writeFileSync(join(SALIDA, 'qr-resena.svg'), qr);
-  const direccion = `Calle de los Sueños ${site.address.street.match(/\d+/)[0]}`;
 
   let playwright;
   try { playwright = require('playwright'); } catch { playwright = require(join(execSync('npm root -g').toString().trim(), 'playwright')); }
   const browser = await playwright.chromium.launch();
   const paginas = [];
   for (const [id, t] of Object.entries(TEXTOS)) {
-    const html = cara(t, direccion);
+    const html = cara(t);
     const archivo = join(SALIDA, `tarjeta-resena-${id}.html`);
     writeFileSync(archivo, html);
     paginas.push(html);
