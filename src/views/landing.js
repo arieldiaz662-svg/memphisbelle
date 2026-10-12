@@ -1,6 +1,6 @@
 import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
-import { NAV, esc, escPhone, instagramUrl, layout, reviewUrl, rodar, whatsappUrl } from './html.js';
+import { NAV, esc, escPhone, instagramUrl, layout, reviewUrl, rodar } from './html.js';
 import { ANIMS, HUMO, ICONOS, SELLO, SELLO_INTRO } from './ilustraciones.js';
 import { structuredData } from './schema.js';
 
@@ -18,14 +18,14 @@ const TXT = {
   es: {
     desliza: 'Sigue bajando ↓', pausar: 'Pausar animaciones',
     verCarta: 'Ver la carta en pantalla completa', otraCarta: 'Menu in English', cartaOtra: 'carta-en.html', otraLang: 'en',
-    horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', tel: 'Teléfono y WhatsApp', llamar: 'Llamar', maps: 'Cómo llegar',
+    horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', tel: 'Teléfono', llamar: 'Llamar', maps: 'Cómo llegar',
     acciones: 'Acciones rápidas', portada: 'Portada', galeria: 'Galería del local', cartaCompleta: 'Toda la carta',
     alergenos: 'Alérgenos',
   },
   en: {
     desliza: 'Scroll ↓', pausar: 'Pause animations',
     verCarta: 'View the full-screen menu', otraCarta: 'Carta en español', cartaOtra: 'carta.html', otraLang: 'es',
-    horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', tel: 'Phone and WhatsApp', llamar: 'Call', maps: 'Get directions',
+    horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', tel: 'Phone', llamar: 'Call', maps: 'Get directions',
     acciones: 'Quick actions', portada: 'Home', galeria: 'Venue gallery', cartaCompleta: 'The full menu',
     alergenos: 'Allergens',
   },
@@ -279,7 +279,7 @@ function galeria(site, idioma) {
 </section>`;
 }
 
-// Visítanos: "¿Vienes a Memphis Belle?" con cómo llegar, WhatsApp para dudas y los datos de la ficha (ubicación,
+// Visítanos: "¿Vienes a Memphis Belle?" con cómo llegar y los datos de la ficha (ubicación,
 // horario agrupado con "Abierto ahora", contacto). No hay reservas: el bar no admite reservas.
 function visit(site, idioma) {
   const { address: a, visit: v } = site;
@@ -296,7 +296,6 @@ function visit(site, idioma) {
         <p data-reveal>${esc(v.text)}</p>
         <div class="contacto-ctas" data-reveal${d(1)}>
           <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${rodar(v.mapsText)}${enlaceExterno}</a>
-          <a class="btn btn-borde" href="${esc(whatsappUrl(site.whatsapp.number, v.whatsappText))}" rel="noopener" target="_blank">${rodar(v.whatsappLabel)}</a>
         </div>
         <dl class="datos-contacto" data-reveal${d(2)}>
           <div><dt class="etiqueta">${t.ubicacion}</dt><dd><address>${esc(a.street)}, ${esc(a.postalCode)} ${esc(a.city)}</address></dd></div>

@@ -37,11 +37,11 @@ export function renderPrivacy({ site, config }) {
       ['Responsable del tratamiento', legal.owner
         ? `<p>${esc(legal.owner)} (NIF/CIF ${esc(legal.taxId)}), ${esc(legal.address)}. Contacto: ${reach}.</p>`
         : `<p>${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}. Contacto: ${reach}.</p>`],
-      ['Qué datos tratamos', '<p>Esta web no guarda ningún dato y no tiene formularios. Los enlaces de contacto (teléfono, correo y WhatsApp) abren tu aplicación con el mensaje ya escrito: solo nos llega si tú decides enviarlo. En ese caso tratamos tu nombre, tu número de teléfono y el contenido de tu mensaje.</p>'],
+      ['Qué datos tratamos', '<p>Esta web no guarda ningún dato y no tiene formularios. Los enlaces de contacto (teléfono y correo) abren tu aplicación: solo nos llega lo que tú decidas enviarnos. En ese caso tratamos tu nombre, tu número de teléfono y el contenido de tu mensaje.</p>'],
       ['Para qué los usamos', '<p>Únicamente para responder a tu consulta. No enviamos publicidad ni tomamos decisiones automatizadas.</p>'],
       ['Base legal', '<p>Tu consentimiento al escribirnos (art. 6.1.a RGPD).</p>'],
       ['Cuánto tiempo los guardamos', '<p>Borramos la conversación en un plazo máximo de 3 meses, salvo que la necesitemos para atender una reclamación.</p>'],
-      ['Con quién los compartimos', '<p>No cedemos tus datos a terceros salvo obligación legal. Al usar WhatsApp se aplican además las condiciones y la política de privacidad de WhatsApp (Meta).</p>'],
+      ['Con quién los compartimos', '<p>No cedemos tus datos a terceros salvo obligación legal.</p>'],
       ['Tus derechos', `<p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiéndonos a ${reach}. Si consideras que no hemos atendido correctamente tu solicitud, puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" rel="noopener">www.aepd.es</a>).</p>`],
     ],
   });
@@ -53,7 +53,7 @@ export function renderCookies({ site, config }) {
     sections: [
       ['Qué cookies usamos', `<p>La web de ${esc(site.fullName)} no utiliza cookies de ningún tipo, y las tipografías se sirven desde nuestro propio alojamiento. Por eso no te mostramos un aviso de cookies.</p>`],
       ['Memoria temporal del navegador', '<p>Para no repetir la pantalla de entrada en cada página, la web guarda un único aviso (<code>mb-intro</code>) en la memoria de sesión de tu navegador. No es una cookie, no contiene datos personales, no se envía a ningún servidor y se borra al cerrar la pestaña.</p>'],
-      ['Enlaces externos', '<p>Al pulsar los enlaces de WhatsApp, Instagram o Google Maps sales de esta web; desde ese momento se aplica la política de cookies de cada servicio.</p>'],
+      ['Enlaces externos', '<p>Al pulsar los enlaces de Instagram o Google Maps sales de esta web; desde ese momento se aplica la política de cookies de cada servicio.</p>'],
     ],
   });
 }

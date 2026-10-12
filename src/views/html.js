@@ -19,10 +19,6 @@ export function escPhone(phone) {
   return esc(phone).replace(/ /g, '&nbsp;');
 }
 
-export function whatsappUrl(number, text) {
-  return `https://wa.me/${number}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
-}
-
 // Texto de botón que "rueda" al pasar el ratón: la etiqueta sale por arriba y entra su copia por abajo.
 export const rodar = (texto) => `<span class="rodar"><span>${esc(texto)}</span><span aria-hidden="true">${esc(texto)}</span></span>`;
 

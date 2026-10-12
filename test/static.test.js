@@ -196,12 +196,12 @@ describe('el local, visítanos y reseñas', () => {
     for (const g of site.local.gallery) assert.ok(galeria.includes(`alt="${g.alt}"`), g.alt);
   });
 
-  test('visítanos: dirección, Cómo llegar, WhatsApp para dudas, horario con "Abierto ahora" y sin reservas', () => {
+  test('visítanos: dirección, Cómo llegar, horario con "Abierto ahora" y sin reservas', () => {
     const visita = index.slice(index.indexOf('id="visitanos"'), index.indexOf('</main>'));
     assert.ok(visita.includes(site.address.street));
     assert.ok(visita.includes(site.googleMapsUrl.replace(/&/g, '&amp;')));
     assert.ok(visita.includes(`href="tel:+${site.phone}"`));
-    assert.ok(visita.includes(`href="https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(site.visit.whatsappText)}"`));
+    assert.doesNotMatch(visita, /wa\.me|WhatsApp/i);
     assert.match(visita, /class="estado estado-info" data-horario=/);
     assert.ok(visita.includes(site.visit.place));
     assert.doesNotMatch(index, /<form|id="reservar"|Reservar mesa/);
@@ -237,9 +237,9 @@ describe('portada y móvil', () => {
     for (const [, id] of index.matchAll(/href="#([^"]+)"/g)) assert.ok(index.includes(`id="${id}"`), id);
   });
 
-  test('contacto: teléfono, WhatsApp, email, Instagram y Cómo llegar', () => {
+  test('contacto: teléfono, email, Instagram y Cómo llegar', () => {
     assert.ok(index.includes(`href="tel:+${site.phone}"`));
-    assert.ok(index.includes(`href="https://wa.me/${site.whatsapp.number}?text=`));
+    assert.doesNotMatch(index, /wa\.me/);
     assert.ok(index.includes(`href="mailto:${site.email}"`));
     assert.ok(index.includes(`href="https://www.instagram.com/${site.instagram}/"`));
     assert.ok(index.includes(site.googleMapsUrl.replace(/&/g, '&amp;')));
@@ -552,7 +552,7 @@ describe('selector de idioma: español / inglés', () => {
     for (const item of site.en.oficio.items) assert.ok(h.includes(item.title) && h.includes(`aria-label="${item.aria}"`), item.title);
     for (const x of site.en.highlights) assert.ok(h.includes(x.text), x.text);
     for (const g of site.en.local.gallery) assert.ok(h.includes(`alt="${g.alt}"`), g.alt);
-    for (const t of ['See the menu', 'Get directions', 'Opening hours', 'Message us on WhatsApp', 'Wednesday to Sunday, 18:00 to 02:00', 'The full menu', 'Moscow Mule', 'Vodka, ginger beer and lime']) assert.ok(h.includes(t), t);
+    for (const t of ['See the menu', 'Get directions', 'Opening hours', 'Wednesday to Sunday, 18:00 to 02:00', 'The full menu', 'Moscow Mule', 'Vodka, ginger beer and lime']) assert.ok(h.includes(t), t);
     for (const sp of ['Ver la carta', 'Cómo llegar', 'De miércoles a domingo', 'Escríbenos', 'Toda la carta']) assert.ok(!h.includes(sp), `queda en español: ${sp}`);
     assert.deepEqual(ids(h), ids(index));
     assert.ok(h.includes('Leave us a Google review') && h.includes('href="carta-en.html"'));

@@ -20,8 +20,6 @@ export const site = {
   // CONTACTO
   phone: '34636864193', // con prefijo de país, solo dígitos
   phoneDisplay: '636 864 193',
-  // WhatsApp para dudas (el bar no admite reservas). Se asume el mismo número que el teléfono: confirmarlo.
-  whatsapp: { number: '34636864193', pendiente: 'Confirmar que el 636 864 193 tiene WhatsApp y que atienden dudas por ahí' },
   email: 'memphiscocteleria@gmail.com',
   instagram: 'memphisbelle_cocteleria',
 
@@ -119,9 +117,7 @@ export const site = {
     title: '¿Vienes a <em>Memphis Belle?</em>',
     text: 'Sin reservas: entra, siéntate en la barra y déjate aconsejar.',
     place: 'Sin reservas · entra sin avisar',
-    whatsappText: 'Hola, tengo una pregunta sobre Memphis Belle.',
     mapsText: 'Cómo llegar',
-    whatsappLabel: 'Escríbenos por WhatsApp',
   },
 
   // CARTA DIGITAL (la real del local). Precios con IGIC incluido, tal como se cobran en la barra.
@@ -281,9 +277,7 @@ export const site = {
       title: 'Coming to <em>Memphis Belle?</em>',
       text: 'No bookings: walk in, sit at the bar and let us advise you.',
       place: 'No bookings · just walk in',
-      whatsappText: 'Hi, I have a question about Memphis Belle.',
       mapsText: 'Get directions',
-      whatsappLabel: 'Message us on WhatsApp',
     },
   },
 };

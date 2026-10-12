@@ -2,7 +2,7 @@
 
 Web de **Memphis Belle Coctelería** (Calle de los Sueños, 1, Santa Cruz de Tenerife): carta digital, horario con "Abierto ahora", ubicación y contacto. El bar no admite reservas.
 
-Es una web **100 % estática**: sin servidor, sin base de datos y sin cookies ni formularios: WhatsApp se abre con un mensaje ya escrito. Se aloja gratis en Cloudflare Workers. Misma base técnica que la web de Alcance Isleño.
+Es una web **100 % estática**: sin servidor, sin base de datos y sin cookies ni formularios. Se aloja gratis en Cloudflare Workers. Misma base técnica que la web de Alcance Isleño.
 
 - Diseño y criterios visuales: [docs/DISENO.md](docs/DISENO.md)
 - Skills de diseño y animación (Emil Kowalski): [.claude/skills/README.md](.claude/skills/README.md)
@@ -45,7 +45,7 @@ GitHub Actions (`.github/workflows/ci.yml`) pasa los tests en cada push y pull r
 |---|---|
 | Carta, precios y secciones | `src/content/site.js` → `menu` |
 | Horario (una franja por día, hora de Canarias) | `src/content/site.js` → `hours` (debe coincidir con la ficha de Google) |
-| Teléfono, WhatsApp, email, Instagram, dirección | `src/content/site.js` |
+| Teléfono, email, Instagram, dirección | `src/content/site.js` |
 | Fotos y textos de "El local" (mosaico de 3) | `src/content/site.js` → `local.items` (cada uno con `image` opcional) |
 | Foto de la fachada en "Visítanos" | `src/content/site.js` → `visit.image` |
 | Valoración y citas de Google (la sección solo aparece si hay valoración) | `src/content/site.js` → `reviews` |
