@@ -16,7 +16,7 @@ export const NAV_EN = [
 // Textos fijos de la portada en cada idioma (los de contenido, del bar, están en site.js; en inglés, en site.en).
 const TXT = {
   es: {
-    desliza: 'Desliza ↓', pausar: 'Pausar animaciones',
+    desliza: 'Sigue bajando ↓', pausar: 'Pausar animaciones',
     verCarta: 'Ver la carta en pantalla completa', otraCarta: 'Menu in English', cartaOtra: 'carta-en.html', otraLang: 'en',
     horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', tel: 'Teléfono y WhatsApp', llamar: 'Llamar', maps: 'Cómo llegar',
     acciones: 'Acciones rápidas', portada: 'Portada', galeria: 'Galería del local', cartaCompleta: 'Toda la carta',

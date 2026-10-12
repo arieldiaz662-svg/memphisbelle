@@ -11,7 +11,7 @@ export const site = {
   fullName: 'Memphis Belle Coctelería',
   title: 'Memphis Belle Coctelería | Cócteles clásicos en Santa Cruz de Tenerife',
   description:
-    'Coctelería en el centro de Santa Cruz de Tenerife. Dry Martini, Manhattan y los clásicos de siempre, con terraza y mascotas bienvenidas. Consulta la carta, el horario y reserva por WhatsApp.',
+    'Coctelería en el centro de Santa Cruz de Tenerife. Dry Martini, Manhattan y muchos clásicos más, con la carta y los precios, el horario y cómo llegar. Una barra y tres mesas, sin reservas.',
   // Imagen de vista previa al compartir el enlace (WhatsApp, redes). 1200×630, en public/img/.
   // Se regenera con: npm run og-image (tras cambios visibles en la portada).
   ogImage: 'img/og.jpg',
@@ -136,7 +136,7 @@ export const site = {
         intro: 'Largos, frescos y con burbuja', introEn: 'Long, fresh and sparkling',
         items: [
           { name: 'St-Germain', text: 'St-Germain y cava', textEn: 'St-Germain and cava', price: '10 €' },
-          { name: 'Moscow Mule', text: 'Vodka, ginger beer y lima', textEn: 'Vodka, ginger beer and lime', price: '10 €' },
+          { name: 'Moscow Mule', text: 'Vodka, cerveza de jengibre y lima', textEn: 'Vodka, ginger beer and lime', price: '10 €' },
           { name: 'Caipiriña', nameEn: 'Caipirinha', text: 'Cachaza, lima y soda', textEn: 'Cachaça, lime and soda', price: '10 €' },
           { name: 'Caipiriña con fruta', nameEn: 'Caipirinha with fruit', text: 'Cachaza y fruta', textEn: 'Cachaça and fruit', price: '10 €' },
           { name: 'Mojito', text: 'Ron, lima y soda', textEn: 'Rum, lime and soda', price: '8 €' },
@@ -176,7 +176,7 @@ export const site = {
         id: 'copas', name: 'Copas y cañas', nameEn: 'Long drinks and beer',
         intro: 'Combinados y cerveza de barril', introEn: 'Mixed drinks and draught beer',
         items: [
-          { name: 'Copa combinado', nameEn: 'Mixed drink', price: '8 €' },
+          { name: 'Copa de combinado', nameEn: 'Mixed drink', price: '8 €' },
           { name: 'Copa premium', nameEn: 'Premium mixed drink', price: '10 / 12 €' },
           { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', text: 'De barril', textEn: 'On draught', price: '2 €' },
           { name: 'Caña Guinness', nameEn: 'Guinness draught beer', text: 'De barril', textEn: 'On draught', price: '4 €' },
@@ -227,7 +227,7 @@ export const site = {
   // aquí se queda como está (nombres de cócteles, fotos, números). La carta tiene sus propios campos nameEn/textEn.
   en: {
     title: 'Memphis Belle Cocktail Bar | Classic cocktails in Santa Cruz',
-    description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and all the classics, with a terrace and pets welcome. See the menu and opening hours, and book by WhatsApp.',
+    description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and plenty more classics, with the full menu and prices, opening hours and directions. One bar and three tables, no bookings.',
     hero: {
       kicker: 'Cocktail bar · Santa Cruz de Tenerife',
       kickerRight: 'Classic cocktails',

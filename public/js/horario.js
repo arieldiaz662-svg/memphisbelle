@@ -104,7 +104,7 @@ export function resumen(dias, idioma = 'es') {
   return [...abiertos, ...cerrados].map(linea);
 }
 
-// ¿Abre ese día? (para avisar en el formulario de reservas). fechaISO: "2026-10-09".
+// ¿Abre ese día? (para avisar si se pregunta por un día cerrado). fechaISO: "2026-10-09".
 export function abreEseDia(dias, fechaISO) {
   const [a, m, d] = fechaISO.split('-').map(Number);
   const dia = (new Date(Date.UTC(a, m - 1, d)).getUTCDay() + 6) % 7;

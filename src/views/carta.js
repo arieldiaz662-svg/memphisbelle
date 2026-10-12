@@ -3,13 +3,13 @@ import { MARCA } from './ilustraciones.js';
 import { estadoAhora, menuHtml, reviewCta } from './landing.js';
 
 // Página de la carta para el QR de las mesas, en español (carta.html) y en inglés (carta-en.html).
-// Pensada para quien ya está sentado en el bar: la carta arriba, sin portada, sin reservas y sin menú; la
+// Pensada para quien ya está sentado en el bar: la carta arriba, sin portada y sin menú; la
 // reseña de Google al final. Ligera (sin fotos) para que cargue enseguida con poca cobertura.
 // La dirección del QR es /carta (el selector de idioma está en la propia página).
 
 const TEXTOS = {
-  es: { titulo: 'Memphis Belle Coctelería | La carta', descripcion: 'La carta de Memphis Belle Coctelería, en Santa Cruz de Tenerife: cócteles clásicos, de la casa y sin alcohol, con precios.', inicio: 'Ir a la web', idioma: 'Idioma', enlace: 'carta-en.html', otro: 'English', otroLang: 'en', pagina: '/carta' },
-  en: { titulo: 'Memphis Belle Cocktail Bar | The menu', descripcion: 'The menu at Memphis Belle cocktail bar in Santa Cruz de Tenerife: classic, house and alcohol-free cocktails, with prices.', inicio: 'Go to the website', idioma: 'Language', enlace: 'carta.html', otro: 'Español', otroLang: 'es', pagina: '/carta-en' },
+  es: { titulo: 'Memphis Belle Coctelería | La carta', descripcion: 'La carta de Memphis Belle Coctelería, en Santa Cruz de Tenerife: cócteles refrescantes, sour e intensos, copas y cerveza de barril, con precios.', inicio: 'Ir a la web', idioma: 'Idioma', enlace: 'carta-en.html', otro: 'English', otroLang: 'en', pagina: '/carta' },
+  en: { titulo: 'Memphis Belle Cocktail Bar | The menu', descripcion: 'The menu at Memphis Belle cocktail bar in Santa Cruz de Tenerife: refreshing, sour and strong cocktails, mixed drinks and draught beer, with prices.', inicio: 'Go to the website', idioma: 'Language', enlace: 'carta.html', otro: 'Español', otroLang: 'es', pagina: '/carta-en' },
 };
 
 function cabecera(site, idioma) {

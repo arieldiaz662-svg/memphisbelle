@@ -41,6 +41,14 @@ describe('construcción y publicación', () => {
     assert.match(read('404.html'), /<base href="\/">/);
   });
 
+  test('no promete reservas en ninguna página (el local no las admite)', () => {
+    for (const file of ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html']) {
+      const texto = read(file).replace(/sin reservas|no bookings|acceptsReservations/gi, '');
+      assert.doesNotMatch(texto, /reserv|booking/i, file);
+    }
+    assert.match(index, /"acceptsReservations":\s*false/);
+  });
+
   test('sin recursos de terceros y con versión en CSS y JS', () => {
     for (const file of readdirSync(outDir).filter((f) => f.endsWith('.html'))) {
       const html = read(file);

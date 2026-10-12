@@ -49,7 +49,7 @@ export function structuredDataObject({ site, config }) {
     })),
     priceRange: `${Math.min(...prices)} € - ${Math.max(...prices)} €`,
     currenciesAccepted: 'EUR',
-    acceptsReservations: true,
+    acceptsReservations: false,
     hasMenu: {
       '@type': 'Menu',
       '@id': `${base}/#carta`,
