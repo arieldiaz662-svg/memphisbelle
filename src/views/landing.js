@@ -280,7 +280,7 @@ function galeria(site, idioma) {
 }
 
 // Visítanos: "¿Vienes a Memphis Belle?" con cómo llegar, WhatsApp para dudas y los datos de la ficha (ubicación,
-// horario agrupado con "Abierto ahora", contacto). No hay reservas: el bar es una barra y tres mesas.
+// horario agrupado con "Abierto ahora", contacto). No hay reservas: el bar no admite reservas.
 function visit(site, idioma) {
   const { address: a, visit: v } = site;
   const t = TXT[idioma];

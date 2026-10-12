@@ -11,7 +11,7 @@ export const site = {
   fullName: 'Memphis Belle Coctelería',
   title: 'Memphis Belle Coctelería | Cócteles clásicos en Santa Cruz de Tenerife',
   description:
-    'Coctelería en el centro de Santa Cruz de Tenerife. Dry Martini, Manhattan y muchos clásicos más, con la carta y los precios, el horario y cómo llegar. Una barra y tres mesas, sin reservas.',
+    'Coctelería en el centro de Santa Cruz de Tenerife. Dry Martini, Manhattan y muchos clásicos más, con la carta y los precios, el horario y cómo llegar. Sin reservas.',
   // Imagen de vista previa al compartir el enlace (WhatsApp, redes). 1200×630, en public/img/.
   // Se regenera con: npm run og-image (tras cambios visibles en la portada).
   ogImage: 'img/og.jpg',
@@ -115,11 +115,11 @@ export const site = {
       { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica' },
     ],
   },
-  // VISITA / CONTACTO: el bar es una barra y tres mesas, sin reservas. No hay formulario: se viene directamente.
+  // VISITA / CONTACTO: el bar no admite reservas. No hay formulario: se viene directamente.
   visit: {
     title: '¿Vienes a <em>Memphis Belle?</em>',
-    text: 'Una barra y tres mesas, sin reservas. Entra, siéntate en la barra y déjate aconsejar.',
-    place: 'Una barra y tres mesas · sin reservas',
+    text: 'Sin reservas: entra, siéntate en la barra y déjate aconsejar.',
+    place: 'Sin reservas · entra sin avisar',
     whatsappText: 'Hola, tengo una pregunta sobre Memphis Belle.',
     mapsText: 'Cómo llegar',
     whatsappLabel: 'Escríbenos por WhatsApp',
@@ -227,7 +227,7 @@ export const site = {
   // aquí se queda como está (nombres de cócteles, fotos, números). La carta tiene sus propios campos nameEn/textEn.
   en: {
     title: 'Memphis Belle Cocktail Bar | Classic cocktails in Santa Cruz',
-    description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and plenty more classics, with the full menu and prices, opening hours and directions. One bar and three tables, no bookings.',
+    description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and plenty more classics, with the full menu and prices, opening hours and directions. No bookings.',
     hero: {
       kicker: 'Cocktail bar · Santa Cruz de Tenerife',
       kickerRight: 'Classic cocktails',
@@ -280,8 +280,8 @@ export const site = {
     },
     visit: {
       title: 'Coming to <em>Memphis Belle?</em>',
-      text: 'One bar and three tables, no bookings. Walk in, sit at the bar and let us advise you.',
-      place: 'One bar and three tables · no bookings',
+      text: 'No bookings: walk in, sit at the bar and let us advise you.',
+      place: 'No bookings · just walk in',
       whatsappText: 'Hi, I have a question about Memphis Belle.',
       mapsText: 'Get directions',
       whatsappLabel: 'Message us on WhatsApp',

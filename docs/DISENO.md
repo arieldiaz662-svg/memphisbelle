@@ -5,7 +5,7 @@
 > scroll, "El oficio" con piezas dibujadas) con lo propio de este proyecto: el B-17 en la portada, la carta con
 > precios y pestañas, los datos reales de la ficha de Google, el formulario de reserva por WhatsApp, la reseña de
 > Google y la carta bilingüe para el QR. Desde la tercera versión sigue la landing editorial del propio local (intro
-> de marca, la web abre en la carta, una barra y tres mesas SIN reservas). Las secciones de más abajo (Idea, Colores…) describen la primera
+> de marca, la web abre en la carta, SIN reservas). Las secciones de más abajo (Idea, Colores…) describen la primera
 > versión (papel y amarillo del mural) y quedan como historia; lo vigente está aquí.
 
 ## Diseño vigente
@@ -19,7 +19,7 @@
   ahora") → cinta → El bar → El oficio → **La carta** (Los imprescindibles con icono y precio + toda la carta en pestañas
   Refrescantes / Ácidos y sour / Intensos / Copas y cañas) → galería del local (sin título) → Déjanos una reseña en
   Google → reseñas (si hay valoración) → Visítanos (¿Vienes a Memphis Belle?, cómo llegar, WhatsApp para dudas, datos)
-  → pie. No hay formulario de reservas: el bar es una barra y tres mesas. La web **abre directamente en la carta**
+  → pie. No hay formulario de reservas: el bar no admite reservas. La web **abre directamente en la carta**
   (el salto ocurre detrás de la intro); si el enlace pide otra sección (`#bar`), abre ahí.
 - **Cabecera**: el botón es "Cómo llegar" (Google Maps) y el selector ES / EN; el menú móvil a pantalla completa.
 - **Contenido** en `src/content/site.js` (`hero`, `cinta`, `bar`, `oficio`, `highlights`, `carta`, `menu`, `local.gallery`, `visit`). La

@@ -1,6 +1,6 @@
 # Memphis Belle Coctelería
 
-Web de **Memphis Belle Coctelería** (Calle de los Sueños, 1, Santa Cruz de Tenerife): carta digital, horario con "Abierto ahora", ubicación y contacto. El bar es una barra y tres mesas, sin reservas.
+Web de **Memphis Belle Coctelería** (Calle de los Sueños, 1, Santa Cruz de Tenerife): carta digital, horario con "Abierto ahora", ubicación y contacto. El bar no admite reservas.
 
 Es una web **100 % estática**: sin servidor, sin base de datos y sin cookies ni formularios: WhatsApp se abre con un mensaje ya escrito. Se aloja gratis en Cloudflare Workers. Misma base técnica que la web de Alcance Isleño.
 
