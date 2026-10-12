@@ -1,6 +1,6 @@
 import { resumen } from '../../public/js/horario.js';
 import { BOMBARDERO } from './bombardero.js';
-import { NAV, esc, escPhone, instagramUrl, layout, reviewUrl, rodar } from './html.js';
+import { NAV, esc, instagramUrl, layout, reviewUrl, rodar } from './html.js';
 import { ANIMS, HUMO, ICONOS, SELLO, SELLO_INTRO } from './ilustraciones.js';
 import { structuredData } from './schema.js';
 
@@ -18,14 +18,14 @@ const TXT = {
   es: {
     desliza: 'Sigue bajando ↓', pausar: 'Pausar animaciones',
     verCarta: 'Ver la carta en pantalla completa', otraCarta: 'Menu in English', cartaOtra: 'carta-en.html', otraLang: 'en',
-    horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', tel: 'Teléfono', llamar: 'Llamar', maps: 'Cómo llegar',
+    horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', maps: 'Cómo llegar',
     acciones: 'Acciones rápidas', portada: 'Portada', galeria: 'Galería del local', cartaCompleta: 'Toda la carta',
     alergenos: 'Alérgenos',
   },
   en: {
     desliza: 'Scroll ↓', pausar: 'Pause animations',
     verCarta: 'View the full-screen menu', otraCarta: 'Carta en español', cartaOtra: 'carta.html', otraLang: 'es',
-    horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', tel: 'Phone', llamar: 'Call', maps: 'Get directions',
+    horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', maps: 'Get directions',
     acciones: 'Quick actions', portada: 'Home', galeria: 'Venue gallery', cartaCompleta: 'The full menu',
     alergenos: 'Allergens',
   },
@@ -303,7 +303,6 @@ function visit(site, idioma) {
             ${resumen(site.hours.days, idioma).map((linea) => `<li>${horasJuntas(esc(linea))}</li>`).join('\n            ')}
           </ul></dd></div>
           <div><dt class="etiqueta">${t.contacto}</dt><dd><ul class="contacto">
-            <li><a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a></li>
             <li><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li>
             <li><a href="${esc(instagramUrl(site.instagram))}" rel="noopener" target="_blank">@${esc(site.instagram)}</a></li>
           </ul></dd></div>
@@ -349,11 +348,10 @@ function reviews(site, idioma = 'es') {
 </section>`;
 }
 
-// Barra fija del móvil: cómo llegar y llamar siempre a mano. En pantallas grandes no se muestra.
+// Barra fija del móvil: cómo llegar siempre a mano. En pantallas grandes no se muestra.
 function barraMovil(site, idioma) {
   const t = TXT[idioma];
   return `<nav class="barra-movil" aria-label="${t.acciones}">
-  <a class="btn btn-borde" href="tel:+${esc(site.phone)}">${t.llamar}</a>
   <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${t.maps}</a>
 </nav>
 `;

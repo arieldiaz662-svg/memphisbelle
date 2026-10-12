@@ -18,8 +18,6 @@ export const site = {
   ogImageAlt: 'Memphis Belle Coctelería, Santa Cruz de Tenerife.',
 
   // CONTACTO
-  phone: '34636864193', // con prefijo de país, solo dígitos
-  phoneDisplay: '636 864 193',
   email: 'memphiscocteleria@gmail.com',
   instagram: 'memphisbelle_cocteleria',
 

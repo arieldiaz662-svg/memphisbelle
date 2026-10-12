@@ -14,11 +14,6 @@ export function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, (char) => ESCAPES[char]);
 }
 
-// Teléfono para mostrar: espacios de no separación para que el número no se parta entre dos líneas.
-export function escPhone(phone) {
-  return esc(phone).replace(/ /g, '&nbsp;');
-}
-
 // Texto de botón que "rueda" al pasar el ratón: la etiqueta sale por arriba y entra su copia por abajo.
 export const rodar = (texto) => `<span class="rodar"><span>${esc(texto)}</span><span aria-hidden="true">${esc(texto)}</span></span>`;
 

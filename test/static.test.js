@@ -200,7 +200,7 @@ describe('el local, visítanos y reseñas', () => {
     const visita = index.slice(index.indexOf('id="visitanos"'), index.indexOf('</main>'));
     assert.ok(visita.includes(site.address.street));
     assert.ok(visita.includes(site.googleMapsUrl.replace(/&/g, '&amp;')));
-    assert.ok(visita.includes(`href="tel:+${site.phone}"`));
+    assert.doesNotMatch(visita, /tel:/);
     assert.doesNotMatch(visita, /wa\.me|WhatsApp/i);
     assert.match(visita, /class="estado estado-info" data-horario=/);
     assert.ok(visita.includes(site.visit.place));
@@ -237,8 +237,8 @@ describe('portada y móvil', () => {
     for (const [, id] of index.matchAll(/href="#([^"]+)"/g)) assert.ok(index.includes(`id="${id}"`), id);
   });
 
-  test('contacto: teléfono, email, Instagram y Cómo llegar', () => {
-    assert.ok(index.includes(`href="tel:+${site.phone}"`));
+  test('contacto: email, Instagram y Cómo llegar', () => {
+    assert.doesNotMatch(index, /tel:/);
     assert.doesNotMatch(index, /wa\.me/);
     assert.ok(index.includes(`href="mailto:${site.email}"`));
     assert.ok(index.includes(`href="https://www.instagram.com/${site.instagram}/"`));
@@ -303,11 +303,11 @@ describe('datos estructurados para Google', () => {
   const data = () => JSON.parse(/<script type="application\/ld\+json">\n([\s\S]*?)\n<\/script>/.exec(index)[1]);
   const bar = () => data()['@graph'][0];
 
-  test('describen el bar: nombre, dirección, teléfono y mapa', () => {
+  test('describen el bar: nombre, dirección y mapa', () => {
     const b = bar();
     assert.equal(b['@type'], 'BarOrPub');
     assert.equal(b.name, site.fullName);
-    assert.equal(b.telephone, `+${site.phone}`);
+    assert.equal(b.telephone, undefined);
     assert.equal(b.address.streetAddress, site.address.street);
     assert.equal(b.geo.latitude, site.geo.lat);
     assert.equal(b.hasMap, site.googleMapsUrl);

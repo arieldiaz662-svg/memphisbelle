@@ -1,5 +1,5 @@
 // Datos estructurados (schema.org en JSON-LD) para la portada: le dicen a Google qué es Memphis Belle,
-// dónde está, su horario, su teléfono y su carta con precios. Todo sale de site.js, así que no se puede
+// dónde está, su horario y su carta con precios. Todo sale de site.js, así que no se puede
 // desincronizar con lo que se ve en la web (pero sí con la ficha de Google: revisarla al cambiar algo).
 // Solo se generan si se conoce la dirección pública (Google necesita URLs absolutas).
 import { DIAS } from '../../public/js/horario.js';
@@ -27,7 +27,6 @@ export function structuredDataObject({ site, config }) {
     name: site.fullName,
     url: `${base}/`,
     description: site.description,
-    telephone: `+${site.phone}`,
     email: site.email,
     ...(site.ogImage ? { image: `${base}/assets/${site.ogImage}` } : {}),
     address: {

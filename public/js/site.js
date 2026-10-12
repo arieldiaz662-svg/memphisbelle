@@ -1,5 +1,5 @@
 // JavaScript de la web. Todo es mejora progresiva: sin JavaScript se ve la carta completa,
-// el horario agrupado y los enlaces de llamar y WhatsApp funcionan igual.
+// el horario agrupado y los enlaces funcionan igual.
 import { estado, textoEstado } from './horario.js';
 
 // "Abierto ahora / Cerrado" con la hora de Canarias. Se actualiza cada minuto y al volver a la

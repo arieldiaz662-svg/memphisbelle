@@ -1,8 +1,8 @@
-import { esc, escPhone, layout } from './html.js';
+import { esc, layout } from './html.js';
 
 // PLANTILLAS ORIENTATIVAS. Deben revisarse con un profesional antes de publicar la web.
 
-const contactLine = (site) => `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a> o el teléfono <a href="tel:+${esc(site.phone)}">${escPhone(site.phoneDisplay)}</a>`;
+const contactLine = (site) => `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>`;
 
 function page({ site, config, path, title, sections }) {
   const body = `<main id="contenido" tabindex="-1" class="pagina-simple legal"><div class="wrap">
@@ -37,7 +37,7 @@ export function renderPrivacy({ site, config }) {
       ['Responsable del tratamiento', legal.owner
         ? `<p>${esc(legal.owner)} (NIF/CIF ${esc(legal.taxId)}), ${esc(legal.address)}. Contacto: ${reach}.</p>`
         : `<p>${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}. Contacto: ${reach}.</p>`],
-      ['Qué datos tratamos', '<p>Esta web no guarda ningún dato y no tiene formularios. Los enlaces de contacto (teléfono y correo) abren tu aplicación: solo nos llega lo que tú decidas enviarnos. En ese caso tratamos tu nombre, tu número de teléfono y el contenido de tu mensaje.</p>'],
+      ['Qué datos tratamos', '<p>Esta web no guarda ningún dato y no tiene formularios. Los enlaces de contacto (correo e Instagram) abren tu aplicación: solo nos llega lo que tú decidas enviarnos. En ese caso tratamos tu nombre, tu número de teléfono y el contenido de tu mensaje.</p>'],
       ['Para qué los usamos', '<p>Únicamente para responder a tu consulta. No enviamos publicidad ni tomamos decisiones automatizadas.</p>'],
       ['Base legal', '<p>Tu consentimiento al escribirnos (art. 6.1.a RGPD).</p>'],
       ['Cuánto tiempo los guardamos', '<p>Borramos la conversación en un plazo máximo de 3 meses, salvo que la necesitemos para atender una reclamación.</p>'],
