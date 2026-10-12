@@ -40,7 +40,6 @@ export const site = {
   // la hora de cierre es menor que la de apertura (18:00 → 02:00). Hora de Canarias.
   // Debe coincidir con la ficha de Google: es lo primero que se desincroniza.
   hours: {
-    pendiente: 'Las fuentes no coinciden (miércoles a domingo o jueves a sábado): copiarlo de la ficha de Google Business',
     days: {
       lunes: null,
       martes: null,
