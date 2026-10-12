@@ -11,7 +11,8 @@ const DAY_OF_WEEK = {
 
 // "9,50 €" → 9.5
 export function parsePrice(text) {
-  const match = /^(\d+(?:,\d{1,2})?)\s*€$/.exec(String(text).trim());
+  // "10 €", "9,50 €" o un rango "10 / 12 €" (se toma el precio más bajo).
+  const match = /^(\d+(?:,\d{1,2})?)(?:\s*\/\s*\d+(?:,\d{1,2})?)?\s*€$/.exec(String(text).trim());
   if (!match) throw new Error(`Precio no reconocido en la carta: "${text}"`);
   return Number(match[1].replace(',', '.'));
 }

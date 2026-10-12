@@ -33,9 +33,8 @@ export const NAV = [
   { id: 'bar', label: 'El bar' },
   { id: 'oficio', label: 'El oficio' },
   { id: 'carta', label: 'La carta' },
-  { id: 'opinion', label: 'Opinión' },
+  { id: 'galeria', label: 'Galería' },
   { id: 'visitanos', label: 'Visítanos' },
-  { id: 'local', label: 'El local' },
 ];
 
 // El aviso legal solo se publica cuando están los datos del titular (site.legal.owner).
@@ -64,16 +63,16 @@ const FONTS = ['fonts/instrument-serif.woff2', 'fonts/instrument-serif-italic.wo
 
 // baseHref: para páginas que se sirven desde cualquier ruta (la página 404), fija la base de los
 // enlaces relativos en la raíz de la web. head: HTML extra para <head> (p. ej. datos estructurados).
-// after: HTML tras el pie (la barra fija de reservar del móvil).
+// after: HTML tras el pie (la barra fija del móvil). intro: pantalla de intro de marca (solo la portada).
 // Textos fijos del pie en cada idioma.
 const PIE = {
-  es: { alcohol: 'Bebe con moderación. No servimos alcohol a menores de 18 años.', legal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', info: 'Información legal', resena: (s) => s.reviewCta.button, saltar: 'Saltar al contenido', reservar: 'Reservar', reservarMesa: 'Reservar mesa', inicio: 'inicio', principal: 'Principal', menu: 'Menú', movil: 'Menú móvil', arriba: 'Volver arriba' },
-  en: { alcohol: 'Please drink responsibly. We do not serve alcohol to anyone under 18.', legal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', info: 'Legal information', resena: (s) => s.reviewCta.buttonEn, saltar: 'Skip to content', reservar: 'Book', reservarMesa: 'Book a table', inicio: 'home', principal: 'Main', menu: 'Menu', movil: 'Mobile menu', arriba: 'Back to top' },
+  es: { alcohol: 'Bebe con moderación. No servimos alcohol a menores de 18 años.', legal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', info: 'Información legal', resena: (s) => s.reviewCta.button, saltar: 'Saltar al contenido', maps: 'Cómo llegar', inicio: 'inicio', principal: 'Principal', menu: 'Menú', movil: 'Menú móvil', arriba: 'Volver arriba' },
+  en: { alcohol: 'Please drink responsibly. We do not serve alcohol to anyone under 18.', legal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', info: 'Legal information', resena: (s) => s.reviewCta.buttonEn, saltar: 'Skip to content', maps: 'Get directions', inicio: 'home', principal: 'Main', menu: 'Menu', movil: 'Mobile menu', arriba: 'Back to top' },
 };
 
 // lang: idioma de la página ("es" o "en"). cabecera: HTML propio para la cabecera (la página de la
-// carta usa una mínima, sin menú ni "Reservar mesa", con el selector de idioma).
-export function layout({ site, config, title, description, path = '/', nav = NAV, body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '', alterno = null }) {
+// carta usa una mínima, sin menú, con el selector de idioma).
+export function layout({ site, config, title, description, path = '/', nav = NAV, body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '', alterno = null, intro = '' }) {
   const to = links(config);
   // og:image necesita URL absoluta: solo se añade cuando se conoce la dirección pública.
   const ogImage = config.publicBaseUrl && site.ogImage ? `${config.publicBaseUrl}/assets/${site.ogImage}` : '';
@@ -83,7 +82,7 @@ export function layout({ site, config, title, description, path = '/', nav = NAV
   const t = PIE[lang];
   const idiomaLink = alterno ? `<a class="idioma" href="${esc(alterno.href)}" lang="${esc(alterno.lang)}" hreflang="${esc(alterno.lang)}" aria-label="${esc(alterno.etiqueta)}">${esc(alterno.texto)}</a>` : '';
   return `<!DOCTYPE html>
-<html lang="${lang}">
+<html lang="${lang}"${intro ? ' data-intro' : ''}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -114,6 +113,7 @@ ${head}</head>
 <body>
 
 ${SPRITE}
+${intro}
 <a class="saltar" href="#contenido">${esc(t.saltar)}</a>
 
 ${cabecera || `<header>
@@ -125,7 +125,7 @@ ${cabecera || `<header>
       </ul>
     </nav>
     <div class="acciones">
-      <a class="btn btn-claro btn-sm" href="${home}#reservar">${rodar(t.reservar)}</a>
+      <a class="btn btn-claro btn-sm" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener">${rodar(t.maps)}</a>
       ${idiomaLink}
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-movil"><span>${esc(t.menu)}</span></button>
     </div>
@@ -140,7 +140,7 @@ ${cabecera || `<header>
   </nav>
   <div class="menu-movil-pie">
     <span class="etiqueta">${esc(site.address.street)} · ${esc(site.address.city)}</span>
-    <a class="btn btn-claro" href="${home}#reservar">${rodar(t.reservarMesa)}</a>
+    <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener">${rodar(t.maps)}</a>
   </div>
 </div>`}
 

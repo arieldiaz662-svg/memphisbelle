@@ -4,7 +4,8 @@
 > otra landing (negro cálido, marfil y oro viejo, titulares serif en grande, etiquetas mono, entradas al hacer
 > scroll, "El oficio" con piezas dibujadas) con lo propio de este proyecto: el B-17 en la portada, la carta con
 > precios y pestañas, los datos reales de la ficha de Google, el formulario de reserva por WhatsApp, la reseña de
-> Google y la carta bilingüe para el QR. Las secciones de más abajo (Idea, Colores…) describen la primera
+> Google y la carta bilingüe para el QR. Desde la tercera versión sigue la landing editorial del propio local (intro
+> de marca, la web abre en la carta, una barra y tres mesas SIN reservas). Las secciones de más abajo (Idea, Colores…) describen la primera
 > versión (papel y amarillo del mural) y quedan como historia; lo vigente está aquí.
 
 ## Diseño vigente
@@ -14,11 +15,15 @@
 - **Color**: fondo `#0B0A09`, marfil `#F2EDE4`, oro viejo `#C9A961` (acentos, precios, cursiva de los titulares) y
   el amarillo del mural `#E8BE45` solo para "Belle" del pie y las estrellas de la reseña. Tokens en `:root`.
 - **Idiomas**: `index.html` (español) y `en.html` (inglés), con selector ES / EN en la cabecera. El inglés sale de `site.en` (en `src/content/site.js`), que se mezcla sobre el español; la carta usa `nameEn`/`textEn`. Las páginas legales siguen en español.
-- **Orden de la página**: portada (título, B-17, estado "Abierto ahora") → cinta → cóctel estrella → 01 El bar →
-  02 El oficio → 03 La carta (clásicos con icono + carta completa con pestañas) → 04 Déjanos una reseña en Google →
-  05 Visítanos → 06 El local (galería + datos) → reseñas (si hay valoración) → 07 Reservas → pie.
-- **Contenido** en `src/content/site.js` (`hero`, `cinta`, `bar`, `oficio`, `highlights`, `local.gallery`). Los
-  textos de presentación (`bar`, `oficio`) están marcados `revisar`: hay que confirmarlos con el local.
+- **Orden de la página**: intro de marca (solo la primera vez por visita) → portada (título, B-17, estado "Abierto
+  ahora") → cinta → El bar → El oficio → **La carta** (Los imprescindibles con icono y precio + toda la carta en pestañas
+  Refrescantes / Ácidos y sour / Intensos / Copas y cañas) → galería del local (sin título) → Déjanos una reseña en
+  Google → reseñas (si hay valoración) → Visítanos (¿Vienes a Memphis Belle?, cómo llegar, WhatsApp para dudas, datos)
+  → pie. No hay formulario de reservas: el bar es una barra y tres mesas. La web **abre directamente en la carta**
+  (el salto ocurre detrás de la intro); si el enlace pide otra sección (`#bar`), abre ahí.
+- **Cabecera**: el botón es "Cómo llegar" (Google Maps) y el selector ES / EN; el menú móvil a pantalla completa.
+- **Contenido** en `src/content/site.js` (`hero`, `cinta`, `bar`, `oficio`, `highlights`, `carta`, `menu`, `local.gallery`, `visit`). La
+  carta (`menu`) es la real del local, con su traducción al inglés (`nameEn`, `textEn`, `introEn`).
 - **Ilustraciones** de línea (cóctel ahumado, cuatro escenas de barra, iconos de la carta, sello): `src/views/ilustraciones.js`.
   Sus retardos van en atributos `data-s="N"` con reglas en el CSS, porque la CSP no admite estilos en línea.
 - **Movimiento**: titulares con máscara, fotos con cortina, carta que se llena; todo se apaga con

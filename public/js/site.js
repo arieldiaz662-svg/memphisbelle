@@ -1,44 +1,6 @@
 // JavaScript de la web. Todo es mejora progresiva: sin JavaScript se ve la carta completa,
 // el horario agrupado y los enlaces de llamar y WhatsApp funcionan igual.
-import { abreEseDia, estado, textoEstado } from './horario.js';
-
-// Pestañas accesibles de la carta (clic, flechas del teclado, Inicio/Fin). Sin JavaScript se ven
-// todas las secciones seguidas.
-function initTabs(tablist) {
-  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
-  const panelOf = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
-
-  function select(tab) {
-    tabs.forEach((t) => {
-      const selected = t === tab;
-      t.setAttribute('aria-selected', String(selected));
-      t.tabIndex = selected ? 0 : -1;
-      panelOf(t).hidden = !selected;
-    });
-  }
-
-  tablist.addEventListener('click', (event) => {
-    const tab = event.target.closest('[role="tab"]');
-    if (tab) select(tab);
-  });
-  tablist.addEventListener('keydown', (event) => {
-    const index = tabs.indexOf(document.activeElement);
-    if (index < 0) return;
-    const next = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 }[event.key];
-    if (next === undefined) return;
-    event.preventDefault();
-    const tab = tabs[(next + tabs.length) % tabs.length];
-    select(tab);
-    tab.focus();
-  });
-
-  tablist.hidden = false;
-  document.documentElement.classList.add('carta-con-pestanas');
-  select(tabs.find((t) => t.getAttribute('aria-selected') === 'true') || tabs[0]);
-}
-document.querySelectorAll('[role="tablist"]').forEach(initTabs);
-// A partir de aquí, cambiar de pestaña lleva un fundido corto (ver .tabs-listas en site.css).
-requestAnimationFrame(() => document.documentElement.classList.add('tabs-listas'));
+import { estado, textoEstado } from './horario.js';
 
 // "Abierto ahora / Cerrado" con la hora de Canarias. Se actualiza cada minuto y al volver a la
 // pestaña, para que no se quede desfasado.
@@ -54,71 +16,58 @@ pintarEstado();
 setInterval(pintarEstado, 60 * 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) pintarEstado(); });
 
-// Textos del formulario y de la pausa según el idioma de la página.
+// Textos según el idioma de la página.
 const IDIOMA = document.documentElement.lang === 'en' ? 'en' : 'es';
 const TXT = {
-  es: {
-    cerrado: 'Ese día estamos cerrados. Elige otro día.', nombre: 'Escribe tu nombre.', dia: 'Elige el día.', pasada: 'Esa fecha ya ha pasado.', hora: 'Elige la hora.',
-    pausar: 'Pausar animaciones', reanudar: 'Reanudar animaciones', cerrar: 'Cerrar', locale: 'es-ES',
-    mensaje: (n, p, fecha, hora, c) => `Hola, soy ${n}. Quería reservar mesa para ${p} ${p === 1 ? 'persona' : 'personas'} el ${fecha} a las ${hora}.${c ? ` ${c}` : ''}`,
-  },
-  en: {
-    cerrado: 'We are closed that day. Please pick another day.', nombre: 'Enter your name.', dia: 'Pick a date.', pasada: 'That date has already passed.', hora: 'Pick a time.',
-    pausar: 'Pause animations', reanudar: 'Resume animations', cerrar: 'Close', locale: 'en-GB',
-    mensaje: (n, p, fecha, hora, c) => `Hi, I'm ${n}. I'd like to book a table for ${p} ${p === 1 ? 'guest' : 'guests'} on ${fecha} at ${hora}.${c ? ` ${c}` : ''}`,
-  },
+  es: { pausar: 'Pausar animaciones', reanudar: 'Reanudar animaciones', cerrar: 'Cerrar' },
+  en: { pausar: 'Pause animations', reanudar: 'Resume animations', cerrar: 'Close' },
 }[IDIOMA];
-
-// Formulario de reserva: compone el mensaje y abre WhatsApp (la web no guarda ningún dato).
-// Se abre dentro del propio evento submit para que el navegador no lo trate como ventana emergente.
-const form = document.getElementById('formulario');
-if (form) {
-  const aviso = document.getElementById('form-aviso');
-  const dias = JSON.parse(form.dataset.horario);
-  const el = form.elements;
-  // No se puede reservar para un día pasado (fecha de Canarias).
-  const hoyISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Atlantic/Canary' }).format(new Date());
-  el.dia.min = hoyISO;
-
-  const avisar = (texto, campo) => {
-    aviso.textContent = texto;
-    aviso.hidden = !texto;
-    if (campo) campo.focus();
-  };
-  el.dia.addEventListener('change', () => {
-    avisar(el.dia.value && !abreEseDia(dias, el.dia.value) ? TXT.cerrado : '');
-  });
-
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const nombre = el.nombre.value.trim();
-    if (!nombre) return avisar(TXT.nombre, el.nombre);
-    if (!el.dia.value) return avisar(TXT.dia, el.dia);
-    if (el.dia.value < hoyISO) return avisar(TXT.pasada, el.dia);
-    if (!abreEseDia(dias, el.dia.value)) return avisar(TXT.cerrado, el.dia);
-    if (!el.hora.value) return avisar(TXT.hora, el.hora);
-    avisar('');
-
-    const [a, m, d] = el.dia.value.split('-').map(Number);
-    const formato = (opciones) => new Intl.DateTimeFormat(TXT.locale, { ...opciones, timeZone: 'UTC' }).format(new Date(Date.UTC(a, m - 1, d)));
-    const fecha = `${formato({ weekday: 'long' })} ${formato({ day: 'numeric', month: 'long' })}`; // "viernes 9 de octubre"
-    const personas = Number(el.personas.value);
-    const comentario = el.comentario.value.trim();
-    const text = TXT.mensaje(nombre, personas, fecha, el.hora.value, comentario);
-    const url = `https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(text)}`;
-    // Con "noopener" window.open siempre devuelve null, así que se corta el opener a mano.
-    const win = window.open(url, '_blank');
-    if (win) win.opener = null;
-    else location.href = url; // si el navegador bloquea la pestaña nueva, se abre en la misma
-  });
-}
 
 // ---------- Movimiento y navegación (mejora progresiva: sin JavaScript todo se ve desde el principio) ----------
 const root = document.documentElement;
 const hayIO = 'IntersectionObserver' in window;
 
-// Portada: el titular y la foto entran en cuanto la página está pintada.
-requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('cargado')));
+// Portada: el titular y la foto entran en cuanto la página está pintada (con intro, al levantarse el telón).
+// Normalmente tras dos fotogramas; si el navegador congela los fotogramas, a los 150 ms como red de seguridad.
+const entrar = () => {
+  const ya = () => root.classList.add('cargado');
+  requestAnimationFrame(() => requestAnimationFrame(ya));
+  setTimeout(ya, 150);
+};
+
+// La portada abre directamente en la carta (salvo que el enlace pida otra sección). El salto es instantáneo y, con
+// intro, ocurre detrás del telón: nadie ve la página desplazarse. La página de la carta del QR no tiene portada.
+let destino = null;
+try { destino = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch (e) { /* hash raro */ }
+const carta = document.querySelector('.hero') ? (destino || document.getElementById('carta')) : null;
+const irACarta = () => carta.scrollIntoView({ block: 'start', behavior: 'instant' });
+if (carta) {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  irACarta();
+  // Las fuentes web cambian la altura del texto al cargar: se recoloca si el visitante aún no se ha movido.
+  let movido = false;
+  ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, () => { movido = true; }, { once: true, passive: true }));
+  if (document.fonts) document.fonts.ready.then(() => { if (!movido || root.classList.contains('intro')) irACarta(); });
+}
+
+if (root.classList.contains('intro')) {
+  try { sessionStorage.setItem('mb-intro', '1'); } catch (e) { /* sin almacenamiento */ }
+  let fuera = false;
+  const salir = () => {
+    if (fuera) return;
+    fuera = true;
+    if (carta) irACarta(); // última recolocación antes de levantar el telón
+    root.classList.add('intro-sale');
+    setTimeout(entrar, 200); // el titular sube mientras se levanta el telón
+    setTimeout(() => root.classList.remove('intro', 'intro-sale'), 900);
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((t) => removeEventListener(t, salir));
+  };
+  setTimeout(salir, 2100);
+  // Un toque, una tecla o un scroll la saltan: nunca bloquea a quien tiene prisa.
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((t) => addEventListener(t, salir, { passive: true }));
+} else {
+  entrar();
+}
 
 // Entradas al hacer scroll (una sola vez por elemento).
 const reveals = [...document.querySelectorAll('[data-reveal]')];
@@ -212,3 +161,40 @@ if (bucles.length && hayIO) {
   const visibles = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle('en-pantalla', e.isIntersecting)));
   bucles.forEach((b) => visibles.observe(b));
 }
+
+// Carta en pestañas (sin JavaScript se ven todas las secciones seguidas).
+document.querySelectorAll('.menu').forEach((menuCarta) => {
+  const lista = menuCarta.querySelector('[role="tablist"]');
+  const tabs = [...lista.querySelectorAll('[role="tab"]')];
+  const marca = lista.querySelector('.pestana-marca');
+  const colocarMarca = (tab) => { marca.style.transform = `translateX(${tab.offsetLeft}px) scaleX(${tab.offsetWidth})`; };
+  const elegir = (tab, porTeclado) => {
+    lista.toggleAttribute('data-teclado', Boolean(porTeclado));
+    tabs.forEach((t) => {
+      const activa = t === tab;
+      t.setAttribute('aria-selected', String(activa));
+      t.tabIndex = activa ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !activa;
+    });
+    colocarMarca(tab);
+    // En móvil desliza solo la fila de pestañas (nunca la página) para que la elegida se vea entera.
+    if (tab.offsetLeft < lista.scrollLeft) lista.scrollLeft = tab.offsetLeft;
+    else if (tab.offsetLeft + tab.offsetWidth > lista.scrollLeft + lista.clientWidth) lista.scrollLeft = tab.offsetLeft + tab.offsetWidth - lista.clientWidth;
+  };
+  menuCarta.classList.add('con-pestanas');
+  elegir(tabs[0]);
+  tabs.forEach((t) => t.addEventListener('click', () => elegir(t, false)));
+  lista.addEventListener('keydown', (e) => {
+    const i = tabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    const destinoTab = { ArrowRight: tabs[(i + 1) % tabs.length], ArrowLeft: tabs[(i - 1 + tabs.length) % tabs.length], Home: tabs[0], End: tabs[tabs.length - 1] }[e.key];
+    if (!destinoTab) return;
+    e.preventDefault();
+    destinoTab.focus();
+    elegir(destinoTab, true);
+  });
+  // La marca se recoloca si cambia el ancho (giro del móvil, carga de la fuente).
+  const recolocar = () => colocarMarca(tabs.find((t) => t.getAttribute('aria-selected') === 'true'));
+  addEventListener('resize', recolocar);
+  if (document.fonts) document.fonts.ready.then(recolocar);
+});

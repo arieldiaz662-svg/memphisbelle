@@ -34,7 +34,8 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--cab) + 8px); }
+/* scrollbar-gutter: el hueco de la barra existe siempre, así ocultarla durante la intro no reajusta el texto */
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--cab) + 8px); scrollbar-gutter: stable; }
 body {
   margin: 0;
   background: var(--fondo);
@@ -64,7 +65,7 @@ p { margin: 0 0 1rem; max-width: 62ch; color: var(--texto-2); text-wrap: pretty;
 
 .etiqueta { font-family: var(--mono); font-size: .72rem; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); font-variant-numeric: tabular-nums; }
 .etiqueta b { font-weight: 400; color: var(--oro); }
-.cabecera-seccion { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 1.1rem; border-top: 1px solid var(--linea); margin-bottom: clamp(2.5rem, 6vw, 5rem); }
+.cabecera-seccion { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding-top: 1.1rem; border-top: 1px solid var(--linea); margin-bottom: clamp(2.5rem, 6vw, 5rem); }
 .declaracion { font-family: var(--display); font-size: clamp(1.7rem, 3.2vw, 2.8rem); line-height: 1.12; letter-spacing: -.015em; color: var(--texto); max-width: 24ch; }
 
 /* ============ BOTONES ============ */
@@ -183,6 +184,55 @@ html.js:not(.cargado) .hero-figura img { scale: 1.15; }
 }
 @media (max-width: 600px) { .hero-meta span + span { display: none; } }
 
+/* Todas las entradas esperan a que termine la intro, para no animarse detrás del telón
+   (la web abre en la carta, así que su entrada debe verse al levantarse) */
+html.js:not(.cargado) [data-reveal]:not([data-reveal="mascara"]):not([data-reveal="foto"]) { opacity: 0; translate: 0 18px; }
+html.js:not(.cargado) [data-reveal="mascara"] > span { translate: 0 105%; }
+html.js:not(.cargado) [data-reveal="foto"] img { clip-path: inset(0 0 100% 0); scale: 1.1; }
+
+/* ============ INTRO DE MARCA ============ */
+.intro-pantalla { display: none; }
+html.intro { overflow: hidden; }
+html.intro .intro-pantalla {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6rem;
+  position: fixed; inset: 0; z-index: 90; background: var(--fondo); cursor: pointer;
+  transition: clip-path 850ms var(--ease-in-out);
+}
+/* Salida: el telón se levanta hacia arriba */
+html.intro-sale .intro-pantalla { clip-path: inset(0 0 100% 0); }
+.intro-contenido { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; transition: transform 850ms var(--ease-in-out), opacity 500ms ease; }
+html.intro-sale .intro-contenido { transform: translateY(-48px); opacity: 0; }
+.intro-sello { width: clamp(96px, 16vw, 132px); height: auto; overflow: visible; }
+.intro-aro { stroke-dasharray: 604; stroke-dashoffset: 604; transform: rotate(-90deg); transform-origin: 100px 100px; animation: intro-aro 1100ms var(--ease-in-out) 100ms forwards; }
+@keyframes intro-aro { to { stroke-dashoffset: 0; } }
+.intro-mb { opacity: 0; transform: scale(.92); transform-origin: 100px 100px; animation: intro-mb 700ms var(--ease-out) 250ms forwards; }
+@keyframes intro-mb { to { opacity: 1; transform: none; } }
+.intro-marca { margin: 0; overflow: hidden; padding-bottom: .1em; font-family: var(--display); font-size: clamp(2.4rem, 7vw, 4.6rem); line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+.intro-marca span { display: block; translate: 0 105%; animation: intro-sube 900ms var(--ease-out) 600ms forwards; }
+.intro-marca em { font-style: italic; color: var(--oro); }
+.intro-sub { opacity: 0; animation: intro-aparece 600ms ease 1000ms forwards; }
+@keyframes intro-sube { to { translate: 0 0; } }
+@keyframes intro-aparece { to { opacity: 1; } }
+.hero-sub { margin: 2.2rem 0 0; max-width: 36ch; font-size: 1.06rem; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.hero-figura { grid-column: 8 / -1; grid-row: 2; position: relative; margin: 0; min-height: 420px; overflow: hidden; border-radius: 2px; transition: clip-path 1300ms var(--ease-in-out) 250ms; }
+.hero-figura img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; transition: scale 1900ms var(--ease-out) 250ms; }
+html.js:not(.cargado) .hero-figura { clip-path: inset(100% 0 0 0); }
+html.js:not(.cargado) .hero-figura img { scale: 1.15; }
+.hero-figura figcaption { position: absolute; left: 1rem; bottom: 1rem; color: var(--texto); text-shadow: 0 1px 12px rgba(0, 0, 0, .6); }
+.hero-pie { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 1.5rem; padding-top: 1.1rem; border-top: 1px solid var(--linea); }
+.hero-pie span { color: var(--texto-2); }
+.hero-pie span::before { content: '— '; color: var(--oro); }
+.hero-pie a { color: var(--texto); }
+@media (max-width: 980px) {
+  .hero-texto { grid-column: 1 / -1; }
+  .hero-figura { grid-column: 1 / -1; grid-row: 3; min-height: 0; aspect-ratio: 4 / 3; }
+  .hero-pie { grid-row: 4; grid-template-columns: 1fr; gap: .5rem; }
+  .hero-pie a { display: none; }
+}
+@media (max-width: 600px) { .hero-meta span + span { display: none; } }
+
+
 /* ============ CINTA ============ */
 .cinta { overflow: hidden; border-block: 1px solid var(--linea); padding-block: 1.3rem; }
 .cinta-pista { display: flex; width: max-content; animation: cinta 50s linear infinite; }
@@ -232,25 +282,72 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 @media (max-width: 600px) { .oficio-item { grid-column: 1 / -1; } }
 
 /* ============ 03 · LA CARTA ============ */
-
+.carta-destacada { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--linea); }
 .carta-fila { position: relative; isolation: isolate; display: grid; grid-template-columns: 3rem 96px minmax(0, 1.15fr) minmax(0, .85fr) auto; align-items: center; gap: 2rem; padding: 1.8rem 0; border-top: 1px solid var(--linea); }
 .carta-fila::before { content: ''; position: absolute; inset: 0 calc(var(--gutter) * -1); background: var(--superficie); opacity: 0; z-index: -1; transition: opacity 250ms ease; }
 .coctel-icono { width: 96px; height: 96px; display: block; }
 .carta-nombre h3 { font-size: clamp(2.2rem, 4.4vw, 3.8rem); line-height: 1; letter-spacing: -.025em; transition: transform 300ms var(--ease-out); }
 .carta-nombre p { margin: .7rem 0 0; font-size: .92rem; max-width: 46ch; }
 .carta-ingredientes { color: var(--texto); }
-.carta-epoca { text-align: right; white-space: nowrap; }
+.carta-precio { font-family: var(--display); font-size: clamp(1.6rem, 2.4vw, 2.2rem); line-height: 1; text-align: right; white-space: nowrap; font-variant-numeric: lining-nums; }
 @media (hover: hover) and (pointer: fine) {
   .carta-fila:hover::before { opacity: 1; }
   .carta-fila:hover .carta-nombre h3 { transform: translateX(8px); }
 }
 @media (max-width: 860px) {
-  .carta-fila { grid-template-columns: 2.2rem 72px minmax(0, 1fr); gap: .6rem 1.2rem; align-items: start; }
+  .carta-fila { grid-template-columns: 2.2rem 72px minmax(0, 1fr) auto; gap: .6rem 1.2rem; align-items: start; }
   .coctel-icono { width: 72px; height: 72px; }
-  .carta-ingredientes, .carta-epoca { grid-column: 3; text-align: left; }
+  .carta-nombre { grid-column: 3; }
+  .carta-precio { grid-column: 4; grid-row: 1; padding-top: .3rem; }
+  .carta-ingredientes { grid-column: 3 / -1; }
 }
+@media (max-width: 560px) {
+  .carta-fila { grid-template-columns: 52px minmax(0, 1fr) auto; gap: .5rem 1rem; }
+  .carta-fila > .etiqueta:first-child { display: none; }
+  .coctel-icono { width: 52px; height: 52px; }
+  .carta-nombre { grid-column: 2; }
+  .carta-precio { grid-column: 3; }
+  .carta-ingredientes { grid-column: 2 / -1; }
+}
+.subtitulo-carta { margin: 0 0 1.2rem; font-weight: 400; color: var(--oro); }
+
+/* Toda la carta: pestañas + carta impresa con línea de puntos hasta el precio */
+.menu { margin-top: clamp(4rem, 8vw, 6.5rem); }
+.menu-cabecera { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem; flex-wrap: wrap; border-bottom: 1px solid var(--linea); }
+.menu-cabecera .subtitulo-carta { margin-bottom: 1rem; }
+.pestanas { position: relative; display: flex; gap: 2rem; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+.pestanas::-webkit-scrollbar { display: none; }
+.pestana { position: relative; flex: none; scroll-snap-align: start; min-height: 44px; padding: .9rem 0 1rem; background: none; border: 0; color: var(--texto-2); font: 400 1rem/1 var(--sans); cursor: pointer; white-space: nowrap; transition: color 200ms ease; }
+.pestana small { font-family: var(--mono); font-size: .68rem; color: var(--texto-3); margin-left: .25rem; vertical-align: .15em; }
+.pestana[aria-selected="true"] { color: var(--texto); }
+@media (hover: hover) and (pointer: fine) { .pestana:hover { color: var(--texto); } }
+/* Indicador que viaja a la pestaña elegida; con teclado cambia al instante (las acciones de teclado no se animan) */
+.pestana-marca { position: absolute; left: 0; bottom: 0; width: 1px; height: 2px; background: var(--oro); transform-origin: 0 0; transition: transform 300ms var(--ease-out); pointer-events: none; }
+.pestanas[data-teclado] .pestana-marca { transition: none; }
+.panel { padding-top: clamp(2rem, 4vw, 3rem); }
+.panel:focus-visible { outline-offset: 8px; }
+.panel[hidden] { display: none; }
+html.js .menu.con-pestanas .panel-titulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.panel-titulo { font-size: 2rem; margin-bottom: .3rem; }
+.panel-intro { margin: 0 0 2rem; }
+.menu.con-pestanas .panel:not([hidden]) { animation: panel-entra 260ms var(--ease-out); }
+@keyframes panel-entra { from { opacity: 0; transform: translateY(6px); } }
+.platos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(2rem, 6vw, 6rem); }
+.platos li { padding: 1.15rem 0; border-top: 1px solid var(--linea); break-inside: avoid; }
+.plato-linea { display: flex; align-items: baseline; gap: .75rem; }
+.plato-nombre { font-family: var(--display); font-size: clamp(1.45rem, 2.2vw, 1.85rem); line-height: 1.1; letter-spacing: -.01em; }
+.plato-nombre em { font-style: italic; color: var(--oro); }
+.relleno { flex: 1; min-width: 1.5rem; border-bottom: 1px dotted var(--linea-fuerte); transform: translateY(-.3em); }
+.plato-precio { font-family: var(--mono); font-size: .9rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.platos p { margin: .35rem 0 0; font-size: .92rem; }
+.barril { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin: 2rem 0 0; padding: 1.2rem 1.4rem; background: var(--superficie); border-radius: 2px; max-width: none; color: var(--texto); font-family: var(--display); font-size: 1.35rem; }
+@media (max-width: 760px) { .platos { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .menu.con-pestanas .panel:not([hidden]) { animation: none; } .pestana-marca { transition: none; } }
+
 
 /* ============ 04 · GALERÍA ============ */
+/* Sin título, la tira de fotos hace de pausa entre la carta y la visita: menos aire que una sección completa */
+#galeria { padding-block: clamp(2rem, 5vw, 4rem); }
 .galeria-grid { display: grid; grid-template-columns: 1.7fr 1fr 1fr; gap: 1.5rem; }
 .galeria-grid .foto .marco { aspect-ratio: auto; height: clamp(360px, 46vw, 640px); }
 @media (max-width: 860px) {
@@ -260,11 +357,24 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
   .galeria-grid .foto:first-child .marco { aspect-ratio: 4 / 3; }
 }
 
-/* ============ SELLO GIRATORIO (reservas) ============ */
-.sello-giro { width: 148px; height: 148px; display: block; }
+/* ============ 05 · VISÍTANOS ============ */
+.contacto-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.5rem; row-gap: 3rem; align-items: end; }
+.contacto-titulo { grid-column: 1 / 8; }
+.contacto-titulo h2 { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: .9; letter-spacing: -.04em; }
+.sello-giro { width: 148px; height: 148px; margin-top: 3rem; display: block; }
 .sello-anillo { transform-box: view-box; transform-origin: 100px 100px; animation: girar-sello 32s linear infinite; }
 @keyframes girar-sello { to { transform: rotate(360deg); } }
 html.js .sello-giro:not(.en-pantalla) .sello-anillo { animation-play-state: paused; }
+.contacto-detalle { grid-column: 8 / -1; }
+.contacto-detalle > p { font-size: 1.06rem; }
+.contacto-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0 2.8rem; }
+.datos-contacto { margin: 0; }
+.datos-contacto div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--linea); }
+.datos-contacto div:last-child { border-bottom: 1px solid var(--linea); }
+.datos-contacto dt { padding-top: .2rem; }
+.datos-contacto dd { margin: 0; color: var(--texto); }
+@media (max-width: 980px) { .contacto-titulo, .contacto-detalle { grid-column: 1 / -1; } }
+
 
 /* ============ PIE ============ */
 body > footer { padding: clamp(4rem, 8vw, 7rem) 0 1.5rem; border-top: 1px solid var(--linea); }
@@ -394,6 +504,23 @@ html.js .carta-fila:not(.visto) .coctel-icono .adorno { transform: translateY(-1
 }
 
 .ilustracion-coctel { width: 100%; padding-block: 0; }
+/* Luz de barra: un foco cálido y suave sobre cada copa, como la lámpara en la penumbra del local */
+.lienzo {
+  background:
+    radial-gradient(ellipse 58% 52% at 50% 58%, rgba(216, 190, 128, .11), transparent 72%),
+    linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, .22)),
+    var(--superficie);
+}
+
+/* Condensación: gotas que nacen en el cristal frío y resbalan (la caída acelera: es gravedad, no UI) */
+.ilustracion-anim .gota { opacity: 0; transform-box: fill-box; transform-origin: 50% 0; animation: gota 5600ms cubic-bezier(0.55, 0, 1, 0.45) var(--d) infinite; }
+@keyframes gota {
+  0%   { opacity: 0; transform: translateY(0) scale(.5); }
+  14%  { opacity: .7; transform: translateY(0) scale(1); }
+  55%  { opacity: .7; transform: translateY(3px); }
+  100% { opacity: 0; transform: translateY(18px); }
+}
+@media (prefers-reduced-motion: reduce) { .ilustracion-anim .gota { opacity: .55; } }
 html[data-quieto] .ilustracion-anim *, html[data-quieto] .ilustracion-coctel *, html[data-quieto] .cinta-pista, html[data-quieto] .sello-anillo { animation-play-state: paused !important; }
 
 /* ============ MOVIMIENTO REDUCIDO ============ */
@@ -480,12 +607,16 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 [data-s="8"] { --d:700ms; }
 [data-s="9"] { --d:1300ms; }
 [data-s="10"] { --d:1900ms; }
-[data-s="11"] { --d:400ms; }
-[data-s="12"] { --d:800ms; }
-[data-s="13"] { --d:1600ms; }
-[data-s="14"] { --d:2000ms; }
-[data-s="15"] { --d:350ms; }
-[data-s="16"] { --d:1050ms; }
+[data-s="11"] { --d:3400ms; }
+[data-s="12"] { --d:400ms; }
+[data-s="13"] { --d:800ms; }
+[data-s="14"] { --d:1600ms; }
+[data-s="15"] { --d:2000ms; }
+[data-s="16"] { --d:3000ms; }
+[data-s="17"] { --d:350ms; }
+[data-s="18"] { --d:1050ms; }
+[data-s="19"] { --d:600ms; }
+[data-s="20"] { --d:2500ms; }
 
 /* ---------- Portada: el B-17 (foto o, sin foto, la ilustración vectorial) ---------- */
 .hero-figura.vectorial { background: #2C2A26; }
@@ -501,90 +632,20 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .estado.abierto .estado-punto { background: var(--oliva); box-shadow: 0 0 0 4px rgba(169, 183, 122, .18); }
 .estado.abierto .estado-texto { color: var(--texto); }
 
-/* ---------- Cóctel estrella ---------- */
-.estrella { background: var(--superficie); border-block: 1px solid var(--linea); }
-.estrella-grid { display: grid; gap: 2.5rem 4rem; grid-template-columns: 1.4fr 1fr; align-items: end; }
-.estrella-grid.con-foto { grid-template-columns: 1.2fr 1fr .9fr; }
-.estrella-foto { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 2px; }
-.estrella-etiqueta { font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0 0 1rem; }
-.estrella h2 { font-size: clamp(3.2rem, 9vw, 7rem); line-height: .9; letter-spacing: -.035em; margin: 0 0 1.4rem; }
-.estrella-desc { font-size: 1.1rem; max-width: 36ch; }
-.estrella-precio { font-family: var(--mono); color: var(--oro); font-size: 1rem; margin: 1.4rem 0 0; font-variant-numeric: tabular-nums; }
-.estrella-receta h3 { font: 400 .72rem/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); margin: 0 0 .9rem; }
-.estrella-receta ul { display: grid; gap: .55rem; }
-.estrella-receta li { font-family: var(--display); font-size: 1.45rem; line-height: 1.15; padding-left: 1.1rem; position: relative; }
-.estrella-receta li::before { content: ""; position: absolute; left: 0; top: .6em; width: .5rem; height: 1px; background: var(--oro); }
-
-/* ---------- 03 · La carta: filas de clásicos y carta completa con pestañas ---------- */
-.carta > .wrap > h2, .carta > .wrap > h1 { font-size: clamp(2.8rem, 6.6vw, 6rem); line-height: .95; letter-spacing: -.03em; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
-.cabecera-completa { margin-top: clamp(3.5rem, 7vw, 6rem); }
-.papel { max-width: none; }
-.aviso-ejemplo { margin: 0 0 1.8rem; padding: .7rem 1rem; border: 1px solid var(--linea-fuerte); border-radius: 2px; color: var(--oro); font: 400 .72rem/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase; max-width: none; }
-.carta-tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 2rem; }
-.carta-tabs [role="tab"] {
-  font: 500 .72rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
-  background: none; border: 1px solid var(--linea-fuerte); border-radius: 999px; color: var(--texto-2);
-  padding: .95rem 1.2rem; min-height: 2.75rem; cursor: pointer; user-select: none; -webkit-user-select: none;
-  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, transform 160ms var(--ease-out);
-}
-.carta-tabs [role="tab"]:active { transform: scale(0.97); }
-.carta-tabs [role="tab"][aria-selected="true"] { background: var(--texto); border-color: var(--texto); color: var(--fondo); }
-.carta-panel:focus-visible { outline: none; }
-/* Con pestañas, el título de cada sección sobra. Sin JavaScript se ven todas seguidas, con su título. */
-.carta-seccion { font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: -.015em; margin: 0 0 1.2rem; }
-.carta-panel + .carta-panel { margin-top: 3rem; }
-.carta-con-pestanas .carta-seccion { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.carta-con-pestanas .carta-panel + .carta-panel { margin-top: 0; }
-.tabs-listas .carta-panel:not([hidden]) { animation: fundido 180ms var(--ease-out); }
-@keyframes fundido { from { opacity: 0; } }
-.carta-panel ul { border-bottom: 1px solid var(--linea); }
-.carta-panel li { padding: 1rem 0; border-top: 1px solid var(--linea); break-inside: avoid; }
-@media (min-width: 900px) {
-  .carta-panel ul { column-count: 2; column-gap: clamp(2rem, 6vw, 6rem); border-bottom: 0; }
-  .carta-panel li:nth-last-child(-n+1) { border-bottom: 1px solid var(--linea); }
-}
-.plato { display: flex; align-items: baseline; gap: .8rem; }
-.plato-nombre { font-family: var(--display); font-size: 1.55rem; line-height: 1.15; color: var(--texto); }
-.guia { flex: 1; border-bottom: 1px dotted var(--linea-fuerte); transform: translateY(-.3em); min-width: 1.5rem; }
-.importe { font-family: var(--mono); font-size: .9rem; color: var(--oro); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.plato-texto { margin: .25rem 0 0; font-size: .92rem; color: var(--texto-2); max-width: 46ch; }
-.plato-alergenos { margin: .3rem 0 0; font-size: .85rem; color: var(--texto-3); max-width: none; }
+/* Avisos de la carta (alérgenos por plato y enlaces a las otras versiones) */
+.plato-alergenos { margin: .35rem 0 0; font-size: .85rem; color: var(--texto-3); max-width: none; }
 .plato-alergenos span { color: var(--texto-2); }
-.carta-nota { margin: 2rem 0 0; font: 400 .72rem/1.6 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--texto-3); max-width: 70ch; }
-.carta-enlaces { display: flex; flex-wrap: wrap; gap: .6rem 2rem; margin: 1.4rem 0 0; font-size: .9rem; max-width: none; }
+.carta-enlaces { display: flex; flex-wrap: wrap; gap: .6rem 2rem; margin: 2.2rem 0 0; font-size: .9rem; max-width: none; }
 .carta-enlaces a { color: var(--oro); text-decoration: underline; text-underline-offset: 3px; }
-.carta-destacada { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--linea); }
 
-/* ---------- 04 · El local: galería y datos ---------- */
-.galeria-grid .foto .marco picture { display: block; width: 100%; height: 100%; }
-.mosaico { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 3rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
-.mosaico-item { margin: 0; padding-top: 1.1rem; border-top: 1px solid var(--linea); }
-.mosaico-item h3 { font-size: 1.65rem; line-height: 1.1; margin: 0 0 .5rem; }
-.mosaico-item p { margin: 0; font-size: .95rem; }
-.mosaico:not(.con-fotos) { margin-top: 0; }
-.mosaico:not(.con-fotos) .grande h3 { font-size: clamp(2.4rem, 5vw, 4rem); }
-@media (max-width: 860px) { .mosaico { grid-template-columns: 1fr; gap: 1.5rem; } }
-
-/* ---------- 05 · Visítanos ---------- */
-.visita { padding-bottom: clamp(5rem, 11vw, 10rem); }
-.visita .wrap > .cabecera-seccion { margin-bottom: clamp(2rem, 5vw, 4rem); }
-.visita-grid { display: grid; gap: 3rem 4rem; grid-template-columns: 1.2fr 1fr; align-items: start; }
-.visita h2 { font-size: clamp(2.8rem, 6.6vw, 6rem); line-height: .95; letter-spacing: -.03em; margin-bottom: 2.5rem; }
-.visita h3 { font: 400 .72rem/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); margin: 0 0 .6rem; }
-.dato { margin-bottom: 2.2rem; }
-.estado-info { margin-bottom: .7rem; }
-.horario-lineas li { font-family: var(--display); font-size: 1.7rem; line-height: 1.25; font-variant-numeric: tabular-nums; }
-.horario-lineas li + li { margin-top: .2rem; color: var(--texto-2); }
-address { font-style: normal; font-family: var(--display); font-size: 1.7rem; line-height: 1.25; margin-bottom: .5rem; }
-.visita-acciones { display: flex; flex-wrap: wrap; gap: .6rem; }
-.visita-foto { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
-.contacto { margin-bottom: 2rem; }
-.contacto li { display: grid; grid-template-columns: 11rem 1fr; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--linea); }
-.contacto li:last-child { border-bottom: 1px solid var(--linea); }
-.contacto span { font: 400 .72rem/1.6 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); padding-top: .2rem; }
-.contacto a { overflow-wrap: anywhere; text-underline-offset: 3px; text-decoration: underline; text-decoration-color: var(--linea-fuerte); }
-.visita-contacto { padding-top: .2rem; }
-@media (max-width: 860px) { .visita-grid { grid-template-columns: 1fr; } .contacto li { grid-template-columns: 1fr; gap: .1rem; } }
+/* Horario, dirección y contacto dentro de los datos de contacto */
+.datos-contacto address { font-style: normal; }
+.datos-contacto .estado-info { margin-bottom: .6rem; }
+.horario-lineas li { font-variant-numeric: tabular-nums; }
+.horario-lineas li + li { color: var(--texto-2); }
+.datos-contacto .contacto li + li { margin-top: .15rem; }
+.datos-contacto a { text-underline-offset: 3px; text-decoration: underline; text-decoration-color: var(--linea-fuerte); }
+.datos-contacto a { display: inline-block; padding-block: .3rem; }
 
 /* ---------- Déjanos una reseña en Google ---------- */
 .opinion .wrap > .cabecera-seccion { margin-bottom: clamp(2rem, 4vw, 3rem); }
@@ -607,32 +668,6 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .cita footer { padding: 0; border: 0; color: var(--texto-3); font-size: .85rem; }
 @media (max-width: 860px) { .resenas-grid { grid-template-columns: 1fr; } }
 
-/* ---------- 06 · Reservas ---------- */
-.reservar { position: relative; isolation: isolate; overflow: hidden; }
-.reservar-fondo, .reservar-fondo img { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
-.reservar-fondo img { object-fit: cover; object-position: 70% 50%; opacity: .35; }
-.reservar.con-imagen::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, var(--fondo) 0%, rgba(11, 10, 9, .55) 30%, rgba(11, 10, 9, .55) 70%, var(--fondo) 100%); }
-.reservar-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 1.5rem; row-gap: 3rem; align-items: start; }
-.reservar-texto { grid-column: 1 / 6; }
-.reservar-texto h2 { font-size: clamp(3rem, 7vw, 6.5rem); line-height: .9; letter-spacing: -.04em; margin-bottom: 2rem; }
-.reservar .sello-giro { margin-top: 2.5rem; }
-.formulario { grid-column: 7 / -1; display: grid; gap: 1.1rem; background: rgba(19, 17, 15, .82); padding: clamp(1.25rem, 4vw, 2.25rem); border: 1px solid var(--linea-fuerte); border-radius: 2px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.formulario label { display: grid; gap: .45rem; font: 400 .72rem/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); }
-.formulario .fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
-.formulario .fila > label { min-width: 0; }
-.formulario input, .formulario select {
-  font: 400 16px/1.3 var(--sans); /* 16 px: iOS no hace zoom al tocar el campo */
-  letter-spacing: 0; text-transform: none; color: var(--texto); background: var(--fondo);
-  border: 1px solid var(--linea-fuerte); border-radius: 2px; padding: .8rem .9rem; width: 100%; min-width: 0; min-height: 48px;
-  color-scheme: dark; transition: border-color 200ms ease;
-}
-.formulario input::placeholder { color: rgba(242, 237, 228, .4); }
-.formulario input:focus, .formulario select:focus { border-color: var(--oro); outline: none; }
-.formulario .btn { justify-self: start; }
-.form-aviso { margin: 0; color: var(--aviso); font-size: .9rem; max-width: none; }
-.form-nota { margin: 0; font-size: .85rem; max-width: none; }
-@media (max-width: 980px) { .reservar-texto, .formulario { grid-column: 1 / -1; } }
-
 /* ---------- Pie ---------- */
 .pie-direccion { margin: 0 0 .6rem; max-width: none; }
 .pie-alcohol { margin: 0 0 .4rem; font-size: .9rem; color: var(--texto-3); max-width: none; }
@@ -646,10 +681,6 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
   .barra-movil .btn { justify-content: center; height: 3rem; }
   body { padding-bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); }
   html[data-menu] .barra-movil { display: none; }
-  .formulario .btn { justify-self: stretch; justify-content: center; }
-  .estrella-grid, .estrella-grid.con-foto { grid-template-columns: 1fr; align-items: start; }
-  .estrella-receta ul { grid-template-columns: 1fr 1fr; gap: .55rem 1rem; }
-  .plato-nombre { font-size: 1.3rem; }
 }
 
 /* ---------- Página de la carta (QR de las mesas) ----------
@@ -659,7 +690,7 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .cabecera-carta .barra { grid-template-columns: 1fr auto; }
 .carta-pagina { padding-top: var(--cab); }
 .carta-pagina .carta { padding-block: clamp(2.5rem, 6vw, 5rem); }
-.carta-pagina .carta > .wrap > h1 { font-size: clamp(2.8rem, 8vw, 6rem); }
+.carta-pagina .carta > .wrap .titulo-fila { margin-bottom: clamp(2rem, 4vw, 3rem); }
 .carta-extra { padding-block: 2.5rem 3rem; }
 .carta-extra .estado { margin-bottom: 1.2rem; }
 .alergenos-aviso { margin: 0; max-width: 60ch; color: var(--texto); }
@@ -670,8 +701,6 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 .legal h2 { font-family: var(--sans); font-size: 1.2rem; font-weight: 500; letter-spacing: 0; line-height: 1.3; margin-top: 2rem; margin-bottom: .6rem; }
 .legal a { color: var(--oro); }
 .pie-marca em { color: var(--mural); }
-.carta-epoca b { font-weight: 400; color: var(--oro); }
-@media (max-width: 860px) { .carta-epoca { white-space: normal; } }
 
 /* ---------- Correcciones de la auditoría ---------- */
 .pie-marca { color: var(--texto); }
@@ -711,3 +740,7 @@ address { font-style: normal; font-family: var(--display); font-size: 1.7rem; li
 @media (hover: hover) and (pointer: fine) {
   .idioma:hover { border-color: var(--texto); }
 }
+
+/* Datos de contacto: en el móvil, etiqueta encima y dato debajo (el email no cabe en la segunda columna) */
+.datos-contacto dd { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .datos-contacto div { grid-template-columns: 1fr; gap: .2rem; } }

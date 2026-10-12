@@ -20,8 +20,8 @@ export const site = {
   // CONTACTO
   phone: '34636864193', // con prefijo de país, solo dígitos
   phoneDisplay: '636 864 193',
-  // WhatsApp para reservas. Se asume el mismo número que el teléfono: confirmarlo con el local.
-  whatsapp: { number: '34636864193', pendiente: 'Confirmar que el 636 864 193 tiene WhatsApp y que aceptan reservas por ahí' },
+  // WhatsApp para dudas (el bar no admite reservas). Se asume el mismo número que el teléfono: confirmarlo.
+  whatsapp: { number: '34636864193', pendiente: 'Confirmar que el 636 864 193 tiene WhatsApp y que atienden dudas por ahí' },
   email: 'memphiscocteleria@gmail.com',
   instagram: 'memphisbelle_cocteleria',
 
@@ -57,18 +57,18 @@ export const site = {
     kicker: 'Coctelería · Santa Cruz de Tenerife',
     kickerRight: 'Clásicos de coctelería',
     title: ['Coctelería', 'de verdad'],
-    lead: 'Los mejores clásicos de coctelería, en el centro de Santa Cruz. Dry Martini, Manhattan y terraza.',
-    cta: 'Reservar mesa',
-    secondary: 'Ver la carta',
+    lead: 'Una de las pocas coctelerías especializadas de Santa Cruz. Rones añejos, whiskies y ginebras para quien sabe lo que busca… y para quien quiere descubrirlo.',
+    cta: 'Ver la carta',
+    secondary: 'Cómo llegar',
     // Fondo de la portada: el B-17 al atardecer (generada con Gemini a partir de docs/PROMPTS-HIGGSFIELD.md,
     // P1). Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
     image: { src: 'img/portada/b17', widths: [640, 1024, 1376], width: 1376, height: 768 },
     imageCaption: 'Memphis Belle, B-17',
     // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
-    foot: ['Clásicos y cócteles de la casa', 'Terraza en la calle de los Sueños'],
+    foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],
   },
-  // Cinta de la portada: nombres que pasan en bucle (decorativa). Los cócteles salen de la carta.
-  cinta: ['Dry Martini', 'Manhattan', 'Negroni', 'Old Fashioned', 'Daiquiri', 'Margarita', 'Bloody Mary', 'Mié–dom hasta las 2:00'],
+  // Cinta de la portada: nombres que pasan en bucle (decorativa).
+  cinta: ['Dry Martini', 'Negroni', 'Mojito', 'Pisco Sour', 'Moscow Mule', 'Old Fashioned', 'Porn Star Martini', 'Guinness de barril'],
   // 01 · El bar: titular y texto de presentación, con cuatro fotos de cócteles.
   bar: {
     title: 'Cócteles de autor, <em>sin prisa</em>',
@@ -95,119 +95,98 @@ export const site = {
     ],
     revisar: 'Confirmar que estas técnicas (ahumado, espuma, tiki, canela) se usan de verdad en la barra; si no, quitar las que sobren',
   },
-  // 03 · La carta: tres clásicos destacados con su icono (el precio sale de la carta).
+  // 03 · La carta: "Los imprescindibles" (con su icono) antes de toda la carta. El precio va aquí porque el
+  // Hemingway Daiquiri solo está en la carta "con fruta".
   highlights: [
-    { name: 'Dry Martini', icon: 'martini', text: 'Tres ingredientes y cien años de debate sobre la proporción exacta. Aquí, la nuestra.', ingredients: 'Ginebra · vermut · aceituna', epoch: 'Principios del s. XX' },
-    { name: 'Manhattan', icon: 'manhattan', text: 'La fórmula que no envejece. Perfecto antes de cenar o después de cualquier cosa.', ingredients: 'Whisky · vermut rojo · bitters', epoch: 'Década de 1880' },
-    { name: 'Daiquiri', icon: 'daiquiri', text: 'El trago que hizo famoso El Floridita de La Habana, en su versión más pura.', ingredients: 'Ron blanco · lima · azúcar', epoch: 'Popular desde los años 30' },
+    { name: 'Dry Martini', icon: 'martini', text: 'Dos ingredientes y cien años de debate sobre la proporción exacta. Aquí, la nuestra.', ingredients: 'Ginebra · vermut seco', price: '10 €' },
+    { name: 'Manhattan', icon: 'manhattan', text: 'La fórmula que no envejece. Perfecto antes de cenar o después de cualquier cosa.', ingredients: 'Whisky · vermut rojo · angostura', price: '10 €' },
+    { name: 'Hemingway Daiquiri', icon: 'daiquiri', text: 'El clásico de La Habana, en nuestra versión con fruta.', ingredients: 'Ron · lima · fruta', price: '10 €' },
   ],
-
-  // EL LOCAL (servicios de la ficha de Google). Mosaico de 3: el primero va grande.
-  // "image" es opcional ({ src: 'img/local/terraza.jpg', alt: '...' }, foto propia en public/img/): sin
-  // fotos, la sección es tipográfica; con alguna, se muestra el mosaico. Nunca hay huecos vacíos.
+  carta: {
+    intro: 'Veintitrés cócteles, copas y cerveza de barril. Empieza por los imprescindibles de la casa.',
+    imprescindibles: 'Los imprescindibles',
+    todaLaCarta: 'Toda la carta',
+  },
+  // GALERÍA del local: tira de fotos sin título (alt describe lo que se ve). Sin pie de foto.
   local: {
-    title: 'Ladrillo, botellas <em>y luz cálida</em>',
-    // Fotos del local (galería). Alt y pie describen lo que se ve.
     gallery: [
-      { src: 'img/ambiente/barra-estanteria', widths: [640, 1000], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde', caption: 'La barra' },
-      { src: 'img/ambiente/ventana', widths: [640], width: 624, height: 1104, alt: 'Interior del bar junto a la ventana', caption: 'Junto a la ventana' },
-      { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica', caption: 'Baldosa hidráulica' },
+      { src: 'img/ambiente/barra-estanteria', widths: [640, 1000], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde' },
+      { src: 'img/ambiente/ventana', widths: [640], width: 624, height: 1104, alt: 'Interior del bar junto a la ventana' },
+      { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica' },
     ],
-    items: [
-      { title: 'Terraza', text: 'Unas 30 personas fuera, en la calle de los Sueños.', image: null },
-      { title: 'Dentro', text: '40 personas, junto a la barra y el mural del bombardero.', image: null },
-      { title: 'Mascotas bienvenidas', text: 'Tu perro puede acompañarte dentro y en la terraza.', image: null },
-    ],
-    revisar: 'Completar con los servicios y atributos de la ficha de Google (accesibilidad, pagos, ambiente...) y añadir fotos propias del local',
   },
-
-  // VISÍTANOS: foto opcional de la fachada o la calle, para reconocer la puerta al llegar.
+  // VISITA / CONTACTO: el bar es una barra y tres mesas, sin reservas. No hay formulario: se viene directamente.
   visit: {
-    title: 'Visítanos',
-    note: 'En el centro de Santa Cruz.',
-    image: null, // { src: 'img/local/fachada.jpg', alt: 'Fachada de Memphis Belle en la calle de los Sueños' }
+    title: '¿Vienes a <em>Memphis Belle?</em>',
+    text: 'Una barra y tres mesas, sin reservas. Entra, siéntate en la barra y déjate aconsejar.',
+    place: 'Una barra y tres mesas · sin reservas',
+    whatsappText: 'Hola, tengo una pregunta sobre Memphis Belle.',
+    mapsText: 'Cómo llegar',
+    whatsappLabel: 'Escríbenos por WhatsApp',
   },
 
-  // CÓCTEL ESTRELLA: sección destacada justo después de la portada. Debe estar también en la carta
-  // (menu) con el mismo nombre y precio; un test lo comprueba. "image" es opcional (foto propia del
-  // cóctel, en public/img/): sin foto, la sección es solo tipográfica.
-  featured: {
-    label: 'Cóctel estrella',
-    name: 'Bloody Mary',
-    text: 'El clásico de vodka y tomate, con el picante y la sal a nuestra manera. Se sirve largo, con mucho hielo y su rama de apio.',
-    ingredients: ['Vodka', 'Zumo de tomate', 'Lima', 'Salsa Worcestershire', 'Tabasco', 'Sal de apio y pimienta negra'],
-    image: null, // { src: 'img/bloody-mary.jpg', alt: 'Bloody Mary en la barra de Memphis Belle' }
-    pendiente: 'Cóctel estrella de ejemplo: confirmar con el local cuál es, su receta y su precio, y conseguir una foto propia',
-  },
-
-  // CARTA DIGITAL. Precios con IGIC incluido, tal como se cobran en la barra.
-  // "text" es opcional (ingredientes o una línea de descripción).
+  // CARTA DIGITAL (la real del local). Precios con IGIC incluido, tal como se cobran en la barra.
+  // "text" y "nameEn"/"textEn" son opcionales; "allergens" (claves de ALERGENOS en landing.js) también.
   menu: {
     title: 'La carta',
     titleEn: 'The menu',
-    note: 'Precios con IGIC incluido. Pregunta por los cócteles fuera de carta.',
-    noteEn: 'Prices include IGIC (Canary Islands tax). Ask about cocktails off the menu.',
-    pendiente: 'Carta de ejemplo: sustituir por la carta real con precios y su traducción al inglés',
-    // ALÉRGENOS: aviso general siempre visible en la página de la carta. Por bebida, opcional: añadir
-    // `allergens: ['sulfitos', 'gluten']` (claves de ALERGENOS en src/views/carta.js) y se muestran bajo
-    // el plato con su leyenda. Rellenarlo con la información real de cada bebida; no hay datos de ejemplo
-    // para no dar información falsa sobre alérgenos.
-    allergensNote: 'Si tienes alguna alergia o intolerancia, díselo a quien te atienda: te informamos de los alérgenos de cada bebida.',
-    allergensNoteEn: 'If you have an allergy or intolerance, please tell our staff: we will let you know the allergens in each drink.',
     sections: [
       {
-        id: 'clasicos',
-        name: 'Clásicos', nameEn: 'Classics',
+        id: 'refrescantes', name: 'Refrescantes', nameEn: 'Refreshing',
+        intro: 'Largos, frescos y con burbuja', introEn: 'Long, fresh and sparkling',
         items: [
-          { name: 'Dry Martini', text: 'Ginebra, vermut seco, aceituna o twist de limón.', textEn: 'Gin, dry vermouth, olive or lemon twist.', price: '9,00 €' },
-          { name: 'Manhattan', text: 'Rye whiskey, vermut rojo, angostura.', textEn: 'Rye whiskey, sweet vermouth, bitters.', price: '9,00 €' },
-          { name: 'Negroni', text: 'Ginebra, Campari, vermut rojo.', textEn: 'Gin, Campari, sweet vermouth.', price: '9,00 €' },
-          { name: 'Old Fashioned', text: 'Bourbon, azúcar, angostura, piel de naranja.', textEn: 'Bourbon, sugar, bitters, orange peel.', price: '9,50 €' },
-          { name: 'Daiquiri', text: 'Ron blanco, lima, azúcar.', textEn: 'White rum, lime, sugar.', price: '8,50 €' },
-          { name: 'Margarita', text: 'Tequila, triple seco, lima.', textEn: 'Tequila, triple sec, lime.', price: '8,50 €' },
-          { name: 'Bloody Mary', text: 'Vodka, tomate, lima, Worcestershire, tabasco, sal de apio.', textEn: 'Vodka, tomato, lime, Worcestershire, Tabasco, celery salt.', price: '9,50 €' },
+          { name: 'St-Germain', text: 'St-Germain y cava', textEn: 'St-Germain and cava', price: '10 €' },
+          { name: 'Moscow Mule', text: 'Vodka, ginger beer y lima', textEn: 'Vodka, ginger beer and lime', price: '10 €' },
+          { name: 'Caipiriña', nameEn: 'Caipirinha', text: 'Cachaza, lima y soda', textEn: 'Cachaça, lime and soda', price: '10 €' },
+          { name: 'Caipiriña con fruta', nameEn: 'Caipirinha with fruit', text: 'Cachaza y fruta', textEn: 'Cachaça and fruit', price: '10 €' },
+          { name: 'Mojito', text: 'Ron, lima y soda', textEn: 'Rum, lime and soda', price: '8 €' },
+          { name: 'Mojito con fruta', nameEn: 'Mojito with fruit', text: 'Ron, hierbabuena y fruta', textEn: 'Rum, mint and fruit', price: '10 €' },
+          { name: 'Tom Collins', text: 'Ginebra, lima y soda', textEn: 'Gin, lime and soda', price: '10 €' },
+          { name: 'Garibaldi', nameEn: 'Garibaldi', text: 'Campari, zumo de naranja, caipiroska, cachaza y lima', textEn: 'Campari, orange juice, caipiroska, cachaça and lime', price: '10 €' },
+          { name: 'Long Island', text: 'Vodka, ron, tequila, ginebra, lima, sirope y triple seco', textEn: 'Vodka, rum, tequila, gin, lime, syrup and triple sec', price: '10 €' },
         ],
       },
       {
-        id: 'de-la-casa',
-        name: 'De la casa', nameEn: 'House cocktails',
+        id: 'sour', name: 'Ácidos y sour', nameEn: 'Sours and citrus',
+        intro: 'Cítricos, con espuma y equilibrados', introEn: 'Citrusy, foamy and balanced',
         items: [
-          { name: 'Memphis Belle', text: 'El cóctel de la casa.', textEn: 'The house cocktail.', price: '10,00 €' },
-          { name: 'Calle de los Sueños', text: 'Ron añejo canario, miel de palma, lima.', textEn: 'Aged Canarian rum, palm honey, lime.', price: '10,00 €' },
-          { name: 'Espresso Martini', text: 'Vodka, café, licor de café.', textEn: 'Vodka, coffee, coffee liqueur.', price: '9,50 €' },
+          { name: 'Margarita', text: 'Tequila, Cointreau y lima', textEn: 'Tequila, Cointreau and lime', price: '10 €' },
+          { name: 'Pisco Sour', text: 'Pisco, lima, azúcar y clara', textEn: 'Pisco, lime, sugar and egg white', price: '10 €' },
+          { name: 'Whisky Sour', text: 'Whisky, lima, azúcar y clara', textEn: 'Whisky, lime, sugar and egg white', price: '10 €' },
+          { name: 'Amaretto Sour', text: 'Amaretto, lima, azúcar y clara', textEn: 'Amaretto, lime, sugar and egg white', price: '10 €' },
+          { name: 'Mezcalita', text: 'Mezcal, limón, triple seco y agave', textEn: 'Mezcal, lemon, triple sec and agave', price: '10 €' },
+          { name: 'Hemingway Daiquiri con fruta', nameEn: 'Hemingway Daiquiri with fruit', text: 'Ron, lima y fruta', textEn: 'Rum, lime and fruit', price: '10 €' },
+          { name: 'Porn Star Martini', text: 'Vodka de vainilla, licor Passoa, puré de maracuyá y sirope', textEn: 'Vanilla vodka, Passoa liqueur, passion fruit purée and syrup', price: '10 €' },
         ],
       },
       {
-        id: 'sin-alcohol',
-        name: 'Sin alcohol', nameEn: 'Alcohol-free',
+        id: 'intensos', name: 'Intensos', nameEn: 'Strong',
+        intro: 'Para quien lo quiere con carácter', introEn: 'For those who like it with character',
         items: [
-          { name: 'Virgin Mojito', text: 'Lima, hierbabuena, soda.', textEn: 'Lime, mint, soda.', price: '6,00 €' },
-          { name: 'Refresco', nameEn: 'Soft drink', price: '2,50 €' },
-          { name: 'Agua', nameEn: 'Water', price: '2,00 €' },
+          { name: 'Dry Martini', text: 'Ginebra y vermut seco', textEn: 'Gin and dry vermouth', price: '10 €' },
+          { name: 'Manhattan', text: 'Whisky, vermut rojo y angostura', textEn: 'Whisky, red vermouth and bitters', price: '10 €' },
+          { name: 'Negroni', text: 'Ginebra, Campari y vermut', textEn: 'Gin, Campari and vermouth', price: '10 €' },
+          { name: 'Boulevardier', text: 'Bourbon, Campari y vermut', textEn: 'Bourbon, Campari and vermouth', price: '10 €' },
+          { name: 'Old Fashioned', text: 'Ron, angostura y sirope', textEn: 'Rum, bitters and syrup', price: '10 €' },
+          { name: 'Chefa', nameEn: 'Chefa', text: 'Whisky, Aperol, Campari y limón', textEn: 'Whisky, Aperol, Campari and lemon', price: '10 €' },
+          { name: 'Bloody Mary', text: 'Vodka, zumo de tomate, salsa Perrins y lima', textEn: 'Vodka, tomato juice, Worcestershire sauce and lime', price: '10 €' },
         ],
       },
       {
-        id: 'cervezas-y-vinos',
-        name: 'Cervezas y vinos', nameEn: 'Beer and wine',
+        id: 'copas', name: 'Copas y cañas', nameEn: 'Long drinks and beer',
+        intro: 'Combinados y cerveza de barril', introEn: 'Mixed drinks and draught beer',
         items: [
-          { name: 'Cerveza', nameEn: 'Beer', price: '3,00 €' },
-          { name: 'Copa de vino', nameEn: 'Glass of wine', price: '4,00 €' },
-          { name: 'Copa de cava', nameEn: 'Glass of cava', price: '5,00 €' },
+          { name: 'Copa combinado', nameEn: 'Mixed drink', price: '8 €' },
+          { name: 'Copa premium', nameEn: 'Premium mixed drink', price: '10 / 12 €' },
+          { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', text: 'De barril', textEn: 'On draught', price: '2 €' },
+          { name: 'Caña Guinness', nameEn: 'Guinness draught beer', text: 'De barril', textEn: 'On draught', price: '4 €' },
         ],
       },
     ],
-  },
-
-  // RESERVAS: el formulario no guarda nada, solo prepara el mensaje de WhatsApp.
-  booking: {
-    title: 'Reserva tu mesa',
-    intro: 'Dinos cuántos sois y cuándo venís. Se abre WhatsApp con el mensaje escrito: solo tienes que enviarlo y te confirmamos.',
-    maxPeople: 12,
-    groupsNote: 'Para grupos de más de 12 personas, llámanos.',
-    // Imagen de ambiente de fondo (generada con ChatGPT: una barra genérica, NO es el local; según los
-    // términos de OpenAI, la imagen generada es nuestra y admite uso comercial). Va sin pie de foto y con
-    // alt vacío, porque es decorativa. Versiones en public/img/ambiente/barra-<ancho>.webp/.jpg.
-    image: { src: 'img/ambiente/barra', widths: [640, 1024, 1536], width: 1536, height: 1024 },
+    // Cuántos cócteles hay (para el titular de la carta): 23 entre refrescantes, sour e intensos.
+    barril: { text: 'Dorada Especial y Guinness, directas del grifo.', textEn: 'Dorada Especial and Guinness, straight from the tap.', label: 'De barril', labelEn: 'On draught' },
+    allergensNote: 'Si tienes alguna alergia o intolerancia, dínoslo antes de pedir.',
+    allergensNoteEn: 'If you have any allergy or intolerance, please tell us before ordering.',
   },
 
   // VALORACIÓN EN GOOGLE (opcional). Si rating está vacío no se muestra.
@@ -247,24 +226,19 @@ export const site = {
   // VERSIÓN EN INGLÉS de la portada (en.html). Cada bloque se mezcla sobre el español: lo que no se traduce
   // aquí se queda como está (nombres de cócteles, fotos, números). La carta tiene sus propios campos nameEn/textEn.
   en: {
-    title: 'Memphis Belle Cocktail Bar | Classic cocktails in Santa Cruz de Tenerife',
+    title: 'Memphis Belle Cocktail Bar | Classic cocktails in Santa Cruz',
     description: 'Cocktail bar in the centre of Santa Cruz de Tenerife. Dry Martini, Manhattan and all the classics, with a terrace and pets welcome. See the menu and opening hours, and book by WhatsApp.',
     hero: {
       kicker: 'Cocktail bar · Santa Cruz de Tenerife',
       kickerRight: 'Classic cocktails',
       title: ['Cocktails', 'done right'],
-      lead: 'The best classic cocktails in the heart of Santa Cruz. Dry Martini, Manhattan and a terrace.',
-      cta: 'Book a table',
-      secondary: 'See the menu',
+      lead: 'One of the few specialist cocktail bars in Santa Cruz. Aged rums, whiskies and gins for those who know what they are after… and for those who want to find out.',
+      cta: 'See the menu',
+      secondary: 'Get directions',
       imageCaption: 'Memphis Belle, B-17',
-      foot: ['Classics and house cocktails', 'Terrace on Calle de los Sueños'],
+      foot: ['Cocktails from €8', 'Dorada and Guinness on draught'],
     },
-    cinta: ['Dry Martini', 'Manhattan', 'Negroni', 'Old Fashioned', 'Daiquiri', 'Margarita', 'Bloody Mary', 'Wed–Sun until 2:00'],
-    featured: {
-      label: 'Signature cocktail',
-      text: 'The classic of vodka and tomato, with the heat and the salt our way. Served long, with plenty of ice and its celery stick.',
-      ingredients: ['Vodka', 'Tomato juice', 'Lime', 'Worcestershire sauce', 'Tabasco', 'Celery salt and black pepper'],
-    },
+    cinta: ['Dry Martini', 'Negroni', 'Mojito', 'Pisco Sour', 'Moscow Mule', 'Old Fashioned', 'Porn Star Martini', 'Draught Guinness'],
     bar: {
       title: 'Craft cocktails, <em>no rush</em>',
       declaration: 'Every drink is made to order, with real ice, classic technique and a touch of our own.',
@@ -288,28 +262,29 @@ export const site = {
       ],
     },
     highlights: [
-      { text: 'Three ingredients and a hundred years of debate over the exact proportion. Here, ours.', ingredients: 'Gin · vermouth · olive', epoch: 'Early 20th century' },
-      { text: 'The formula that never ages. Perfect before dinner or after anything.', ingredients: 'Whiskey · red vermouth · bitters', epoch: '1880s' },
-      { text: 'The drink that made El Floridita in Havana famous, in its purest version.', ingredients: 'White rum · lime · sugar', epoch: 'Popular since the 1930s' },
+      { text: 'Two ingredients and a hundred years of debate over the exact proportion. Here, ours.', ingredients: 'Gin · dry vermouth' },
+      { text: 'The formula that never ages. Perfect before dinner or after anything.', ingredients: 'Whiskey · red vermouth · bitters' },
+      { text: 'The Havana classic, in our version with fruit.', ingredients: 'Rum · lime · fruit' },
     ],
+    carta: {
+      intro: 'Twenty-three cocktails, mixed drinks and draught beer. Start with the house essentials.',
+      imprescindibles: 'The essentials',
+      todaLaCarta: 'The full menu',
+    },
     local: {
-      title: 'Brick, bottles <em>and warm light</em>',
       gallery: [
-        { alt: 'Wooden bar and shelves of bottles under green light', caption: 'The bar' },
-        { alt: 'Inside the bar by the window', caption: 'By the window' },
-        { alt: 'High tables and hydraulic tile floor', caption: 'Hydraulic tiles' },
-      ],
-      items: [
-        { title: 'Terrace', text: 'About 30 people outside, on Calle de los Sueños.' },
-        { title: 'Inside', text: '40 people, by the bar and the bomber mural.' },
-        { title: 'Pets welcome', text: 'Your dog is welcome inside and on the terrace.' },
+        { alt: 'Wooden bar and shelves of bottles under green light' },
+        { alt: 'Inside the bar by the window' },
+        { alt: 'High tables and hydraulic tile floor' },
       ],
     },
-    visit: { title: 'Visit us', note: 'In the centre of Santa Cruz.' },
-    booking: {
-      title: 'Book your table',
-      intro: 'Tell us how many of you there are and when you are coming. WhatsApp opens with the message already written: just send it and we will confirm.',
-      groupsNote: 'For groups of more than 12 people, call us.',
+    visit: {
+      title: 'Coming to <em>Memphis Belle?</em>',
+      text: 'One bar and three tables, no bookings. Walk in, sit at the bar and let us advise you.',
+      place: 'One bar and three tables · no bookings',
+      whatsappText: 'Hi, I have a question about Memphis Belle.',
+      mapsText: 'Get directions',
+      whatsappLabel: 'Message us on WhatsApp',
     },
   },
 };

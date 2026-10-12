@@ -1,8 +1,8 @@
 # Memphis Belle Coctelería
 
-Web de **Memphis Belle Coctelería** (Calle de los Sueños, 1, Santa Cruz de Tenerife): carta digital, horario con "Abierto ahora", ubicación, contacto y reservas por WhatsApp.
+Web de **Memphis Belle Coctelería** (Calle de los Sueños, 1, Santa Cruz de Tenerife): carta digital, horario con "Abierto ahora", ubicación y contacto. El bar es una barra y tres mesas, sin reservas.
 
-Es una web **100 % estática**: sin servidor, sin base de datos y sin cookies. El formulario de reservas no guarda datos, solo abre WhatsApp con el mensaje ya escrito. Se aloja gratis en Cloudflare Workers. Misma base técnica que la web de Alcance Isleño.
+Es una web **100 % estática**: sin servidor, sin base de datos y sin cookies ni formularios: WhatsApp se abre con un mensaje ya escrito. Se aloja gratis en Cloudflare Workers. Misma base técnica que la web de Alcance Isleño.
 
 - Diseño y criterios visuales: [docs/DISENO.md](docs/DISENO.md)
 - Skills de diseño y animación (Emil Kowalski): [.claude/skills/README.md](.claude/skills/README.md)
@@ -21,7 +21,7 @@ npm run og-image     # regenera la imagen para compartir (tras cambiar la portad
 
 ## Carta para el QR de las mesas
 
-- `carta.html` (español) y `carta-en.html` (inglés): solo la carta, sin portada ni reservas, y al final el enlace para dejar una reseña en Google. El QR apunta a `/carta`; el cambio de idioma está en la propia página.
+- `carta.html` (español) y `carta-en.html` (inglés): solo la carta, sin portada, y al final el enlace para dejar una reseña en Google. El QR apunta a `/carta`; el cambio de idioma está en la propia página.
 - Alérgenos: cada plato admite `allergens: ['gluten', 'sulfitos', …]` en `src/content/site.js` (14 de la normativa UE, claves en `ALERGENOS`) y la carta los muestra en el idioma de la página. Falta rellenarlos con los datos reales.
 - Pegatinas: `npm run pegatinas -- https://tudominio.com` genera en `pegatinas/` (no se sube a git) los QR en SVG y las pegatinas de 70 × 90 mm (PDF vectorial y PNG a 300 ppp): una de carta y otra de reseña.
 - **No imprimas nada hasta tener el dominio propio y definitivo**: un QR impreso no se puede cambiar. Con `*.workers.dev` o un dominio provisional, las pegatinas quedan inservibles si cambia.
@@ -58,7 +58,8 @@ GitHub Actions (`.github/workflows/ci.yml`) pasa los tests en cada push y pull r
 src/content/site.js     contenido editable (una sola fuente de textos, carta y horario)
 src/views/              plantillas: portada (landing.js), carta del QR (carta.js), base (html.js), ilustraciones (ilustraciones.js), legales (legal.js), datos para Google (schema.js)
 public/js/horario.js    "Abierto ahora" en hora de Canarias; lo usan el navegador, la construcción y los tests
-public/js/site.js       pestañas de la carta, estado del horario y formulario de reservas
+public/js/site.js       intro de marca, apertura en la carta, pestañas, estado del horario y movimiento
+public/js/ini.js        se carga en <head>: marca que hay JavaScript y decide si se ve la intro
 public/                 CSS, tipografías (OFL) e imágenes
 scripts/                construcción, vista previa, imagen al compartir y lista de pendientes
 test/                   tests de la web generada y comprobación de publicación
