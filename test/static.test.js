@@ -49,6 +49,12 @@ describe('construcción y publicación', () => {
     assert.match(index, /"acceptsReservations":\s*false/);
   });
 
+  test('el pie lleva el crédito de la web con enlace en todas las páginas', () => {
+    for (const file of ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html']) {
+      assert.ok(read(file).includes(`<a href="${site.credit.url}" rel="noopener" target="_blank">${site.credit.name}</a>`), file);
+    }
+  });
+
   test('sin recursos de terceros y con versión en CSS y JS', () => {
     for (const file of readdirSync(outDir).filter((f) => f.endsWith('.html'))) {
       const html = read(file);

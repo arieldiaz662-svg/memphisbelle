@@ -57,8 +57,8 @@ const FONTS = ['fonts/instrument-serif.woff2', 'fonts/instrument-serif-italic.wo
 // after: HTML tras el pie (la barra fija del móvil). intro: pantalla de intro de marca (solo la portada).
 // Textos fijos del pie en cada idioma.
 const PIE = {
-  es: { alcohol: 'Bebe con moderación. No servimos alcohol a menores de 18 años.', legal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', info: 'Información legal', resena: (s) => s.reviewCta.button, saltar: 'Saltar al contenido', maps: 'Cómo llegar', inicio: 'inicio', principal: 'Principal', menu: 'Menú', movil: 'Menú móvil', arriba: 'Volver arriba' },
-  en: { alcohol: 'Please drink responsibly. We do not serve alcohol to anyone under 18.', legal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', info: 'Legal information', resena: (s) => s.reviewCta.buttonEn, saltar: 'Skip to content', maps: 'Get directions', inicio: 'home', principal: 'Main', menu: 'Menu', movil: 'Mobile menu', arriba: 'Back to top' },
+  es: { alcohol: 'Bebe con moderación. No servimos alcohol a menores de 18 años.', legal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', info: 'Información legal', resena: (s) => s.reviewCta.button, saltar: 'Saltar al contenido', maps: 'Cómo llegar', inicio: 'inicio', principal: 'Principal', menu: 'Menú', movil: 'Menú móvil', arriba: 'Volver arriba', web: 'Web por' },
+  en: { alcohol: 'Please drink responsibly. We do not serve alcohol to anyone under 18.', legal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', info: 'Legal information', resena: (s) => s.reviewCta.buttonEn, saltar: 'Skip to content', maps: 'Get directions', inicio: 'home', principal: 'Main', menu: 'Menu', movil: 'Mobile menu', arriba: 'Back to top', web: 'Website by' },
 };
 
 // lang: idioma de la página ("es" o "en"). cabecera: HTML propio para la cabecera (la página de la
@@ -152,6 +152,7 @@ ${body}
       </nav>
       <a class="etiqueta" href="#contenido">${esc(t.arriba)} ↑</a>
     </div>
+    <p class="pie-credito etiqueta">${esc(t.web)} <a href="${esc(site.credit.url)}" rel="noopener" target="_blank">${esc(site.credit.name)}</a></p>
   </div>
 </footer>
 ${after}${scripts.map((file) => `<script type="module" src="${esc(to.asset(file))}"></script>`).join('\n')}

@@ -47,6 +47,9 @@ export const site = {
     },
   },
 
+  // Crédito de la web en el pie.
+  credit: { name: 'Alcance Isleño', url: 'https://alcanceisleno.com' },
+
   // PORTADA
   hero: {
     kicker: 'Coctelería · Santa Cruz de Tenerife',

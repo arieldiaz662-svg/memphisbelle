@@ -672,6 +672,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .pie-direccion { margin: 0 0 .6rem; max-width: none; }
 .pie-alcohol { margin: 0 0 .4rem; font-size: .9rem; color: var(--texto-3); max-width: none; }
 .pie-resena { margin: 0 0 clamp(1.5rem, 3vw, 2.5rem); }
+.pie-credito { margin: clamp(1.2rem, 2.5vw, 2rem) 0 0; color: var(--texto-3); }
+.pie-credito a { color: var(--texto-2, var(--texto)); text-underline-offset: 3px; text-decoration: underline; text-decoration-color: var(--linea-fuerte); }
 .pie-resena a { color: var(--texto); text-underline-offset: 3px; text-decoration: underline; text-decoration-color: var(--linea-fuerte); }
 
 /* ---------- Barra fija del móvil ---------- */
