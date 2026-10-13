@@ -45,10 +45,10 @@ BASE_Z = 2.0          # grosor de la base
 RELIEVE = 0.8         # altura del texto y los dibujos
 MIN_TRAZO = 0.6       # trazo mínimo que se busca (una pasada y media de boquilla de 0,4)
 NFC_X, NFC_Y = 40.0, 62.5   # centro de la tarjeta: ahí está incrustada la pastilla NFC
-SLOT = 30.0                 # lado de la pegatina del QR
+SLOT = 34.6                 # lado de la pegatina del QR
 SLOT_Y = 95.0               # centro del hueco de la pegatina (hacia abajo desde el borde superior)
 REBAJE = 0.4                # profundidad del hueco para que la pegatina quede a ras
-HOLGURA = 0.4               # el hueco es un poco mayor que la pegatina
+HOLGURA = 0.4               # el hueco (35 mm) es un poco mayor que la pegatina (34,6 mm)
 COLORES = {"base": "#0B0A09", "marfil": "#F2EDE4", "amarillo": "#E8BE45"}
 
 TEXTOS = {
@@ -386,7 +386,7 @@ def pdf():
       <tr><th>Cambio de filamento</th><td>Base negra hasta 2,0 mm (la capa donde empieza el relieve). A partir de ahí, marfil y amarillo. Con AMS / multicolor: abre el 3MF y asigna un filamento a cada pieza. Impresora de un solo color: cambia el filamento con pausa (M600) en la capa de 2,0 mm e imprime primero el marfil y luego el amarillo, o imprime cada color por separado y pega.</td></tr>
       <tr><th>Primera capa</th><td>Lenta y bien calibrada; la base es una placa grande de 80 × 125 mm: usa borde de adhesión o lámina PEI limpia para evitar que se curve.</td></tr>
       <tr><th>NFC</th><td>La pastilla va incrustada en el centro de la tarjeta (40 mm del borde izquierdo y 62,5 mm del superior), justo bajo el símbolo NFC. Pausa la impresión cuando la base llegue a 1,0 – 1,2 mm, coloca la pastilla, y continúa. Con 2,0 mm de base entra una pastilla fina; si es más gruesa, dime su diámetro y grosor y preparo el hueco.</td></tr>
-      <tr><th>Pegatina del QR</th><td>Hueco rebajado de 30,4 × 30,4 mm y 0,4 mm de profundidad, centrado bajo el símbolo NFC (de 80 a 110 mm desde el borde superior). La pegatina de 30 × 30 mm queda a ras. Si es de otro tamaño, cambia SLOT en scripts/tarjeta-3d.py.</td></tr></td></tr></table>
+      <tr><th>Pegatina del QR</th><td>Hueco rebajado de 35 × 35 mm y 0,4 mm de profundidad, centrado bajo el símbolo NFC (de 77,5 a 112,5 mm desde el borde superior). La pegatina de 34,6 × 34,6 mm entra con 0,2 mm de holgura por lado y queda a ras. Si es de otro tamaño, cambia SLOT en scripts/tarjeta-3d.py.</td></tr></td></tr></table>
       <h2>Por qué este diseño imprime bien</h2>
       <p>Sin QR impreso (es una pegatina), con texto grande y en relieve de 0,8 mm, y con los trazos finos de las letras engrosados hasta un mínimo de 0,6 mm para que no se rompan. Los modelos son sólidos y estancos (comprobado).</p>
       <p class="nota">Archivos: tarjeta-resena-es.3mf, tarjeta-resena-en.3mf y, por pieza, los STL (1 base negro, 2 relieve marfil, 3 relieve amarillo). Un PDF no se puede imprimir en 3D: este documento es la guía y la referencia a escala; el modelo está en los 3MF / STL.</p></section>''')

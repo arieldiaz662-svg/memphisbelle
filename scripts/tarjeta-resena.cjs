@@ -19,8 +19,8 @@ const { join, resolve } = require('node:path');
 const { pathToFileURL } = require('node:url');
 const QRCode = require('qrcode');
 
-const SLOT_MM = 30; // lado del hueco para la pegatina del QR (cámbialo si la pegatina es de otro tamaño)
-const QR_MM = [30.4, 30]; // tamaños del QR suelto para imprimir (30,4 mm = lado del hueco rebajado de la tarjeta 3D)
+const SLOT_MM = 35; // lado del hueco para la pegatina del QR (cámbialo si la pegatina es de otro tamaño)
+const QR_MM = [34.6]; // QR suelto para imprimir: 34,6 mm entra en el hueco de 35 mm de la tarjeta (0,2 mm de holgura por lado)
 const RAIZ = join(__dirname, '..');
 const SALIDA = join(RAIZ, 'tarjetas');
 const FUENTES = pathToFileURL(join(RAIZ, 'public', 'fonts')).href;
@@ -146,7 +146,9 @@ function pdfQr(enlace, mm) {
     const q = await browser.newPage({ viewport: { width: Math.ceil(mm * 96 / 25.4), height: Math.ceil(mm * 96 / 25.4) }, deviceScaleFactor: 600 / 96 });
     await q.goto(pathToFileURL(archivo).href);
     writeFileSync(join(SALIDA, `qr-resena-${etiqueta}mm.pdf`), pdfQr(enlace, mm));
-    await q.locator('svg').screenshot({ path: join(SALIDA, `qr-resena-${etiqueta}mm.png`) });
+    // PNG a 600 ppp desde el PDF vectorial (la captura del navegador desenfoca los bordes y el QR se lee peor).
+    try { execSync(`pdftoppm -r 600 -png -singlefile "${join(SALIDA, `qr-resena-${etiqueta}mm.pdf`)}" "${join(SALIDA, `qr-resena-${etiqueta}mm`)}"`); }
+    catch { await q.locator('svg').screenshot({ path: join(SALIDA, `qr-resena-${etiqueta}mm.png`) }); }
     await q.close();
     require('node:fs').rmSync(archivo);
   }
