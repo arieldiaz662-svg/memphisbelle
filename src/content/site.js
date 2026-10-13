@@ -200,8 +200,7 @@ export const site = {
     titleEn: 'Been with us?',
     textEn: 'Your Google review helps more people find us.',
     buttonEn: 'Leave us a Google review',
-    writeUrl: '',
-    revisar: 'Copiar de la ficha de Google Business el enlace de "Pedir reseñas" en reviewCta.writeUrl para que el botón lleve directo a escribir la reseña',
+    writeUrl: 'https://share.google/zSSIE7czQ8sTxQtMX',
   },
 
   // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como

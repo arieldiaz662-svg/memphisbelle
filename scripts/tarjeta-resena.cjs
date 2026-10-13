@@ -20,6 +20,7 @@ const { pathToFileURL } = require('node:url');
 const QRCode = require('qrcode');
 
 const SLOT_MM = 30; // lado del hueco para la pegatina del QR (cámbialo si la pegatina es de otro tamaño)
+const QR_MM = [30.4, 30]; // tamaños del QR suelto para imprimir (30,4 mm = lado del hueco rebajado de la tarjeta 3D)
 const RAIZ = join(__dirname, '..');
 const SALIDA = join(RAIZ, 'tarjetas');
 const FUENTES = pathToFileURL(join(RAIZ, 'public', 'fonts')).href;
@@ -87,6 +88,20 @@ h1 em { font-style: italic; color: #E8BE45; }
 </div>
 </body></html>`;
 
+// PDF vectorial del QR con la página exactamente de mm × mm (Chromium redondea el tamaño de página, por eso se escribe a mano).
+function pdfQr(enlace, mm) {
+  const q = QRCode.create(enlace, { errorCorrectionLevel: 'M' }).modules;
+  const margen = 2; const n = q.size + 2 * margen; const pt = (mm / 25.4) * 72; const u = pt / n;
+  let c = `1 1 1 rg 0 0 ${pt.toFixed(4)} ${pt.toFixed(4)} re f\n0 0 0 rg\n`;
+  for (let y = 0; y < q.size; y++) for (let x = 0; x < q.size; x++) if (q.get(x, y)) c += `${((x + margen) * u).toFixed(4)} ${((n - margen - 1 - y) * u).toFixed(4)} ${(u + 0.01).toFixed(4)} ${(u + 0.01).toFixed(4)} re f\n`;
+  const o = [`<< /Type /Catalog /Pages 2 0 R >>`, `<< /Type /Pages /Kids [3 0 R] /Count 1 >>`, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pt.toFixed(4)} ${pt.toFixed(4)}] /Contents 4 0 R /Resources << >> >>`, `<< /Length ${Buffer.byteLength(c)} >>\nstream\n${c}endstream`];
+  let out = '%PDF-1.4\n'; const pos = [];
+  o.forEach((x, i) => { pos.push(Buffer.byteLength(out)); out += `${i + 1} 0 obj\n${x}\nendobj\n`; });
+  const xref = Buffer.byteLength(out);
+  out += `xref\n0 ${o.length + 1}\n0000000000 65535 f \n${pos.map((x) => String(x).padStart(10, '0') + ' 00000 n \n').join('')}trailer\n<< /Size ${o.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(out);
+}
+
 (async () => {
   const [{ site }, { reviewUrl }] = await Promise.all([import(pathToFileURL(join(RAIZ, 'src/content/site.js')).href), import(pathToFileURL(join(RAIZ, 'src/views/html.js')).href)]);
   const enlace = reviewUrl(site);
@@ -94,6 +109,8 @@ h1 em { font-style: italic; color: #E8BE45; }
   // Negro sobre blanco y margen de 2 módulos (la tarjeta ya deja aire alrededor): es lo que mejor se lee.
   const qr = await QRCode.toString(enlace, { type: 'svg', errorCorrectionLevel: 'M', margin: 2, color: { dark: '#000000', light: '#FFFFFF' } });
   writeFileSync(join(SALIDA, 'qr-resena.svg'), qr);
+  // QR suelto a medida exacta (cuadrado, con su margen blanco dentro): SVG, PDF y PNG a 600 ppp.
+  const qrAMedida = (mm) => qr.replace(/<svg ([^>]*?)width="[^"]*" height="[^"]*"/, '<svg $1').replace('<svg ', `<svg width="${mm}mm" height="${mm}mm" `);
 
   let playwright;
   try { playwright = require('playwright'); } catch { playwright = require(join(execSync('npm root -g').toString().trim(), 'playwright')); }
@@ -119,6 +136,20 @@ h1 em { font-style: italic; color: #E8BE45; }
   const pdf = await browser.newPage();
   await pdf.goto(pathToFileURL(archivoPdf).href); await pdf.evaluate(() => document.fonts.ready);
   await pdf.pdf({ path: join(SALIDA, 'tarjeta-resena.pdf'), width: '80mm', height: '125mm', printBackground: true });
+  for (const mm of QR_MM) {
+    const etiqueta = String(mm).replace('.', ',');
+    const svg = qrAMedida(mm);
+    writeFileSync(join(SALIDA, `qr-resena-${etiqueta}mm.svg`), svg);
+    const hoja = `<!doctype html><meta charset="utf-8"><style>@page { size: ${mm}mm ${mm}mm; margin: 0 } html, body { margin: 0; width: ${mm}mm; height: ${mm}mm } svg { display: block; width: ${mm}mm; height: ${mm}mm }</style>${svg}`;
+    const archivo = join(SALIDA, '.qr.html');
+    writeFileSync(archivo, hoja);
+    const q = await browser.newPage({ viewport: { width: Math.ceil(mm * 96 / 25.4), height: Math.ceil(mm * 96 / 25.4) }, deviceScaleFactor: 600 / 96 });
+    await q.goto(pathToFileURL(archivo).href);
+    writeFileSync(join(SALIDA, `qr-resena-${etiqueta}mm.pdf`), pdfQr(enlace, mm));
+    await q.locator('svg').screenshot({ path: join(SALIDA, `qr-resena-${etiqueta}mm.png`) });
+    await q.close();
+    require('node:fs').rmSync(archivo);
+  }
   await browser.close();
   require('node:fs').rmSync(archivoPdf);
   console.log(`Tarjeta en ${resolve(SALIDA)}\n  enlace del QR (y de la etiqueta NFC): ${enlace}`);

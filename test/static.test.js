@@ -221,7 +221,7 @@ describe('el local, visítanos y reseñas', () => {
     assert.ok(enlace(franja), 'la franja enlaza a Google');
     const pie = index.slice(index.indexOf('<footer>'));
     assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
-    assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|maps\.google\.com)/);
+    assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|share\.google\/|maps\.google\.com)/);
     // Va tras la galería y antes de "Visítanos".
     assert.ok(index.indexOf('id="galeria"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="visitanos"'));
   });
