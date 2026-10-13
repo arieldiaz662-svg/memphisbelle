@@ -1,7 +1,8 @@
-// Dominio propio de la web. Mientras esté vacío, la web se publica solo en la dirección de workers.dev.
+// Dirección de la web: subdominio de alcanceisleno.com (la cuenta de Cloudflare es de Alcance Isleño). Si está vacío,
+// la web se publica solo en la dirección de workers.dev.
 // Cuando haya dominio: ponerlo aquí y en wrangler.jsonc (routes y PUBLIC_BASE_URL). Un test comprueba
 // que coinciden.
-export const DOMINIO = '';
+export const DOMINIO = 'memphisbelle.alcanceisleno.com';
 
 // www y la dirección de workers.dev se redirigen al dominio principal, para que solo haya una dirección
 // de la web. Va en su propio módulo porque un Worker solo puede exportar manejadores.

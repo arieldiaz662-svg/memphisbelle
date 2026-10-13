@@ -79,7 +79,7 @@ describe('construcción y publicación', () => {
     // El dominio de worker/redireccion.js y el de wrangler.jsonc deben coincidir.
     if (DOMINIO) {
       assert.ok(config.build.command.includes(`PUBLIC_BASE_URL=https://${DOMINIO}`));
-      assert.deepEqual(config.routes.map((r) => r.pattern), [DOMINIO, `www.${DOMINIO}`]);
+      assert.ok(config.routes.some((r) => r.pattern === DOMINIO && r.custom_domain === true));
     } else {
       assert.equal(config.routes, undefined);
     }

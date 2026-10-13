@@ -13,6 +13,7 @@
     "og-image": "node scripts/og-image.cjs",
     "pegatinas": "node scripts/pegatinas.cjs",
     "tarjeta": "node scripts/tarjeta-resena.cjs",
+    "qr-mesas": "node scripts/qr-mesas.cjs",
     "pendientes": "node scripts/pendientes.js",
     "test": "node --test"
   },
