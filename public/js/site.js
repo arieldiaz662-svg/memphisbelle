@@ -181,8 +181,13 @@ document.querySelectorAll('.menu').forEach((menuCarta) => {
     if (tab.offsetLeft < lista.scrollLeft) lista.scrollLeft = tab.offsetLeft;
     else if (tab.offsetLeft + tab.offsetWidth > lista.scrollLeft + lista.clientWidth) lista.scrollLeft = tab.offsetLeft + tab.offsetWidth - lista.clientWidth;
   };
+  // Pista visual (degradado) mientras quedan pestañas por ver a la derecha.
+  const marcarMas = () => lista.toggleAttribute('data-mas', lista.scrollWidth - lista.scrollLeft - lista.clientWidth > 4);
+  lista.addEventListener('scroll', marcarMas, { passive: true });
+  window.addEventListener('resize', marcarMas);
   menuCarta.classList.add('con-pestanas');
   elegir(tabs[0]);
+  marcarMas();
   tabs.forEach((t) => t.addEventListener('click', () => elegir(t, false)));
   lista.addEventListener('keydown', (e) => {
     const i = tabs.indexOf(document.activeElement);

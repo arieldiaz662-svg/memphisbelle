@@ -15,6 +15,7 @@ createServer((req, res) => {
   const path = normalize(decodeURIComponent(req.url.split('?')[0])).replace(/^(\.\.[/\\])+/, '');
   let file = join(root, path);
   if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
+  else if (!existsSync(file) && existsSync(`${file}.html`)) file = `${file}.html`; // URLs limpias (/carta, /en), como en el Worker
   const found = existsSync(file);
   if (!found) file = join(root, '404.html'); // como Cloudflare
   res.writeHead(found ? 200 : 404, { 'content-type': types[extname(file)] || 'application/octet-stream' });

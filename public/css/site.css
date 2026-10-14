@@ -63,7 +63,7 @@ h2 { font-size: clamp(2.8rem, 6.6vw, 6rem); line-height: .95; letter-spacing: -.
 h1 em, h2 em { font-style: italic; color: var(--oro); }
 p { margin: 0 0 1rem; max-width: 62ch; color: var(--texto-2); text-wrap: pretty; }
 
-.etiqueta { font-family: var(--mono); font-size: .72rem; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); font-variant-numeric: tabular-nums; }
+.etiqueta { font-family: var(--mono); font-size: .75rem; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); font-variant-numeric: tabular-nums; }
 .etiqueta b { font-weight: 400; color: var(--oro); }
 .cabecera-seccion { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding-top: 1.1rem; border-top: 1px solid var(--linea); margin-bottom: clamp(2.5rem, 6vw, 5rem); }
 .declaracion { font-family: var(--display); font-size: clamp(1.7rem, 3.2vw, 2.8rem); line-height: 1.12; letter-spacing: -.015em; color: var(--texto); max-width: 24ch; }
@@ -78,7 +78,7 @@ p { margin: 0 0 1rem; max-width: 62ch; color: var(--texto-2); text-wrap: pretty;
 .btn:active { transform: scale(0.97); }
 .btn-claro { background: var(--texto); color: var(--fondo); }
 .btn-borde { border-color: var(--linea-fuerte); color: var(--texto); }
-.btn-sm { height: 2.75rem; padding: 0 1.15rem; font-size: .7rem; }
+.btn-sm { height: 2.75rem; padding: 0 1.15rem; font-size: .75rem; }
 /* El texto "rueda" al pasar el ratón: la etiqueta sale por arriba y entra su copia por abajo */
 .rodar { display: inline-grid; overflow: hidden; line-height: 1.2; }
 .rodar > span { grid-area: 1 / 1; transition: transform 300ms var(--ease-out); }
@@ -110,7 +110,7 @@ html.js [data-reveal="foto"]:not(.visto) img { clip-path: inset(0 0 100% 0); sca
 .saltar { position: absolute; left: 1rem; top: -100px; z-index: 60; background: var(--texto); color: var(--fondo); padding: .75rem 1.1rem; border-radius: 999px; font-size: .85rem; }
 .saltar:focus { top: 1rem; }
 header { position: fixed; inset: 0 0 auto; z-index: 50; border-bottom: 1px solid transparent; transition: background-color 300ms ease, border-color 300ms ease; }
-header[data-scrolled] { background: rgba(11, 10, 9, .72); -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%); border-bottom-color: var(--linea); }
+header[data-scrolled] { background: rgba(11, 10, 9, .88); -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%); border-bottom-color: var(--linea); }
 html[data-menu] header { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 @media (prefers-reduced-transparency: reduce) { header[data-scrolled] { background: var(--fondo); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 .barra { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--cab); }
@@ -124,7 +124,7 @@ html[data-menu] header { background: transparent; border-bottom-color: transpare
 .principal a[aria-current]::after { opacity: 1; transform: none; }
 @media (hover: hover) and (pointer: fine) { .principal a:hover { color: var(--texto); } }
 .acciones { justify-self: end; display: flex; align-items: center; gap: .6rem; }
-.menu-btn { display: none; height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); background: transparent; color: var(--texto); font: 500 .7rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: border-color 200ms ease, transform 160ms var(--ease-out); }
+.menu-btn { display: none; height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); background: transparent; color: var(--texto); font: 500 .75rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: border-color 200ms ease, transform 160ms var(--ease-out); }
 .menu-btn:active { transform: scale(0.97); }
 
 /* Menú móvil a pantalla completa */
@@ -150,7 +150,7 @@ html[data-menu] header { background: transparent; border-bottom-color: transpare
     transition: opacity 150ms ease, transform 150ms ease;
   }
   html[data-menu] .menu-movil .enlace { opacity: 1; transform: none; transition: opacity 420ms var(--ease-out) calc(var(--i) * 45ms + 60ms), transform 420ms var(--ease-out) calc(var(--i) * 45ms + 60ms); }
-  .menu-movil .enlace small { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; color: var(--texto-3); }
+  .menu-movil .enlace small { font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; color: var(--texto-3); }
   .menu-movil-pie { display: flex; flex-direction: column; gap: 1.2rem; }
 }
 @media (max-width: 520px) { .acciones .btn-sm { display: none; } }
@@ -275,7 +275,7 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 .oficio-pie h3 { font-size: 1.65rem; line-height: 1.1; letter-spacing: -.01em; }
 .destacado .oficio-pie h3 { font-size: clamp(1.9rem, 3vw, 2.6rem); }
 .oficio-pie p { grid-column: 2; margin: .35rem 0 0; font-size: .92rem; }
-.pausa-anim { height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); background: transparent; color: var(--texto-2); font: 500 .7rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out); }
+.pausa-anim { height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); background: transparent; color: var(--texto-2); font: 500 .75rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: border-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out); }
 .pausa-anim:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .pausa-anim:hover { border-color: var(--texto); color: var(--texto); } }
 @media (max-width: 1100px) { .oficio-item { grid-column: span 6; } .oficio-item.destacado { grid-column: 1 / -1; grid-row: auto; } }
@@ -318,7 +318,7 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 .pestanas { position: relative; display: flex; gap: 2rem; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
 .pestanas::-webkit-scrollbar { display: none; }
 .pestana { position: relative; flex: none; scroll-snap-align: start; min-height: 44px; padding: .9rem 0 1rem; background: none; border: 0; color: var(--texto-2); font: 400 1rem/1 var(--sans); cursor: pointer; white-space: nowrap; transition: color 200ms ease; }
-.pestana small { font-family: var(--mono); font-size: .68rem; color: var(--texto-3); margin-left: .25rem; vertical-align: .15em; }
+.pestana small { font-family: var(--mono); font-size: .75rem; color: var(--texto-3); margin-left: .25rem; vertical-align: .15em; }
 .pestana[aria-selected="true"] { color: var(--texto); }
 @media (hover: hover) and (pointer: fine) { .pestana:hover { color: var(--texto); } }
 /* Indicador que viaja a la pestaña elegida; con teclado cambia al instante (las acciones de teclado no se animan) */
@@ -737,7 +737,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 860px) { .galeria-grid { max-width: 440px; } .galeria-grid .foto .marco { height: auto; } }
 
 /* ---------- Selector de idioma (ES / EN) ---------- */
-.idioma { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; height: 2.75rem; padding: 0 .8rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); font: 500 .7rem/1 var(--mono); letter-spacing: .14em; color: var(--texto); transition: border-color 200ms ease, transform 160ms var(--ease-out); }
+.idioma { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; height: 2.75rem; padding: 0 .8rem; border-radius: 999px; border: 1px solid var(--linea-fuerte); font: 500 .75rem/1 var(--mono); letter-spacing: .14em; color: var(--texto); transition: border-color 200ms ease, transform 160ms var(--ease-out); }
 .idioma:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) {
   .idioma:hover { border-color: var(--texto); }
@@ -746,3 +746,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Datos de contacto: en el móvil, etiqueta encima y dato debajo (el email no cabe en la segunda columna) */
 .datos-contacto dd { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 560px) { .datos-contacto div { grid-template-columns: 1fr; gap: .2rem; } }
+
+/* ---------- Revisión de usabilidad en móvil ---------- */
+/* Zonas táctiles de ~44 px en los enlaces de texto, sin cambiar su aspecto: el área se amplía con un pseudoelemento. */
+@media (pointer: coarse) {
+  .carta-enlaces a, .pie-resena a, .pie-credito a, .contacto a, .pie-fila nav a { position: relative; }
+  .carta-enlaces a::after, .pie-resena a::after, .pie-credito a::after, .contacto a::after, .pie-fila nav a::after { content: ""; position: absolute; inset: -14px -6px; }
+}
+/* Pista de que la fila de pestañas se desliza: borde con degradado mientras quede algo por ver a la derecha. */
+.pestanas[data-mas] { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent); }
+/* En móvil "Cómo llegar" ya está en la barra fija de abajo: no se repite en la entrada. */
+@media (max-width: 720px) { .hero-ctas .btn-borde { display: none; } }
