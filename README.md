@@ -35,6 +35,8 @@ Los datos que no se han podido confirmar llevan `pendiente` en `src/content/site
 
 **Cloudflare Workers**: conectar el Worker `memphisbelle` a este repositorio. Toda la configuración está en `wrangler.jsonc`: pasa los tests (si alguno falla, no se publica), construye y publica `dist/`, sirve `404.html` en rutas inexistentes y aplica las cabeceras de `_headers`. La web se publica en **https://memphisbelle.alcanceisleno.com**, un subdominio de Alcance Isleño (la cuenta de Cloudflare es suya; el dominio personalizado se añade en el panel del Worker si no se crea solo). `memphisbelle.<cuenta>.workers.dev` redirige a esa dirección. Está definido en `worker/redireccion.js` (`DOMINIO`) y en `wrangler.jsonc` (`routes` y `PUBLIC_BASE_URL`); un test comprueba que coinciden. Con `PUBLIC_BASE_URL` se generan el canonical, el sitemap, la imagen al compartir y los datos estructurados para Google. Si el bar tiene algún día dominio propio: cambiar los tres sitios y este subdominio redirigirá al nuevo, así que las pegatinas ya pegadas siguen funcionando.
 
+Traspaso al dueño del bar (dominio, cuenta de Cloudflare y repositorio propios): `docs/TRASPASO.md`; el cambio de dirección se hace con `node scripts/cambiar-dominio.js midominio.com`.
+
 QR de las mesas: `npm run qr-mesas` (40 mm, solo el QR, con el dominio de arriba) deja el PDF vectorial, el PNG y el SVG en `qr-mesas/`.
 
 GitHub Actions (`.github/workflows/ci.yml`) pasa los tests en cada push y pull request.
