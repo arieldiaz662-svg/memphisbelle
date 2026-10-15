@@ -42,6 +42,17 @@ Probar el QR con un móvil real antes de imprimir. Actualizar también el enlace
 ## 7. Antes de publicar
 `npm run pendientes` debe salir sin "Pendientes antes de publicar" (datos legales del titular).
 
+## Permisos de Alcance Isleño (mantener sin ser dueños)
+| Pieza | Dueño | Lo que necesita Alcance Isleño |
+|---|---|---|
+| Dominio | El bar (titular del registro, su correo y su tarjeta) | Nada; llega con el acceso a Cloudflare si el dominio está ahí |
+| Cuenta de Cloudflare | El bar (propietario) | Miembro invitado con rol para editar el Worker y el DNS; sin propiedad ni facturación. El dueño lo elige y lo retira cuando quiera |
+| Repositorio de GitHub | El bar | Colaborador con permiso de escritura |
+| Ficha de Google Business | El bar | Administrador, solo si hay que actualizar el enlace |
+
+Riesgo principal: que el dominio caduque (la web y el QR de las mesas dejarían de funcionar). Renovación automática con la tarjeta del bar, el correo de
+Alcance Isleño como contacto técnico para recibir los avisos, y un recordatorio un mes antes del vencimiento.
+
 ## Qué pasa con `memphisbelle.alcanceisleno.com`
 Si ya se hubieran impreso QR con esa dirección, se puede dejar activa como redirección al dominio nuevo; pero eso mantiene una dependencia de
 Alcance Isleño. Lo recomendable es no imprimir con ella.
