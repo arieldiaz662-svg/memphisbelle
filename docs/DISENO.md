@@ -10,7 +10,7 @@
 
 ## Diseño vigente
 
-- **Tipografía** (alojada, OFL): Instrument Serif (titulares, nombres de cócteles), Geist (texto) y Geist Mono
+- **Tipografía** (alojada, OFL): Instrument Serif (titulares, nombres de cócteles), Geist (texto) y Poppins Medium
   (etiquetas, precios). Ficheros en `public/fonts/`.
 - **Color**: fondo `#0B0A09`, marfil `#F2EDE4`, oro viejo `#C9A961` (acentos, precios, cursiva de los titulares) y
   el amarillo del mural `#E8BE45` solo para "Belle" del pie y las estrellas de la reseña. Tokens en `:root`.

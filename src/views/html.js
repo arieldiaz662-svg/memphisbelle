@@ -48,7 +48,7 @@ export function links(config) {
   };
 }
 
-const FONTS = ['fonts/instrument-serif.woff2', 'fonts/instrument-serif-italic.woff2', 'fonts/geist.woff2', 'fonts/geist-mono.woff2'];
+const FONTS = ['fonts/instrument-serif.woff2', 'fonts/instrument-serif-italic.woff2', 'fonts/geist.woff2', 'fonts/poppins-500.woff2'];
 
 // baseHref: para páginas que se sirven desde cualquier ruta (la página 404), fija la base de los
 // enlaces relativos en la raíz de la web. head: HTML extra para <head> (p. ej. datos estructurados).

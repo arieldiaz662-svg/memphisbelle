@@ -409,7 +409,7 @@ describe('diseño editorial (híbrido)', () => {
   });
 
   test('las tipografías están alojadas en la web y precargadas', () => {
-    for (const f of ['instrument-serif', 'instrument-serif-italic', 'geist', 'geist-mono']) {
+    for (const f of ['instrument-serif', 'instrument-serif-italic', 'geist', 'poppins-500']) {
       assert.ok(statSync(join(outDir, 'assets/fonts', `${f}.woff2`)).isFile(), f);
       assert.match(index, new RegExp(`rel="preload" href="assets/fonts/${f}\\.woff2`));
       assert.ok(css.includes(`../fonts/${f}.woff2`), f);
