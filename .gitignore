@@ -7,3 +7,5 @@ dist/
 pegatinas/
 tarjetas/*.zip
 qr-mesas/
+__pycache__/
+*.pyc

@@ -92,7 +92,7 @@ function hero(site, idioma) {
         <p class="hero-sub">${esc(h.lead)}</p>
         <div class="hero-ctas">
           <a class="btn btn-claro" href="#carta">${rodar(h.cta)}${flecha}</a>
-          <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${rodar(h.secondary)}</a>
+          <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank">${rodar(h.secondary)}</a>
         </div>
       </div>
     </div>
@@ -197,7 +197,7 @@ function bar(site, idioma) {
     <div class="wrap bar-texto">
       ${titular(b.title)}
       <p class="declaracion" data-reveal${d(1)}>${esc(b.declaration)}</p>
-      <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank" data-reveal${d(2)}>${rodar(t.maps)}${enlaceExterno}</a>
+      <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank" data-reveal${d(2)}>${rodar(t.maps)}${enlaceExterno}</a>
     </div></div>` : ''}
   <div class="wrap">
     <div class="cab-centrada cab-fotos"><p class="intro" data-reveal>${esc(b.text)}</p></div>
@@ -216,7 +216,7 @@ export function reviewCta(site, idioma = 'es') {
   <div class="wrap cab-centrada">
     <h2 class="gigante" id="opinion-titulo" data-reveal>${esc(en ? c.titleEn : c.title)}</h2>
     <p class="intro" data-reveal${d(1)}>${esc(en ? c.textEn : c.text)}</p>
-    <a class="btn btn-borde btn-resena" href="${esc(reviewUrl(site))}" rel="noopener" target="_blank" data-reveal${d(2)}><span class="estrellas" aria-hidden="true">★★★★★</span>${rodar(en ? c.buttonEn : c.button)}</a>
+    <a class="btn btn-borde btn-resena" href="${esc(reviewUrl(site))}" rel="noopener noreferrer" target="_blank" data-reveal${d(2)}><span class="estrellas" aria-hidden="true">★★★★★</span>${rodar(en ? c.buttonEn : c.button)}</a>
   </div>
 </section>`;
 }
@@ -232,7 +232,7 @@ function reviews(site, idioma = 'es') {
       <h2 class="sr">${en ? 'Reviews' : 'Reseñas'}</h2>
       <p class="nota-google"><strong>${esc(r.rating)}</strong> ${en ? 'out of 5 on Google' : 'de 5 en Google'}</p>
       ${r.count ? `<p>${esc(r.count)} ${en ? 'reviews' : 'reseñas'}</p>` : ''}
-      <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${en ? 'Read the reviews' : 'Leer las reseñas'}</a>
+      <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank">${en ? 'Read the reviews' : 'Leer las reseñas'}</a>
     </div>
     ${(r.quotes || []).slice(0, 3).map((q) => `<blockquote class="cita"><p>${esc(q.text)}</p><footer>${esc(q.author)}, ${en ? 'on Google' : 'en Google'}</footer></blockquote>`).join('\n    ')}
   </div>
@@ -249,7 +249,7 @@ function visit(site, idioma) {
       ${titular(v.title)}
       <p class="intro" data-reveal${d(1)}>${esc(v.text)}</p>
       <div class="visita-ctas" data-reveal${d(2)}>
-        <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${rodar(v.mapsText)}${enlaceExterno}</a>
+        <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank">${rodar(v.mapsText)}${enlaceExterno}</a>
       </div>
     </div>
     <dl class="datos">
@@ -259,7 +259,7 @@ function visit(site, idioma) {
       </ul></dd></div>
       <div class="dato" data-reveal${d(3)}><dt>${t.contacto}</dt><dd><ul class="contacto">
         <li><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li>
-        <li><a href="${esc(instagramUrl(site.instagram))}" rel="noopener" target="_blank">@${esc(site.instagram)}</a></li>
+        <li><a href="${esc(instagramUrl(site.instagram))}" rel="noopener noreferrer" target="_blank">@${esc(site.instagram)}</a></li>
         <li>${esc(v.place)}</li>
       </ul></dd></div>
     </dl>
@@ -283,7 +283,7 @@ function visit(site, idioma) {
 function barraMovil(site, idioma) {
   const t = TXT[idioma];
   return `<nav class="barra-movil" aria-label="${t.acciones}">
-  <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank">${t.maps}</a>
+  <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank">${t.maps}</a>
 </nav>
 `;
 }

@@ -160,7 +160,10 @@ document.querySelectorAll('.mapa').forEach((mapa) => {
     marco.src = mapa.dataset.mapa;
     marco.title = mapa.dataset.titulo;
     marco.loading = 'lazy';
-    marco.referrerPolicy = 'no-referrer-when-downgrade';
+    marco.referrerPolicy = 'strict-origin-when-cross-origin';
+    // El mapa solo puede ejecutar su propio código; sin acceso a la web, a formularios ni a ventanas, salvo el enlace "Ver en Google Maps".
+    marco.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+    marco.setAttribute('allow', '');
     mapa.replaceChildren(marco);
     mapa.classList.add('mapa-activo');
   });

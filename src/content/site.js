@@ -154,8 +154,8 @@ export const site = {
         items: [
           { name: 'Copa de combinado', nameEn: 'Mixed drink', price: '8 €' },
           { name: 'Copa premium', nameEn: 'Premium mixed drink', price: '10 / 12 €' },
-          { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', text: 'De barril', textEn: 'On draught', price: '2 €' },
-          { name: 'Caña Guinness', nameEn: 'Guinness draught beer', text: 'De barril', textEn: 'On draught', price: '4 €' },
+          { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', price: '2 €' },
+          { name: 'Caña Guinness', nameEn: 'Guinness draught beer', price: '4 €' },
         ],
       },
     ],

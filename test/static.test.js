@@ -12,6 +12,7 @@ import { buildStatic } from '../scripts/build-static.js';
 import { pendientes } from '../scripts/pendientes.js';
 import { site } from '../src/content/site.js';
 import { STATIC_CSP, esc } from '../src/views/html.js';
+import { CABECERAS_SEGURIDAD } from '../src/seguridad.js';
 import { ALERGENOS, NAV, menuHtml } from '../src/views/landing.js';
 import { parsePrice, structuredDataObject } from '../src/views/schema.js';
 import worker from '../worker/index.js';
@@ -51,7 +52,7 @@ describe('construcción y publicación', () => {
 
   test('el pie lleva el crédito de la web con enlace en todas las páginas', () => {
     for (const file of ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html']) {
-      assert.ok(read(file).includes(`<a href="${site.credit.url}" rel="noopener" target="_blank">${site.credit.name}</a>`), file);
+      assert.ok(read(file).includes(`<a href="${site.credit.url}" rel="noopener noreferrer" target="_blank">${site.credit.name}</a>`), file);
     }
   });
 
@@ -212,10 +213,10 @@ describe('el local, visítanos y reseñas', () => {
     const esperado = site.reviewCta.writeUrl || site.googleMapsUrl;
     const franja = seccion('opinion', site.reviews.rating ? 'resenas' : 'visitanos');
     assert.ok(franja.includes(site.reviewCta.button));
-    const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener" target="_blank"[ >]`).test(html);
+    const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener noreferrer" target="_blank"[ >]`).test(html);
     assert.ok(enlace(franja), 'la franja enlaza a Google');
     const pie = index.slice(index.indexOf('<footer>'));
-    assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
+    assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener noreferrer" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
     assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|share\.google\/|maps\.google\.com)/);
     // Va tras el bar y antes de "Visítanos".
     assert.ok(index.indexOf('id="bar"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="visitanos"'));
@@ -616,5 +617,56 @@ describe('mapa de Google en "Visítanos"', () => {
     assert.doesNotMatch(STATIC_CSP, /frame-src[^;]*\*/);
     assert.match(read('assets/js/site.js'), /createElement\('iframe'\)/);
     assert.match(read('cookies.html'), /Mapa de Google Maps/);
+  });
+});
+
+describe('seguridad', () => {
+  test('la CSP no admite nada externo salvo el marco de Google, ni scripts o estilos en línea, y exige Trusted Types', () => {
+    assert.doesNotMatch(STATIC_CSP, /unsafe-inline|unsafe-eval|\*|http:/);
+    assert.match(STATIC_CSP, /default-src 'self'/);
+    assert.match(STATIC_CSP, /script-src 'self'(;|$)/);
+    assert.match(STATIC_CSP, /require-trusted-types-for 'script'/);
+    assert.match(STATIC_CSP, /object-src 'none'/);
+    assert.match(STATIC_CSP, /base-uri 'self'/);
+  });
+
+  test('_headers lleva todas las cabeceras de seguridad (HSTS, nosniff, X-Frame-Options, COOP…) y la CSP completa', () => {
+    const h = read('_headers');
+    for (const nombre of Object.keys(CABECERAS_SEGURIDAD)) assert.ok(h.includes(`  ${nombre}: `), nombre);
+    assert.match(h, /frame-ancestors 'none'; upgrade-insecure-requests/);
+    assert.match(h, /Strict-Transport-Security: max-age=31536000/);
+  });
+
+  test('la meta CSP de las páginas no lleva upgrade-insecure-requests (rompería la vista previa local)', () => {
+    assert.doesNotMatch(index, /upgrade-insecure-requests|frame-ancestors/);
+  });
+
+  test('todo enlace que abre otra pestaña lleva noopener noreferrer', () => {
+    for (const file of ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html']) {
+      for (const [a] of read(file).matchAll(/<a [^>]*target="_blank"[^>]*>/g)) assert.match(a, /rel="noopener noreferrer"/, `${file}: ${a}`);
+    }
+  });
+
+  test('el Worker rechaza métodos que no leen, redirige y pone las cabeceras en todas las respuestas', async () => {
+    const { default: worker } = await import('../worker/index.js');
+    const env = { ASSETS: { fetch: async () => new Response('<h1>ok</h1>', { status: 200, headers: { 'Content-Type': 'text/html', Server: 'x' } }) } };
+    const post = await worker.fetch(new Request('https://memphisbelle.alcanceisleno.com/', { method: 'POST', body: 'x' }), env);
+    assert.equal(post.status, 405);
+    assert.equal(post.headers.get('X-Content-Type-Options'), 'nosniff');
+    const ok = await worker.fetch(new Request('https://memphisbelle.alcanceisleno.com/'), env);
+    assert.equal(ok.status, 200);
+    assert.equal(ok.headers.get('X-Frame-Options'), 'DENY');
+    assert.equal(ok.headers.get('Server'), null);
+    assert.match(ok.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
+    const redir = await worker.fetch(new Request('https://memphisbelle.workers.dev/carta'), env);
+    assert.equal(redir.status, 301);
+    assert.equal(redir.headers.get('Strict-Transport-Security'), 'max-age=31536000; includeSubDomains');
+  });
+
+  test('el JavaScript no usa vías de inyección (innerHTML, eval, document.write…)', () => {
+    for (const f of ['site.js', 'horario.js', 'ini.js']) {
+      const js = readFileSync(new URL(`../public/js/${f}`, import.meta.url), 'utf8');
+      assert.doesNotMatch(js, /innerHTML|outerHTML|insertAdjacentHTML|eval\(|new Function|document\.write|srcdoc/, f);
+    }
   });
 });

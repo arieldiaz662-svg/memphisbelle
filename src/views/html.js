@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 import { MARCA, SPRITE } from './ilustraciones.js';
+import { STATIC_CSP } from '../seguridad.js';
 
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
@@ -31,9 +32,8 @@ export function hasLegalNotice(site) {
   return Boolean(site.legal && site.legal.owner && site.legal.owner.trim());
 }
 
-// Política de seguridad de contenidos. Va como <meta> en cada página (vale en cualquier alojamiento, también
-// en la vista previa local) y _headers la repite como cabecera para Cloudflare.
-export const STATIC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src https://www.google.com; form-action 'self'; object-src 'none'; base-uri 'self'";
+// La política de seguridad de contenidos (CSP) vive en src/seguridad.js; aquí se re-exporta para las páginas.
+export { STATIC_CSP };
 
 // Color de la parte de arriba de la página (barra de estado del móvil). La web es oscura siempre.
 export const THEME_COLOR = '#0B0A09';
@@ -114,7 +114,7 @@ ${cabecera || `<header>
       </ul>
     </nav>
     <div class="acciones">
-      <a class="btn btn-claro btn-sm" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener">${rodar(t.maps)}</a>
+      <a class="btn btn-claro btn-sm" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">${rodar(t.maps)}</a>
       ${idiomaLink}
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-movil"><span>${esc(t.menu)}</span></button>
     </div>
@@ -129,7 +129,7 @@ ${cabecera || `<header>
   </nav>
   <div class="menu-movil-pie">
     <span class="etiqueta">${esc(site.address.street)}, ${esc(site.address.city)}</span>
-    <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener">${rodar(t.maps)}</a>
+    <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">${rodar(t.maps)}</a>
   </div>
 </div>`}
 
@@ -140,7 +140,7 @@ ${body}
     <p class="pie-marca" aria-hidden="true">Memphis <em>Belle</em></p>
     <p class="pie-direccion">${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>
     <p class="pie-alcohol">${esc(t.alcohol)}</p>
-    <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener" target="_blank">${esc(t.resena(site))}</a></p>
+    <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener noreferrer" target="_blank">${esc(t.resena(site))}</a></p>
     <div class="pie-fila">
       <span class="etiqueta">© ${year} ${esc(site.fullName)}</span>
       <nav aria-label="${esc(t.info)}">
@@ -150,7 +150,7 @@ ${body}
       </nav>
       <a class="etiqueta" href="#contenido">${esc(t.arriba)} ↑</a>
     </div>
-    <p class="pie-credito etiqueta">${esc(t.web)} <a href="${esc(site.credit.url)}" rel="noopener" target="_blank">${esc(site.credit.name)}</a></p>
+    <p class="pie-credito etiqueta">${esc(t.web)} <a href="${esc(site.credit.url)}" rel="noopener noreferrer" target="_blank">${esc(site.credit.name)}</a></p>
   </div>
 </footer>
 ${after}${scripts.map((file) => `<script type="module" src="${esc(to.asset(file))}"></script>`).join('\n')}

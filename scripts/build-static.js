@@ -9,7 +9,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { site } from '../src/content/site.js';
-import { STATIC_CSP, hasLegalNotice, messagePage } from '../src/views/html.js';
+import { CABECERAS_SEGURIDAD } from '../src/seguridad.js';
+import { hasLegalNotice, messagePage } from '../src/views/html.js';
 import { renderCarta } from '../src/views/carta.js';
 import { renderLanding } from '../src/views/landing.js';
 import { renderCookies, renderLegalNotice, renderPrivacy } from '../src/views/legal.js';
@@ -69,12 +70,9 @@ ${sitemapUrls.map((path) => `  <url><loc>${config.publicBaseUrl}/${path}</loc></
 `);
   }
 
-  // Cabeceras de seguridad para Cloudflare y Netlify.
+  // Cabeceras de seguridad para Cloudflare y Netlify (src/seguridad.js; el Worker las repite en cada respuesta).
   writeFileSync(join(outDir, '_headers'), `/*
-  Content-Security-Policy: ${STATIC_CSP}; frame-ancestors 'none'
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
+${Object.entries(CABECERAS_SEGURIDAD).map(([nombre, valor]) => `  ${nombre}: ${valor}`).join('\n')}
 /assets/*
   Cache-Control: public, max-age=86400
 `);
