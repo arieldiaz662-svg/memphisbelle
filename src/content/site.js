@@ -55,7 +55,7 @@ export const site = {
     kicker: 'Coctelería · Santa Cruz de Tenerife',
     kickerRight: 'Clásicos de coctelería',
     title: ['Coctelería', 'de verdad'],
-    lead: 'Una de las pocas coctelerías especializadas de Santa Cruz. Rones añejos, whiskies y ginebras para quien sabe lo que busca… y para quien quiere descubrirlo.',
+    lead: 'Coctelería especializada en Santa Cruz de Tenerife. Rones añejos, whiskies y ginebras, para el paladar exigente y para quien desea descubrir algo nuevo.',
     cta: 'Ver la carta',
     secondary: 'Cómo llegar',
     // Fondo de la portada: foto real del dueño preparando un cóctel (sesión del local). Sale su cara:
@@ -220,7 +220,7 @@ export const site = {
       kicker: 'Cocktail bar · Santa Cruz de Tenerife',
       kickerRight: 'Classic cocktails',
       title: ['Cocktails', 'done right'],
-      lead: 'One of the few specialist cocktail bars in Santa Cruz. Aged rums, whiskies and gins for those who know what they are after… and for those who want to find out.',
+      lead: 'Specialist cocktail bar in Santa Cruz de Tenerife. Aged rums, whiskies and gins, for the discerning palate and for those who wish to discover something new.',
       cta: 'See the menu',
       secondary: 'Get directions',
       imageCaption: 'Memphis Belle, B-17',
