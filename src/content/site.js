@@ -59,11 +59,11 @@ export const site = {
     cta: 'Ver la carta',
     secondary: 'Cómo llegar',
     // Fondo de la portada: foto real del dueño preparando un cóctel (sesión del local). Sale su cara:
-    // PENDIENTE de su visto bueno; si prefiere otra, basta cambiar este archivo (img/portada/b17 sigue disponible).
+    // PENDIENTE de su visto bueno; si prefiere otra, basta cambiar este archivo (img/portada/mural, el mural del B-17 sin personas, es la alternativa).
     // Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
     image: { src: 'img/portada/barman', widths: [640, 1024, 1333], width: 1333, height: 2000 },
     imageCaption: 'Memphis Belle, B-17',
-    revisar: 'Confirmar con el dueño que está de acuerdo en salir (con la cara visible) en la foto de la portada; si no, usar la del B-17 (img/portada/b17) u otra foto sin cara',
+    revisar: 'Confirmar con el dueño que está de acuerdo en salir (con la cara visible) en la foto de la portada; si no, usar el mural del B-17 (img/portada/mural), que no tiene caras',
     // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
     foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],
   },
