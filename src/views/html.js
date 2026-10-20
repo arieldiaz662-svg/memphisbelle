@@ -21,10 +21,9 @@ export const instagramUrl = (user) => `https://www.instagram.com/${user}/`;
 
 // Menú de la cabecera, en el orden de las secciones de la portada. Las demás páginas lo usan igual, con enlaces a la portada.
 export const NAV = [
-  { id: 'bar', label: 'El bar' },
-  { id: 'oficio', label: 'El oficio' },
   { id: 'carta', label: 'La carta' },
-  { id: 'galeria', label: 'Galería' },
+  { id: 'oficio', label: 'El oficio' },
+  { id: 'bar', label: 'El bar' },
   { id: 'visitanos', label: 'Visítanos' },
 ];
 
@@ -126,11 +125,11 @@ ${cabecera || `<header>
 <div class="menu-movil" id="menu-movil">
   <nav aria-label="${esc(t.movil)}">
     <ol>
-      ${nav.map((item, i) => `<li><a class="enlace" data-s="i${i}" href="${home}#${esc(item.id)}">${esc(item.label)} <small>0${i + 1}</small></a></li>`).join('\n      ')}
+      ${nav.map((item, i) => `<li><a class="enlace" data-s="i${i}" href="${home}#${esc(item.id)}">${esc(item.label)}</a></li>`).join('\n      ')}
     </ol>
   </nav>
   <div class="menu-movil-pie">
-    <span class="etiqueta">${esc(site.address.street)} · ${esc(site.address.city)}</span>
+    <span class="etiqueta">${esc(site.address.street)}, ${esc(site.address.city)}</span>
     <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" target="_blank" rel="noopener">${rodar(t.maps)}</a>
   </div>
 </div>`}
@@ -140,7 +139,7 @@ ${body}
 <footer>
   <div class="wrap">
     <p class="pie-marca" aria-hidden="true">Memphis <em>Belle</em></p>
-    <p class="pie-direccion etiqueta">${esc(site.fullName)} · ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>
+    <p class="pie-direccion">${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>
     <p class="pie-alcohol">${esc(t.alcohol)}</p>
     <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener" target="_blank">${esc(t.resena(site))}</a></p>
     <div class="pie-fila">

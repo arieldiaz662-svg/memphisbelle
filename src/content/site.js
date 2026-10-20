@@ -58,9 +58,10 @@ export const site = {
     lead: 'Una de las pocas coctelerías especializadas de Santa Cruz. Rones añejos, whiskies y ginebras para quien sabe lo que busca… y para quien quiere descubrirlo.',
     cta: 'Ver la carta',
     secondary: 'Cómo llegar',
-    // Fondo de la portada: el B-17 al atardecer (generada con Gemini a partir de docs/PROMPTS-HIGGSFIELD.md,
-    // P1). Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
-    image: { src: 'img/portada/b17', widths: [640, 1024, 1376], width: 1376, height: 768 },
+    // Fondo de la portada: foto real del dueño preparando un cóctel (sesión del local). Sale su cara:
+    // PENDIENTE de su visto bueno; si prefiere otra, basta cambiar este archivo (img/portada/b17 sigue disponible).
+    // Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
+    image: { src: 'img/portada/barman', widths: [640, 1024, 1333], width: 1333, height: 2000 },
     imageCaption: 'Memphis Belle, B-17',
     // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
     foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],
@@ -93,16 +94,8 @@ export const site = {
     ],
     revisar: 'Confirmar que estas técnicas (ahumado, espuma, tiki, canela) se usan de verdad en la barra; si no, quitar las que sobren',
   },
-  // 03 · La carta: "Los imprescindibles" (con su icono) antes de toda la carta. El precio va aquí porque el
-  // Hemingway Daiquiri solo está en la carta "con fruta".
-  highlights: [
-    { name: 'Dry Martini', icon: 'martini', text: 'Dos ingredientes y cien años de debate sobre la proporción exacta. Aquí, la nuestra.', ingredients: 'Ginebra · vermut seco', price: '10 €' },
-    { name: 'Manhattan', icon: 'manhattan', text: 'La fórmula que no envejece. Perfecto antes de cenar o después de cualquier cosa.', ingredients: 'Whisky · vermut rojo · angostura', price: '10 €' },
-    { name: 'Hemingway Daiquiri', icon: 'daiquiri', text: 'El clásico de La Habana, en nuestra versión con fruta.', ingredients: 'Ron · lima · fruta', price: '10 €' },
-  ],
   carta: {
-    intro: 'Veintitrés cócteles, copas y cerveza de barril. Empieza por los imprescindibles de la casa.',
-    imprescindibles: 'Los imprescindibles',
+    intro: 'Veintitrés cócteles, copas y cerveza de barril. Precios con IGIC incluido.',
     todaLaCarta: 'Toda la carta',
   },
   // GALERÍA del local: tira de fotos sin título (alt describe lo que se ve). Sin pie de foto.
@@ -117,7 +110,7 @@ export const site = {
   visit: {
     title: '¿Vienes a <em>Memphis Belle?</em>',
     text: 'Sin reservas: entra, siéntate en la barra y déjate aconsejar.',
-    place: 'Sin reservas · entra sin avisar',
+    place: 'Sin reservas, entra sin avisar',
     mapsText: 'Cómo llegar',
   },
 
@@ -179,6 +172,19 @@ export const site = {
         ],
       },
     ],
+    // Fotos bajo la carta (sesión de fotos del local). Para cambiarlas: archivos en public/img/carta (640 y 1024 px, webp y jpg).
+    photos: [
+      { src: 'img/carta/jarra-cobre', widths: [640, 1024], width: 1024, height: 1536, alt: 'Moscow Mule en jarra de cobre con lima y hielo picado' },
+      { src: 'img/carta/rocks-lima', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel en vaso corto con rodaja de lima y hielo' },
+      { src: 'img/carta/coupe-crema', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel cremoso en copa coupe' },
+      { src: 'img/carta/martini-naranja', widths: [640, 835], width: 835, height: 1252, alt: 'Cóctel naranja en copa de martini con piel de naranja' },
+      { src: 'img/carta/highball-lima', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel largo con lima y pajita negra' },
+      { src: 'img/carta/coupe-especiado', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel en copa coupe con borde especiado y naranja deshidratada' },
+      { src: 'img/carta/vaso-corto-naranja', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel rojizo en vaso corto con piel de naranja' },
+      { src: 'img/carta/martini-espresso', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel oscuro con espuma en copa de martini' },
+      { src: 'img/carta/highball-capas', widths: [640, 1024], width: 1024, height: 1536, alt: 'Cóctel largo en capas con pajita negra' },
+      { src: 'img/carta/cana-barril', widths: [640, 1024], width: 1024, height: 1536, alt: 'Caña de cerveza oscura de barril en copa' },
+    ],
     // Cuántos cócteles hay (para el titular de la carta): 23 entre refrescantes, sour e intensos.
     barril: { text: 'Dorada Especial y Guinness, directas del grifo.', textEn: 'Dorada Especial and Guinness, straight from the tap.', label: 'De barril', labelEn: 'On draught' },
     allergensNote: 'Si tienes alguna alergia o intolerancia, dínoslo antes de pedir.',
@@ -233,6 +239,20 @@ export const site = {
       imageCaption: 'Memphis Belle, B-17',
       foot: ['Cocktails from €8', 'Dorada and Guinness on draught'],
     },
+    menu: {
+      photos: [
+        { alt: 'Moscow Mule in a copper mug with lime and crushed ice' },
+        { alt: 'Short cocktail with a lime wheel and ice' },
+        { alt: 'Creamy cocktail in a coupe glass' },
+        { alt: 'Orange cocktail in a martini glass with orange peel' },
+        { alt: 'Tall cocktail with lime and a black straw' },
+        { alt: 'Cocktail in a coupe with a spiced rim and dried orange' },
+        { alt: 'Reddish cocktail in a short glass with orange peel' },
+        { alt: 'Dark cocktail with foam in a martini glass' },
+        { alt: 'Layered tall cocktail with a black straw' },
+        { alt: 'Dark draught beer in a stemmed glass' },
+      ],
+    },
     cinta: ['Dry Martini', 'Negroni', 'Mojito', 'Pisco Sour', 'Moscow Mule', 'Old Fashioned', 'Porn Star Martini', 'Draught Guinness'],
     bar: {
       title: 'Craft cocktails, <em>no rush</em>',
@@ -256,14 +276,8 @@ export const site = {
         { title: 'Fresh cinnamon', text: 'Cinnamon grated over the foam and dehydrated orange on the side.', aria: 'Cinnamon stick being grated over a tall glass with foam; the powder falls onto the foam' },
       ],
     },
-    highlights: [
-      { text: 'Two ingredients and a hundred years of debate over the exact proportion. Here, ours.', ingredients: 'Gin · dry vermouth' },
-      { text: 'The formula that never ages. Perfect before dinner or after anything.', ingredients: 'Whiskey · red vermouth · bitters' },
-      { text: 'The Havana classic, in our version with fruit.', ingredients: 'Rum · lime · fruit' },
-    ],
     carta: {
-      intro: 'Twenty-three cocktails, mixed drinks and draught beer. Start with the house essentials.',
-      imprescindibles: 'The essentials',
+      intro: 'Twenty-three cocktails, mixed drinks and draught beer. Prices include IGIC.',
       todaLaCarta: 'The full menu',
     },
     local: {
@@ -276,7 +290,7 @@ export const site = {
     visit: {
       title: 'Coming to <em>Memphis Belle?</em>',
       text: 'No bookings: walk in, sit at the bar and let us advise you.',
-      place: 'No bookings · just walk in',
+      place: 'No bookings, just walk in',
       mapsText: 'Get directions',
     },
   },

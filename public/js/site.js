@@ -35,11 +35,12 @@ const entrar = () => {
   setTimeout(ya, 150);
 };
 
-// La portada abre directamente en la carta (salvo que el enlace pida otra sección). El salto es instantáneo y, con
+// La portada abre arriba, o en la sección que pida el enlace. El salto es instantáneo y, con
 // intro, ocurre detrás del telón: nadie ve la página desplazarse. La página de la carta del QR no tiene portada.
 let destino = null;
 try { destino = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch (e) { /* hash raro */ }
-const carta = document.querySelector('.hero') ? (destino || document.getElementById('carta')) : null;
+// La portada abre arriba; solo salta a una sección si el enlace la pide (por ejemplo /#carta, ideal para el QR de las mesas).
+const carta = document.querySelector('.hero') ? destino : null;
 const irACarta = () => carta.scrollIntoView({ block: 'start', behavior: 'instant' });
 if (carta) {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -78,8 +79,6 @@ else {
     const el = entrada.target;
     el.classList.add('visto');
     io.unobserve(el);
-    // Cuando termina la entrada de la carta, el hover usa tiempos cortos y sin retardo.
-    if (el.classList.contains('carta-fila')) setTimeout(() => el.classList.add('listo'), 1800);
   }), { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
   reveals.forEach((e) => io.observe(e));
   // Si se salta una parte de la página (enlace de ancla, scroll muy rápido), lo que queda por encima de la
@@ -161,45 +160,3 @@ if (bucles.length && hayIO) {
   const visibles = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle('en-pantalla', e.isIntersecting)));
   bucles.forEach((b) => visibles.observe(b));
 }
-
-// Carta en pestañas (sin JavaScript se ven todas las secciones seguidas).
-document.querySelectorAll('.menu').forEach((menuCarta) => {
-  const lista = menuCarta.querySelector('[role="tablist"]');
-  const tabs = [...lista.querySelectorAll('[role="tab"]')];
-  const marca = lista.querySelector('.pestana-marca');
-  const colocarMarca = (tab) => { marca.style.transform = `translateX(${tab.offsetLeft}px) scaleX(${tab.offsetWidth})`; };
-  const elegir = (tab, porTeclado) => {
-    lista.toggleAttribute('data-teclado', Boolean(porTeclado));
-    tabs.forEach((t) => {
-      const activa = t === tab;
-      t.setAttribute('aria-selected', String(activa));
-      t.tabIndex = activa ? 0 : -1;
-      document.getElementById(t.getAttribute('aria-controls')).hidden = !activa;
-    });
-    colocarMarca(tab);
-    // En móvil desliza solo la fila de pestañas (nunca la página) para que la elegida se vea entera.
-    if (tab.offsetLeft < lista.scrollLeft) lista.scrollLeft = tab.offsetLeft;
-    else if (tab.offsetLeft + tab.offsetWidth > lista.scrollLeft + lista.clientWidth) lista.scrollLeft = tab.offsetLeft + tab.offsetWidth - lista.clientWidth;
-  };
-  // Pista visual (degradado) mientras quedan pestañas por ver a la derecha.
-  const marcarMas = () => lista.toggleAttribute('data-mas', lista.scrollWidth - lista.scrollLeft - lista.clientWidth > 4);
-  lista.addEventListener('scroll', marcarMas, { passive: true });
-  window.addEventListener('resize', marcarMas);
-  menuCarta.classList.add('con-pestanas');
-  elegir(tabs[0]);
-  marcarMas();
-  tabs.forEach((t) => t.addEventListener('click', () => elegir(t, false)));
-  lista.addEventListener('keydown', (e) => {
-    const i = tabs.indexOf(document.activeElement);
-    if (i < 0) return;
-    const destinoTab = { ArrowRight: tabs[(i + 1) % tabs.length], ArrowLeft: tabs[(i - 1 + tabs.length) % tabs.length], Home: tabs[0], End: tabs[tabs.length - 1] }[e.key];
-    if (!destinoTab) return;
-    e.preventDefault();
-    destinoTab.focus();
-    elegir(destinoTab, true);
-  });
-  // La marca se recoloca si cambia el ancho (giro del móvil, carga de la fuente).
-  const recolocar = () => colocarMarca(tabs.find((t) => t.getAttribute('aria-selected') === 'true'));
-  addEventListener('resize', recolocar);
-  if (document.fonts) document.fonts.ready.then(recolocar);
-});

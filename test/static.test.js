@@ -160,7 +160,7 @@ describe('carta', () => {
   test('todos los platos de site.js aparecen con su precio', () => {
     for (const item of items) {
       const nombre = esc(item.name).replace(/ (con fruta)$/, ' <em>$1</em>');
-      assert.ok(index.includes(`<span class="plato-nombre">${nombre}</span><span class="relleno" aria-hidden="true"></span><span class="plato-precio">${item.price}</span>`), item.name);
+      assert.ok(index.includes(`<span class="plato-nombre">${nombre}</span><span class="plato-precio">${item.price}</span>`), item.name);
     }
   });
 
@@ -171,15 +171,13 @@ describe('carta', () => {
     assert.throws(() => parsePrice('desde 9 €'));
   });
 
-  test('pestañas accesibles, una por sección con su recuento, y sin JavaScript se ve todo', () => {
+  test('la carta es una hoja con todas las secciones seguidas, con su índice de enlaces y sin pestañas', () => {
     for (const sec of site.menu.sections) {
-      assert.match(index, new RegExp(`role="tab" type="button" id="tab-${sec.id}" aria-controls="panel-${sec.id}"`));
-      assert.match(index, new RegExp(`id="tab-${sec.id}"[^>]*>${escapeRe(sec.name)} <small>${sec.items.length}</small>`));
-      assert.match(index, new RegExp(`id="panel-${sec.id}" aria-labelledby="tab-${sec.id}"`));
+      assert.match(index, new RegExp(`<section class="carta-seccion" id="carta-${sec.id}" aria-labelledby="carta-${sec.id}-t">`));
+      assert.match(index, new RegExp(`<a href="#carta-${sec.id}">${escapeRe(sec.name)}</a>`));
     }
-    assert.doesNotMatch(index, /role="tablist"[^>]*hidden/); // la tira de pestañas se ve; el JavaScript oculta los paneles que no tocan
-    assert.doesNotMatch(index, /role="tabpanel"[^>]*hidden/);
-    assert.match(index, /class="pestana-marca" aria-hidden="true"/);
+    assert.doesNotMatch(index, /role="tab/);
+    assert.doesNotMatch(index, /class="pestana/);
   });
 
   test('es la carta real: sin aviso de ejemplo y con "De barril" en la sección de copas', () => {
@@ -192,14 +190,11 @@ describe('carta', () => {
 describe('el local, visítanos y reseñas', () => {
   const seccion = (id, siguiente) => index.slice(index.indexOf(`id="${id}"`), index.indexOf(`id="${siguiente}"`));
 
-  test('galería del local: fotos sin título ni pie, con su descripción', () => {
-    const galeria = seccion('galeria', 'opinion');
-    const fotos = site.local.gallery.length;
-    assert.equal((galeria.match(/<figure class="foto"/g) || []).length, fotos);
-    assert.equal((galeria.match(/<img /g) || []).length, fotos);
-    assert.doesNotMatch(galeria, /<figcaption|<h2/);
-    assert.match(galeria, /aria-label="Galería del local"/);
-    for (const g of site.local.gallery) assert.ok(galeria.includes(`alt="${g.alt}"`), g.alt);
+  test('el bar: banda de foto a sangre y una fila con las fotos de los cócteles', () => {
+    const bar = seccion('bar', 'opinion');
+    assert.match(bar, /class="bar-foto"/);
+    assert.equal((bar.match(/<figure class="foto"/g) || []).length, site.bar.photos.length);
+    for (const f of site.bar.photos) assert.ok(bar.includes(`alt="${f.alt}"`), f.alt);
   });
 
   test('visítanos: dirección, Cómo llegar, horario con "Abierto ahora" y sin reservas', () => {
@@ -217,13 +212,13 @@ describe('el local, visítanos y reseñas', () => {
     const esperado = site.reviewCta.writeUrl || site.googleMapsUrl;
     const franja = seccion('opinion', site.reviews.rating ? 'resenas' : 'visitanos');
     assert.ok(franja.includes(site.reviewCta.button));
-    const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener" target="_blank">`).test(html);
+    const enlace = (html) => new RegExp(`<a class="[^"]*" href="${escapeRe(esperado.replace(/&/g, '&amp;'))}" rel="noopener" target="_blank"[ >]`).test(html);
     assert.ok(enlace(franja), 'la franja enlaza a Google');
     const pie = index.slice(index.indexOf('<footer>'));
     assert.ok(pie.includes(`href="${esperado.replace(/&/g, '&amp;')}" rel="noopener" target="_blank">${site.reviewCta.button}`), 'el pie enlaza a Google');
     assert.match(esperado, /^https:\/\/(www\.google\.com\/maps|g\.page\/r\/|search\.google\.com\/local\/writereview|maps\.app\.goo\.gl|share\.google\/|maps\.google\.com)/);
-    // Va tras la galería y antes de "Visítanos".
-    assert.ok(index.indexOf('id="galeria"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="visitanos"'));
+    // Va tras el bar y antes de "Visítanos".
+    assert.ok(index.indexOf('id="bar"') < index.indexOf('id="opinion"') && index.indexOf('id="opinion"') < index.indexOf('id="visitanos"'));
   });
 
   test('las reseñas solo aparecen si hay valoración de Google', () => {
@@ -282,8 +277,8 @@ describe('portada y móvil', () => {
 
   test('las animaciones respetan "reducir movimiento" y no se usa transition: all', () => {
     const reducido = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: reduce)'));
-    assert.match(reducido, /\.cinta-pista, \.sello-anillo \{ animation: none; \}/);
-    assert.match(reducido, /html\.js:not\(\.cargado\) \.hero-figura \{ clip-path: none; \}/);
+    assert.match(reducido, /\.cinta-pista \{ animation: none; \}/);
+    assert.match(reducido, /html\.js:not\(\.cargado\) \.hero-foto img \{ scale: 1; \}/);
     assert.doesNotMatch(css, /transition:\s*all/);
   });
 
@@ -429,21 +424,18 @@ describe('diseño editorial (híbrido)', () => {
   });
 
   test('El oficio: una escena por elemento de site.js y botón para pausar (oculto hasta que hay JavaScript)', () => {
-    const oficio = index.slice(index.indexOf('id="oficio"'), index.indexOf('id="carta"'));
-    assert.equal((oficio.match(/class="oficio-item/g) || []).length, site.oficio.items.length);
+    const oficio = index.slice(index.indexOf('id="oficio"'), index.indexOf('id="bar"'));
+    assert.equal((oficio.match(/class="redondo"/g) || []).length, site.oficio.items.length);
     assert.match(oficio, /class="pausa-anim"[^>]*hidden/);
     for (const item of site.oficio.items) assert.ok(oficio.includes(`<h3>${item.title}</h3>`), item.title);
     assert.equal((oficio.match(/<svg[^>]*role="img"[^>]*aria-label=/g) || []).length, site.oficio.items.length);
   });
 
-  test('"Los imprescindibles" llevan su icono y su precio', () => {
-    const carta = index.slice(index.indexOf('class="carta-destacada"'), index.indexOf('class="menu"'));
-    assert.equal((carta.match(/class="carta-fila"/g) || []).length, site.highlights.length);
-    for (const h of site.highlights) {
-      assert.ok(carta.includes(`<h3>${h.name}</h3>`), h.name);
-      assert.ok(carta.includes(`<span class="carta-precio">${h.price}</span>`), `${h.name} ${h.price}`);
-    }
-    assert.equal((carta.match(/class="coctel-icono"/g) || []).length, site.highlights.length);
+  test('bajo la carta van las fotos de site.menu.photos y ya no hay copas animadas', () => {
+    const fotos = index.slice(index.indexOf('class="carta-fotos"'), index.indexOf('id="oficio"'));
+    assert.equal((fotos.match(/class="carta-foto"/g) || []).length, site.menu.photos.length);
+    for (const f of site.menu.photos) assert.ok(fotos.includes(`alt="${f.alt}"`), f.alt);
+    assert.doesNotMatch(index, /coctel-icono|class="producto/);
   });
 
   test('la cinta de la portada es decorativa y sus nombres salen de site.js', () => {
@@ -498,11 +490,11 @@ describe('correcciones de la auditoría', () => {
   });
 
   test('la cabecera pasa a menú móvil antes de que el menú choque con la marca', () => {
-    assert.match(css, /@media \(max-width: 1100px\) \{\s*\.principal \{ display: none; \}/);
+    assert.match(css, /@media \(max-width: 1100px\)[\s\S]*?\.principal \{ display: none; \}/);
   });
 
   test('objetivos táctiles de 44 px en marca y enlaces del pie', () => {
-    assert.match(css, /\.marca \{ min-height: 44px; \}/);
+    assert.match(css, /\.marca \{[^}]*min-height: 44px/);
     assert.match(css, /\.pie-fila a \{ padding-block: \.95rem; \}/);
   });
 });
@@ -556,8 +548,7 @@ describe('selector de idioma: español / inglés', () => {
     assert.ok(h.includes(site.en.hero.title[0]) && h.includes(site.en.hero.lead));
     assert.ok(h.includes(site.en.title));
     for (const item of site.en.oficio.items) assert.ok(h.includes(item.title) && h.includes(`aria-label="${item.aria}"`), item.title);
-    for (const x of site.en.highlights) assert.ok(h.includes(x.text), x.text);
-    for (const g of site.en.local.gallery) assert.ok(h.includes(`alt="${g.alt}"`), g.alt);
+    assert.ok(h.includes(`alt="${site.en.local.gallery[0].alt}"`));
     for (const t of ['See the menu', 'Get directions', 'Opening hours', 'Wednesday to Sunday, 18:00 to 02:00', 'The full menu', 'Moscow Mule', 'Vodka, ginger beer and lime']) assert.ok(h.includes(t), t);
     for (const sp of ['Ver la carta', 'Cómo llegar', 'De miércoles a domingo', 'Escríbenos', 'Toda la carta']) assert.ok(!h.includes(sp), `queda en español: ${sp}`);
     assert.deepEqual(ids(h), ids(index));
@@ -566,7 +557,6 @@ describe('selector de idioma: español / inglés', () => {
 
   test('cada elemento traducido de site.en corresponde a uno del español (mismo número de piezas)', () => {
     assert.equal(site.en.oficio.items.length, site.oficio.items.length);
-    assert.equal(site.en.highlights.length, site.highlights.length);
     assert.equal(site.en.local.gallery.length, site.local.gallery.length);
     assert.equal(site.en.bar.photos.length, site.bar.photos.length);
     assert.equal(site.en.hero.foot.length, site.hero.foot.length);
@@ -599,21 +589,19 @@ describe('diseño de la portada: intro, carta al abrir y pestañas', () => {
     assert.match(ini, /sessionStorage\.getItem\('mb-intro'\)/);
     assert.match(ini, /prefers-reduced-motion: reduce/);
     assert.match(css, /html\.intro \.intro-pantalla/);
-    assert.match(css, /html\.js:not\(\.cargado\) \[data-reveal\]/);
+    assert.match(css, /html\.js \[data-reveal\]:not\(\.visto\)/);
   });
 
-  test('la intro lleva el texto de la portada en cada idioma', () => {
-    assert.ok(index.includes(`<span class="intro-sub etiqueta">${site.hero.kicker}</span>`));
-    assert.ok(read('en.html').includes(`<span class="intro-sub etiqueta">${site.en.hero.kicker}</span>`));
+  test('la intro lleva el nombre del bar', () => {
+    assert.match(index, /class="intro-marca"><span>Memphis/);
+    assert.match(read('en.html'), /class="intro-marca"><span>Memphis/);
   });
 
-  test('la portada abre en la carta, se puede saltar la intro y la carta usa pestañas con teclado', () => {
-    assert.match(js, /document\.getElementById\('carta'\)/);
+  test('la portada abre arriba (o en la sección del enlace), se puede saltar la intro y la carta no necesita JavaScript', () => {
+    assert.match(js, /const carta = document\.querySelector\('\.hero'\) \? destino : null/);
     assert.match(js, /behavior: 'instant'/);
     assert.match(js, /setTimeout\(salir, 2100\)/);
     assert.match(js, /\['pointerdown', 'keydown', 'wheel', 'touchstart'\]/);
-    assert.match(js, /ArrowRight/);
-    assert.match(js, /'Home'|Home:/);
   });
 
   test('los CTA de la portada son "Ver la carta" y "Cómo llegar", sin reservas', () => {
@@ -624,8 +612,7 @@ describe('diseño de la portada: intro, carta al abrir y pestañas', () => {
   });
 
   test('cada sección de la carta tiene su introducción y la de copas lleva "De barril"', () => {
-    for (const sec of site.menu.sections) assert.ok(index.includes(`<p class="panel-intro etiqueta">${sec.intro}</p>`), sec.id);
-    assert.equal((index.match(/class="pestana"/g) || []).length, site.menu.sections.length);
+    for (const sec of site.menu.sections) assert.ok(index.includes(`<p class="panel-intro">${sec.intro}</p>`), sec.id);
     assert.ok(site.menu.sections.flatMap((x) => x.items).length >= 23);
   });
 });
