@@ -19,8 +19,8 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) pint
 // Textos según el idioma de la página.
 const IDIOMA = document.documentElement.lang === 'en' ? 'en' : 'es';
 const TXT = {
-  es: { pausar: 'Pausar animaciones', reanudar: 'Reanudar animaciones', cerrar: 'Cerrar' },
-  en: { pausar: 'Pause animations', reanudar: 'Resume animations', cerrar: 'Close' },
+  es: { cerrar: 'Cerrar' },
+  en: { cerrar: 'Close' },
 }[IDIOMA];
 
 // ---------- Movimiento y navegación (mejora progresiva: sin JavaScript todo se ve desde el principio) ----------
@@ -143,19 +143,8 @@ if (hayIO) {
   }
 }
 
-// Pausar / reanudar todo lo que se mueve en bucle.
-const pausa = document.querySelector('.pausa-anim');
-if (pausa) {
-  pausa.hidden = false;
-  pausa.addEventListener('click', () => {
-    const quieto = root.toggleAttribute('data-quieto');
-    pausa.setAttribute('aria-pressed', String(quieto));
-    pausa.textContent = quieto ? TXT.reanudar : TXT.pausar;
-  });
-}
-
 // Los bucles solo corren mientras se ven.
-const bucles = document.querySelectorAll('.ilustracion-coctel, .ilustracion-anim, .cinta, .sello-giro');
+const bucles = document.querySelectorAll('.cinta, .sello-giro');
 if (bucles.length && hayIO) {
   const visibles = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle('en-pantalla', e.isIntersecting)));
   bucles.forEach((b) => visibles.observe(b));

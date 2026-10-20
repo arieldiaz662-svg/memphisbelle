@@ -416,23 +416,13 @@ describe('diseño editorial (híbrido)', () => {
     assert.match(index, /<script src="assets\/js\/ini\.js/);
   });
 
-  test('los retardos de las ilustraciones salen de reglas data-s del CSS', () => {
-    const usados = new Set([...index.matchAll(/data-s="(\d+)"/g)].map((m) => m[1]));
-    assert.ok(usados.size > 0);
-    for (const n of usados) assert.ok(css.includes(`[data-s="${n}"]`), `data-s=${n}`);
+  test('los retardos escalonados salen de reglas data-s del CSS y ya no hay sección de oficio ni ilustraciones animadas', () => {
+    assert.doesNotMatch(index, /id="oficio"|pausa-anim|ilustracion-/);
     for (const n of new Set([...index.matchAll(/data-s="(i\d)"/g)].map((m) => m[1]))) assert.ok(css.includes(`[data-s="${n}"]`), n);
   });
 
-  test('El oficio: una escena por elemento de site.js y botón para pausar (oculto hasta que hay JavaScript)', () => {
-    const oficio = index.slice(index.indexOf('id="oficio"'), index.indexOf('id="bar"'));
-    assert.equal((oficio.match(/class="redondo"/g) || []).length, site.oficio.items.length);
-    assert.match(oficio, /class="pausa-anim"[^>]*hidden/);
-    for (const item of site.oficio.items) assert.ok(oficio.includes(`<h3>${item.title}</h3>`), item.title);
-    assert.equal((oficio.match(/<svg[^>]*role="img"[^>]*aria-label=/g) || []).length, site.oficio.items.length);
-  });
-
   test('bajo la carta van las fotos de site.menu.photos y ya no hay copas animadas', () => {
-    const fotos = index.slice(index.indexOf('class="carta-fotos"'), index.indexOf('id="oficio"'));
+    const fotos = index.slice(index.indexOf('class="carta-fotos"'), index.indexOf('id="bar"'));
     assert.equal((fotos.match(/class="carta-foto"/g) || []).length, site.menu.photos.length);
     for (const f of site.menu.photos) assert.ok(fotos.includes(`alt="${f.alt}"`), f.alt);
     assert.doesNotMatch(index, /coctel-icono|class="producto/);
@@ -547,7 +537,6 @@ describe('selector de idioma: español / inglés', () => {
     const h = en();
     assert.ok(h.includes(site.en.hero.title[0]) && h.includes(site.en.hero.lead));
     assert.ok(h.includes(site.en.title));
-    for (const item of site.en.oficio.items) assert.ok(h.includes(item.title) && h.includes(`aria-label="${item.aria}"`), item.title);
     assert.ok(h.includes(`alt="${site.en.local.gallery[0].alt}"`));
     for (const t of ['See the menu', 'Get directions', 'Opening hours', 'Wednesday to Sunday, 18:00 to 02:00', 'The full menu', 'Moscow Mule', 'Vodka, ginger beer and lime']) assert.ok(h.includes(t), t);
     for (const sp of ['Ver la carta', 'Cómo llegar', 'De miércoles a domingo', 'Escríbenos', 'Toda la carta']) assert.ok(!h.includes(sp), `queda en español: ${sp}`);
@@ -556,16 +545,10 @@ describe('selector de idioma: español / inglés', () => {
   });
 
   test('cada elemento traducido de site.en corresponde a uno del español (mismo número de piezas)', () => {
-    assert.equal(site.en.oficio.items.length, site.oficio.items.length);
     assert.equal(site.en.local.gallery.length, site.local.gallery.length);
     assert.equal(site.en.bar.photos.length, site.bar.photos.length);
     assert.equal(site.en.hero.foot.length, site.hero.foot.length);
     assert.equal(site.en.cinta.length, site.cinta.length);
-  });
-
-  test('la pausa de las animaciones también habla inglés', () => {
-    const js = readFileSync(new URL('../public/js/site.js', import.meta.url), 'utf8');
-    for (const t of ['Pause animations', 'Resume animations']) assert.ok(js.includes(t), t);
   });
 
   test('el horario agrupado también sale en inglés', () => {

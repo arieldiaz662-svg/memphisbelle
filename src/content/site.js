@@ -82,19 +82,6 @@ export const site = {
     ],
     revisar: 'Confirmar con el local que los textos de presentación describen su forma de trabajar',
   },
-  // 02 · El oficio: cuatro escenas de barra dibujadas (animación decorativa) y el cóctel ahumado.
-  oficio: {
-    title: 'El oficio, <em>en movimiento</em>',
-    text: 'Así nacen algunas de las copas que ves en las fotos. Técnica de barra, sin atajos.',
-    items: [
-      { id: 'humo', title: 'Ahumado al soplete', text: 'La llama toca el borde, salta la chispa y el humo perfuma la copa antes del primer trago.', aria: 'Cóctel ahumándose con un soplete: la llama toca el borde del vaso, saltan chispas y sube el humo' },
-      { id: 'colar', title: 'Agitado y colado', text: 'Hielo, coctelera y un colado fino directo a la copa escarchada.', aria: 'Coctelera inclinada colando un cóctel en una copa de martini escarchada que se va llenando' },
-      { id: 'espuma', title: 'Espuma de seda', text: 'Agitado en seco para montar la espuma y una rama de romero para el aroma.', aria: 'Coctelera agitándose con fuerza junto a un vaso con espuma blanca y una rama de romero' },
-      { id: 'tiki', title: 'Swizzle tiki', text: 'Hielo picado y la varilla girando hasta que la taza escarcha.', aria: 'Varilla swizzle girando dentro de una taza tiki con hielo picado mientras el vaso escarcha' },
-      { id: 'canela', title: 'Canela al momento', text: 'Canela rallada sobre la espuma y naranja deshidratada al lado.', aria: 'Rama de canela rallándose sobre un vaso alto con espuma; el polvo cae sobre la espuma' },
-    ],
-    revisar: 'Confirmar que estas técnicas (ahumado, espuma, tiki, canela) se usan de verdad en la barra; si no, quitar las que sobren',
-  },
   carta: {
     intro: 'Veintitrés cócteles, copas y cerveza de barril. Precios con IGIC incluido.',
     todaLaCarta: 'Toda la carta',
@@ -263,17 +250,6 @@ export const site = {
         { alt: 'Guinness and Dorada Especial draught beer taps', caption: 'Dorada and Guinness, on draught' },
         { alt: 'Wall of old drinks signs and posters under three spotlights', caption: 'Signs and posters from the house' },
         { alt: 'Whisky bottles on a wooden shelf', caption: 'Whiskies from around the world' },
-      ],
-    },
-    oficio: {
-      title: 'The craft, <em>in motion</em>',
-      text: 'This is how some of the drinks in the photos are born. Bar technique, no shortcuts.',
-      items: [
-        { title: 'Smoked with a torch', text: 'The flame touches the rim, a spark flies and the smoke perfumes the glass before the first sip.', aria: 'Cocktail being smoked with a torch: the flame touches the rim of the glass, sparks fly and smoke rises' },
-        { title: 'Shaken and strained', text: 'Ice, shaker and a fine strain straight into the frosted glass.', aria: 'Tilted shaker straining a cocktail into a frosted martini glass that slowly fills' },
-        { title: 'Silky foam', text: 'Dry shaken to build the foam, with a sprig of rosemary for the aroma.', aria: 'Shaker being shaken hard next to a glass with white foam and a sprig of rosemary' },
-        { title: 'Tiki swizzle', text: 'Crushed ice and the swizzle stick spinning until the mug frosts.', aria: 'Swizzle stick spinning inside a tiki mug of crushed ice while the glass frosts' },
-        { title: 'Fresh cinnamon', text: 'Cinnamon grated over the foam and dehydrated orange on the side.', aria: 'Cinnamon stick being grated over a tall glass with foam; the powder falls onto the foam' },
       ],
     },
     carta: {

@@ -1,12 +1,11 @@
 import { resumen } from '../../public/js/horario.js';
 import { NAV, esc, instagramUrl, layout, reviewUrl, rodar } from './html.js';
-import { ANIMS, HUMO, SELLO_INTRO } from './ilustraciones.js';
+import { SELLO_INTRO } from './ilustraciones.js';
 import { structuredData } from './schema.js';
 
 export { NAV };
 export const NAV_EN = [
   { id: 'carta', label: 'The menu' },
-  { id: 'oficio', label: 'The craft' },
   { id: 'bar', label: 'The bar' },
   { id: 'visitanos', label: 'Visit us' },
 ];
@@ -14,14 +13,12 @@ export const NAV_EN = [
 // Textos fijos de la portada en cada idioma (los de contenido, del bar, están en site.js; en inglés, en site.en).
 const TXT = {
   es: {
-    pausar: 'Pausar animaciones', anterior: 'Anterior', siguiente: 'Siguiente', escenas: 'Escenas del oficio',
     verCarta: 'Ver la carta en pantalla completa', otraCarta: 'Menu in English', cartaOtra: 'carta-en.html', otraLang: 'en',
     horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', maps: 'Cómo llegar',
     acciones: 'Acciones rápidas', portada: 'Portada', cartaCompleta: 'Toda la carta', alergenos: 'Alérgenos', desde: 'Precio',
     mapaTitulo: 'Mapa de Google con la ubicación de Memphis Belle', mapaVer: 'Ver el mapa', mapaAviso: 'Al verlo se carga Google Maps y Google puede guardar cookies. Más información en la', mapaCookies: 'política de cookies',
   },
   en: {
-    pausar: 'Pause animations', anterior: 'Previous', siguiente: 'Next', escenas: 'Craft scenes',
     verCarta: 'View the full-screen menu', otraCarta: 'Carta en español', cartaOtra: 'carta.html', otraLang: 'es',
     horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', maps: 'Get directions',
     acciones: 'Quick actions', portada: 'Home', cartaCompleta: 'The full menu', alergenos: 'Allergens', desde: 'Price',
@@ -189,28 +186,6 @@ function menu(site, idioma) {
   }) + '\n' + fotosCarta(site);
 }
 
-// El oficio: cinco escenas dibujadas en círculos, bajo un titular centrado. En pantallas estrechas se deslizan.
-function oficio(site, idioma) {
-  const o = site.oficio;
-  const t = TXT[idioma];
-  const dibujo = (item) => (item.id === 'humo' ? HUMO : ANIMS[item.id]).replace(/aria-label="[^"]*"/, `aria-label="${esc(item.aria)}"`);
-  return `<section class="seccion" id="oficio">
-  <div class="wrap">
-    <div class="cab-centrada">
-      ${titular(o.title)}
-      <p class="intro" data-reveal${d(1)}>${esc(o.text)}</p>
-      <button class="pausa-anim" type="button" aria-pressed="false" hidden>${t.pausar}</button>
-    </div>
-  </div>
-  <div class="pista" role="region" aria-label="${t.escenas}" tabindex="0">
-    ${o.items.map((item, n) => `<figure class="redondo" data-reveal${d(Math.min(n, 4))}>
-      <div class="lienzo">${dibujo(item)}</div>
-      <figcaption><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></figcaption>
-    </figure>`).join('\n    ')}
-  </div>
-</section>`;
-}
-
 // El bar: foto a sangre con la frase encima y una fila con las fotos de los cócteles.
 function bar(site, idioma) {
   const b = site.bar;
@@ -320,7 +295,6 @@ export function renderLanding({ site: original, config, idioma = 'es' }) {
   const body = `<main id="contenido" tabindex="-1">
 ${hero(site, idioma)}
 ${menu(site, idioma)}
-${oficio(site, idioma)}
 ${bar(site, idioma)}
 ${reviewCta(site, idioma)}
 ${reviews(site, idioma)}

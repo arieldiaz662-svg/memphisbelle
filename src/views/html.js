@@ -22,7 +22,6 @@ export const instagramUrl = (user) => `https://www.instagram.com/${user}/`;
 // Menú de la cabecera, en el orden de las secciones de la portada. Las demás páginas lo usan igual, con enlaces a la portada.
 export const NAV = [
   { id: 'carta', label: 'La carta' },
-  { id: 'oficio', label: 'El oficio' },
   { id: 'bar', label: 'El bar' },
   { id: 'visitanos', label: 'Visítanos' },
 ];
