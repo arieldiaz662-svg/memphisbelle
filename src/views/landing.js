@@ -18,12 +18,14 @@ const TXT = {
     verCarta: 'Ver la carta en pantalla completa', otraCarta: 'Menu in English', cartaOtra: 'carta-en.html', otraLang: 'en',
     horario: 'Horario', ubicacion: 'Ubicación', contacto: 'Contacto', local: 'El local', maps: 'Cómo llegar',
     acciones: 'Acciones rápidas', portada: 'Portada', cartaCompleta: 'Toda la carta', alergenos: 'Alérgenos', desde: 'Precio',
+    mapaTitulo: 'Mapa de Google con la ubicación de Memphis Belle', mapaVer: 'Ver el mapa', mapaAviso: 'Al verlo se carga Google Maps y Google puede guardar cookies. Más información en la', mapaCookies: 'política de cookies',
   },
   en: {
     pausar: 'Pause animations', anterior: 'Previous', siguiente: 'Next', escenas: 'Craft scenes',
     verCarta: 'View the full-screen menu', otraCarta: 'Carta en español', cartaOtra: 'carta.html', otraLang: 'es',
     horario: 'Opening hours', ubicacion: 'Location', contacto: 'Contact', local: 'The venue', maps: 'Get directions',
     acciones: 'Quick actions', portada: 'Home', cartaCompleta: 'The full menu', alergenos: 'Allergens', desde: 'Price',
+    mapaTitulo: 'Google map showing the location of Memphis Belle', mapaVer: 'Show the map', mapaAviso: 'Showing it loads Google Maps and Google may store cookies. More information in the', mapaCookies: 'cookies policy',
   },
 };
 
@@ -286,6 +288,18 @@ function visit(site, idioma) {
         <li>${esc(v.place)}</li>
       </ul></dd></div>
     </dl>
+  </div>
+  <div class="wrap mapa-caja" data-reveal${d(1)}>
+    <div class="mapa" data-mapa="${esc(`https://www.google.com/maps?q=${site.geo.lat},${site.geo.lng}&z=17&hl=${idioma}&output=embed`)}" data-titulo="${esc(t.mapaTitulo)}">
+      <div class="mapa-previa">
+        <svg class="mapa-pin" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" fill="currentColor"/></svg>
+        <p class="mapa-direccion">${esc(a.street)}, ${esc(a.postalCode)} ${esc(a.city)}</p>
+        <div class="mapa-acciones">
+          <button class="btn btn-claro mapa-cargar" type="button" hidden>${rodar(t.mapaVer)}</button>
+        </div>
+        <p class="mapa-aviso">${esc(t.mapaAviso)} <a href="cookies.html">${esc(t.mapaCookies)}</a>.</p>
+      </div>
+    </div>
   </div>
 </section>`;
 }

@@ -160,3 +160,19 @@ if (bucles.length && hayIO) {
   const visibles = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle('en-pantalla', e.isIntersecting)));
   bucles.forEach((b) => visibles.observe(b));
 }
+
+// Mapa de Google: no se carga hasta que se pide (así no se envían datos a Google ni se guardan cookies sin avisar).
+document.querySelectorAll('.mapa').forEach((mapa) => {
+  const boton = mapa.querySelector('.mapa-cargar');
+  if (!boton) return;
+  boton.hidden = false;
+  boton.addEventListener('click', () => {
+    const marco = document.createElement('iframe');
+    marco.src = mapa.dataset.mapa;
+    marco.title = mapa.dataset.titulo;
+    marco.loading = 'lazy';
+    marco.referrerPolicy = 'no-referrer-when-downgrade';
+    mapa.replaceChildren(marco);
+    mapa.classList.add('mapa-activo');
+  });
+});

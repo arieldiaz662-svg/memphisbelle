@@ -616,3 +616,22 @@ describe('diseño de la portada: intro, carta al abrir y pestañas', () => {
     assert.ok(site.menu.sections.flatMap((x) => x.items).length >= 23);
   });
 });
+
+describe('mapa de Google en "Visítanos"', () => {
+  test('no hay iframe hasta que se pide: solo la previa, con el botón oculto sin JavaScript y el aviso de cookies', () => {
+    for (const html of [index, read('en.html')]) {
+      const visita = html.slice(html.indexOf('id="visitanos"'));
+      assert.doesNotMatch(visita, /<iframe/);
+      assert.match(visita, /class="mapa" data-mapa="https:\/\/www\.google\.com\/maps\?q=28\.468885,-16\.2608065&amp;z=17&amp;hl=(es|en)&amp;output=embed"/);
+      assert.match(visita, /class="btn btn-claro mapa-cargar" type="button" hidden>/);
+      assert.ok(visita.includes(`href="${site.googleMapsUrl.replace(/&/g, '&amp;')}"`)); // el botón "Cómo llegar" abre Maps
+      assert.match(visita, /href="cookies\.html"/);
+    }
+  });
+  test('la CSP solo admite google.com como marco y el JS crea el iframe al pulsar', () => {
+    assert.match(STATIC_CSP, /frame-src https:\/\/www\.google\.com;/);
+    assert.doesNotMatch(STATIC_CSP, /frame-src[^;]*\*/);
+    assert.match(read('assets/js/site.js'), /createElement\('iframe'\)/);
+    assert.match(read('cookies.html'), /Mapa de Google Maps/);
+  });
+});

@@ -63,6 +63,7 @@ export const site = {
     // Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial (bombardero.js).
     image: { src: 'img/portada/barman', widths: [640, 1024, 1333], width: 1333, height: 2000 },
     imageCaption: 'Memphis Belle, B-17',
+    revisar: 'Confirmar con el dueño que está de acuerdo en salir (con la cara visible) en la foto de la portada; si no, usar la del B-17 (img/portada/b17) u otra foto sin cara',
     // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
     foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],
   },
@@ -185,6 +186,7 @@ export const site = {
     ],
     // Cuántos cócteles hay (para el titular de la carta): 23 entre refrescantes, sour e intensos.
     barril: { text: 'Dorada Especial y Guinness, directas del grifo.', textEn: 'Dorada Especial and Guinness, straight from the tap.', label: 'De barril', labelEn: 'On draught' },
+    revisar: 'Alérgenos: confirmar con el dueño cuáles lleva cada cóctel (huevo en los sour, lácteos, frutos secos en el amaretto, sulfitos…) y rellenar `allergens` en cada plato',
     allergensNote: 'Si tienes alguna alergia o intolerancia, dínoslo antes de pedir.',
     allergensNoteEn: 'If you have any allergy or intolerance, please tell us before ordering.',
   },
@@ -218,7 +220,7 @@ export const site = {
     taxId: '', // NIF/CIF
     address: '', // dirección postal
     registry: '', // datos registrales, si es sociedad
-    lastUpdated: '2 de octubre de 2026',
+    lastUpdated: '20 de octubre de 2026',
     pendiente: 'Datos del titular (nombre o razón social, NIF/CIF y dirección) para el aviso legal',
   },
 

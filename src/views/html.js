@@ -34,7 +34,7 @@ export function hasLegalNotice(site) {
 
 // Política de seguridad de contenidos. Va como <meta> en cada página (vale en cualquier alojamiento, también
 // en la vista previa local) y _headers la repite como cabecera para Cloudflare.
-export const STATIC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; object-src 'none'; base-uri 'self'";
+export const STATIC_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src https://www.google.com; form-action 'self'; object-src 'none'; base-uri 'self'";
 
 // Color de la parte de arriba de la página (barra de estado del móvil). La web es oscura siempre.
 export const THEME_COLOR = '#0B0A09';
