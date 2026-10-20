@@ -218,13 +218,13 @@ function bar(site, idioma) {
   const t = TXT[idioma];
   const foto = (f, i) => `<figure class="foto" data-reveal${d(i)}><div class="marco"><picture><source type="image/webp" srcset="assets/${esc(f.src)}-640.webp"><img src="assets/${esc(f.src)}-640.jpg" alt="${esc(f.alt)}" width="640" height="800" loading="lazy" decoding="async"></picture></div><figcaption>${esc(f.caption)}</figcaption></figure>`;
   return `<section class="bar" id="bar">
-  ${g ? `<div class="bar-banda">${fondo(g, 'bar-foto', { sizes: '100vw', alt: g.alt })}<div class="bar-velo" aria-hidden="true"></div></div>` : ''}
-  <div class="wrap">
-    <div class="bar-texto">
+  ${g ? `<div class="bar-banda">${fondo(g, 'bar-foto', { sizes: '100vw', alt: g.alt })}<div class="bar-velo" aria-hidden="true"></div>
+    <div class="wrap bar-texto">
       ${titular(b.title)}
       <p class="declaracion" data-reveal${d(1)}>${esc(b.declaration)}</p>
       <a class="btn btn-claro" href="${esc(site.googleMapsUrl)}" rel="noopener" target="_blank" data-reveal${d(2)}>${rodar(t.maps)}${enlaceExterno}</a>
-    </div>
+    </div></div>` : ''}
+  <div class="wrap">
     <div class="cab-centrada cab-fotos"><p class="intro" data-reveal>${esc(b.text)}</p></div>
     <div class="fotos-fila">
       ${b.photos.map(foto).join('\n      ')}
