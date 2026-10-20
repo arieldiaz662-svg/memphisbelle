@@ -102,7 +102,7 @@ export const site = {
   // GALERÍA del local: tira de fotos sin título (alt describe lo que se ve). Sin pie de foto.
   local: {
     gallery: [
-      { src: 'img/ambiente/estanteria-rones', widths: [640, 1024, 1600], width: 1600, height: 1066, alt: 'Estantería de rones y ginebras con los vasos iluminados en azul' },
+      { src: 'img/portada/mural', widths: [640, 1024, 1600], width: 1600, height: 1066, alt: 'Mural del bombardero Memphis Belle pintado en la pared, con dos lámparas colgantes y botellas' },
     ],
   },
   // VISITA / CONTACTO: el bar no admite reservas. No hay formulario: se viene directamente.
@@ -282,7 +282,7 @@ export const site = {
     },
     local: {
       gallery: [
-        { alt: 'Shelves of rums and gins with the glasses lit in blue' },
+        { alt: 'Mural of the Memphis Belle bomber painted on the wall, with two pendant lamps and bottles' },
       ],
     },
     visit: {
