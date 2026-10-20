@@ -68,7 +68,8 @@ export const site = {
     foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],
   },
   // Cinta de la portada: nombres que pasan en bucle (decorativa).
-  cinta: ['Dry Martini', 'Negroni', 'Mojito', 'Pisco Sour', 'Moscow Mule', 'Old Fashioned', 'Porn Star Martini', 'Guinness de barril'],
+  // Lo que hay en la carta, por tipo de bebida (no cócteles concretos): quien mira sabe si tiene ron, ginebra, whisky…
+  cinta: ['Ron', 'Whisky', 'Ginebra', 'Vodka', 'Tequila', 'Mezcal', 'Cachaza', 'Pisco', 'Bourbon', 'Vermut', 'Cava', 'Cerveza de barril'],
   // 01 · El bar: titular y texto de presentación, con cuatro fotos de cócteles.
   bar: {
     title: 'Cócteles de autor, <em>sin prisa</em>',
@@ -240,7 +241,7 @@ export const site = {
         { alt: 'Dark draught beer in a stemmed glass' },
       ],
     },
-    cinta: ['Dry Martini', 'Negroni', 'Mojito', 'Pisco Sour', 'Moscow Mule', 'Old Fashioned', 'Porn Star Martini', 'Draught Guinness'],
+    cinta: ['Rum', 'Whisky', 'Gin', 'Vodka', 'Tequila', 'Mezcal', 'Cachaça', 'Pisco', 'Bourbon', 'Vermouth', 'Cava', 'Draught beer'],
     bar: {
       title: 'Craft cocktails, <em>no rush</em>',
       declaration: 'Every drink is made to order, with real ice, classic technique and a touch of our own.',
