@@ -74,12 +74,12 @@ export const site = {
     declaration: 'Cada copa se prepara al momento, con hielo de verdad, técnica clásica y un toque propio.',
     text: 'Pasa por la barra, pide lo que te apetezca o déjate aconsejar: siempre hay algo en la carta que no esperabas.',
     photos: [
-      { src: 'img/ambiente/coctel-naranja', alt: 'Cóctel naranja con rodaja de lima en copa de martini', caption: 'Naranja, lima y copa escarchada', pos: 'a' },
-      { src: 'img/ambiente/coctel-espuma', alt: 'Cóctel con espuma blanca y romero', caption: 'Espuma y romero', pos: 'b' },
-      { src: 'img/ambiente/coctel-tiki', alt: 'Cócteles tiki en vasos de cerámica sobre la barra', caption: 'Tiki en cerámica', pos: 'c' },
-      { src: 'img/ambiente/coctel-canela', alt: 'Cóctel con espuma, canela y rodajas de naranja deshidratada', caption: 'Espuma, canela y naranja', pos: 'b' },
+      { src: 'img/ambiente/lampara-memphis', alt: 'Lámpara colgante sobre la barra, con los grifos de cerveza al fondo', caption: 'La barra, a media luz' },
+      { src: 'img/ambiente/grifos-barril', alt: 'Grifos de cerveza de barril Guinness y Dorada Especial', caption: 'Dorada y Guinness, de barril' },
+      { src: 'img/ambiente/chapas-carteles', alt: 'Pared con chapas y carteles antiguos de bebidas bajo tres focos', caption: 'Chapas y carteles de la casa' },
+      { src: 'img/ambiente/whiskies', alt: 'Botellas de whisky en una balda de madera', caption: 'Whiskies de todo el mundo' },
     ],
-    revisar: 'Confirmar con el local que los textos de presentación describen su forma de trabajar y que las fotos de cócteles son suyas o de uso libre',
+    revisar: 'Confirmar con el local que los textos de presentación describen su forma de trabajar',
   },
   // 02 · El oficio: cuatro escenas de barra dibujadas (animación decorativa) y el cóctel ahumado.
   oficio: {
@@ -101,9 +101,7 @@ export const site = {
   // GALERÍA del local: tira de fotos sin título (alt describe lo que se ve). Sin pie de foto.
   local: {
     gallery: [
-      { src: 'img/ambiente/barra-estanteria', widths: [640, 1000], width: 1000, height: 764, alt: 'Barra de madera y estantería de botellas con luz verde' },
-      { src: 'img/ambiente/ventana', widths: [640], width: 624, height: 1104, alt: 'Interior del bar junto a la ventana' },
-      { src: 'img/ambiente/baldosa', widths: [640], width: 624, height: 820, alt: 'Mesas altas y suelo de baldosa hidráulica' },
+      { src: 'img/ambiente/estanteria-rones', widths: [640, 1024, 1600], width: 1600, height: 1066, alt: 'Estantería de rones y ginebras con los vasos iluminados en azul' },
     ],
   },
   // VISITA / CONTACTO: el bar no admite reservas. No hay formulario: se viene directamente.
@@ -259,10 +257,10 @@ export const site = {
       declaration: 'Every drink is made to order, with real ice, classic technique and a touch of our own.',
       text: 'Come to the bar, order what you fancy or let us advise you: there is always something on the menu you did not expect.',
       photos: [
-        { alt: 'Orange cocktail with a slice of lime in a martini glass', caption: 'Orange, lime and a frosted glass' },
-        { alt: 'Cocktail with white foam and rosemary', caption: 'Foam and rosemary' },
-        { alt: 'Tiki cocktails in ceramic mugs on the bar', caption: 'Tiki in ceramic' },
-        { alt: 'Cocktail with foam, cinnamon and dehydrated orange slices', caption: 'Foam, cinnamon and orange' },
+        { alt: 'Pendant lamp over the bar with the beer taps behind', caption: 'The bar, in low light' },
+        { alt: 'Guinness and Dorada Especial draught beer taps', caption: 'Dorada and Guinness, on draught' },
+        { alt: 'Wall of old drinks signs and posters under three spotlights', caption: 'Signs and posters from the house' },
+        { alt: 'Whisky bottles on a wooden shelf', caption: 'Whiskies from around the world' },
       ],
     },
     oficio: {
@@ -282,9 +280,7 @@ export const site = {
     },
     local: {
       gallery: [
-        { alt: 'Wooden bar and shelves of bottles under green light' },
-        { alt: 'Inside the bar by the window' },
-        { alt: 'High tables and hydraulic tile floor' },
+        { alt: 'Shelves of rums and gins with the glasses lit in blue' },
       ],
     },
     visit: {

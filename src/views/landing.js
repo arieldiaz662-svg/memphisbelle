@@ -214,7 +214,7 @@ function bar(site, idioma) {
   const b = site.bar;
   const g = (site.local.gallery || []).filter((x) => x.src)[0];
   const t = TXT[idioma];
-  const foto = (f, i) => `<figure class="foto" data-reveal${d(i)}><div class="marco"><picture><source type="image/webp" srcset="assets/${esc(f.src)}-640.webp"><img src="assets/${esc(f.src)}-640.jpg" alt="${esc(f.alt)}" width="640" height="1100" loading="lazy" decoding="async"></picture></div><figcaption>${esc(f.caption)}</figcaption></figure>`;
+  const foto = (f, i) => `<figure class="foto" data-reveal${d(i)}><div class="marco"><picture><source type="image/webp" srcset="assets/${esc(f.src)}-640.webp"><img src="assets/${esc(f.src)}-640.jpg" alt="${esc(f.alt)}" width="640" height="800" loading="lazy" decoding="async"></picture></div><figcaption>${esc(f.caption)}</figcaption></figure>`;
   return `<section class="bar" id="bar">
   ${g ? `<div class="bar-banda">${fondo(g, 'bar-foto', { sizes: '100vw', alt: g.alt })}<div class="bar-velo" aria-hidden="true"></div>
     <div class="wrap bar-texto">
