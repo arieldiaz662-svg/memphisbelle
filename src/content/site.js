@@ -111,7 +111,7 @@ export const site = {
         id: 'refrescantes', name: 'Refrescantes', nameEn: 'Refreshing',
         intro: 'Largos, frescos y con burbuja', introEn: 'Long, fresh and sparkling',
         items: [
-          { name: 'St-Germain', text: 'St-Germain y cava', textEn: 'St-Germain and cava', price: '10 €' },
+          { name: 'St-Germain', text: 'St-Germain y cava', textEn: 'St-Germain and cava', allergens: ['sulfitos'], price: '10 €' },
           { name: 'Moscow Mule', text: 'Vodka, cerveza de jengibre y lima', textEn: 'Vodka, ginger beer and lime', price: '10 €' },
           { name: 'Caipiriña', nameEn: 'Caipirinha', text: 'Cachaza, lima y soda', textEn: 'Cachaça, lime and soda', price: '10 €' },
           { name: 'Caipiriña con fruta', nameEn: 'Caipirinha with fruit', text: 'Cachaza y fruta', textEn: 'Cachaça and fruit', price: '10 €' },
@@ -127,9 +127,9 @@ export const site = {
         intro: 'Cítricos, con espuma y equilibrados', introEn: 'Citrusy, foamy and balanced',
         items: [
           { name: 'Margarita', text: 'Tequila, Cointreau y lima', textEn: 'Tequila, Cointreau and lime', price: '10 €' },
-          { name: 'Pisco Sour', text: 'Pisco, lima, azúcar y clara', textEn: 'Pisco, lime, sugar and egg white', price: '10 €' },
-          { name: 'Whisky Sour', text: 'Whisky, lima, azúcar y clara', textEn: 'Whisky, lime, sugar and egg white', price: '10 €' },
-          { name: 'Amaretto Sour', text: 'Amaretto, lima, azúcar y clara', textEn: 'Amaretto, lime, sugar and egg white', price: '10 €' },
+          { name: 'Pisco Sour', text: 'Pisco, lima, azúcar y clara', textEn: 'Pisco, lime, sugar and egg white', allergens: ['huevos'], price: '10 €' },
+          { name: 'Whisky Sour', text: 'Whisky, lima, azúcar y clara', textEn: 'Whisky, lime, sugar and egg white', allergens: ['huevos'], price: '10 €' },
+          { name: 'Amaretto Sour', text: 'Amaretto, lima, azúcar y clara', textEn: 'Amaretto, lime, sugar and egg white', allergens: ['huevos', 'frutos_secos'], price: '10 €' },
           { name: 'Mezcalita', text: 'Mezcal, limón, triple seco y agave', textEn: 'Mezcal, lemon, triple sec and agave', price: '10 €' },
           { name: 'Hemingway Daiquiri con fruta', nameEn: 'Hemingway Daiquiri with fruit', text: 'Ron, lima y fruta', textEn: 'Rum, lime and fruit', price: '10 €' },
           { name: 'Porn Star Martini', text: 'Vodka de vainilla, licor Passoa, puré de maracuyá y sirope', textEn: 'Vanilla vodka, Passoa liqueur, passion fruit purée and syrup', price: '10 €' },
@@ -139,13 +139,13 @@ export const site = {
         id: 'intensos', name: 'Intensos', nameEn: 'Strong',
         intro: 'Para quien lo quiere con carácter', introEn: 'For those who like it with character',
         items: [
-          { name: 'Dry Martini', text: 'Ginebra y vermut seco', textEn: 'Gin and dry vermouth', price: '10 €' },
-          { name: 'Manhattan', text: 'Whisky, vermut rojo y angostura', textEn: 'Whisky, red vermouth and bitters', price: '10 €' },
-          { name: 'Negroni', text: 'Ginebra, Campari y vermut', textEn: 'Gin, Campari and vermouth', price: '10 €' },
-          { name: 'Boulevardier', text: 'Bourbon, Campari y vermut', textEn: 'Bourbon, Campari and vermouth', price: '10 €' },
+          { name: 'Dry Martini', text: 'Ginebra y vermut seco', textEn: 'Gin and dry vermouth', allergens: ['sulfitos'], price: '10 €' },
+          { name: 'Manhattan', text: 'Whisky, vermut rojo y angostura', textEn: 'Whisky, red vermouth and bitters', allergens: ['sulfitos'], price: '10 €' },
+          { name: 'Negroni', text: 'Ginebra, Campari y vermut', textEn: 'Gin, Campari and vermouth', allergens: ['sulfitos'], price: '10 €' },
+          { name: 'Boulevardier', text: 'Bourbon, Campari y vermut', textEn: 'Bourbon, Campari and vermouth', allergens: ['sulfitos'], price: '10 €' },
           { name: 'Old Fashioned', text: 'Ron, angostura y sirope', textEn: 'Rum, bitters and syrup', price: '10 €' },
           { name: 'Chefa', nameEn: 'Chefa', text: 'Whisky, Aperol, Campari y limón', textEn: 'Whisky, Aperol, Campari and lemon', price: '10 €' },
-          { name: 'Bloody Mary', text: 'Vodka, zumo de tomate, salsa Perrins y lima', textEn: 'Vodka, tomato juice, Worcestershire sauce and lime', price: '10 €' },
+          { name: 'Bloody Mary', text: 'Vodka, zumo de tomate, salsa Perrins y lima', textEn: 'Vodka, tomato juice, Worcestershire sauce and lime', allergens: ['gluten', 'pescado'], price: '10 €' },
         ],
       },
       {
@@ -154,8 +154,8 @@ export const site = {
         items: [
           { name: 'Copa de combinado', nameEn: 'Mixed drink', price: '8 €' },
           { name: 'Copa premium', nameEn: 'Premium mixed drink', price: '10 / 12 €' },
-          { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', price: '2 €' },
-          { name: 'Caña Guinness', nameEn: 'Guinness draught beer', price: '4 €' },
+          { name: 'Caña Dorada Especial', nameEn: 'Dorada Especial draught beer', allergens: ['gluten'], price: '2 €' },
+          { name: 'Caña Guinness', nameEn: 'Guinness draught beer', allergens: ['gluten'], price: '4 €' },
         ],
       },
     ],
@@ -174,9 +174,9 @@ export const site = {
     ],
     // Cuántos cócteles hay (para el titular de la carta): 23 entre refrescantes, sour e intensos.
     barril: { text: 'Dorada Especial y Guinness, directas del grifo.', textEn: 'Dorada Especial and Guinness, straight from the tap.', label: 'De barril', labelEn: 'On draught' },
-    revisar: 'Alérgenos: confirmar con el dueño cuáles lleva cada cóctel (huevo en los sour, lácteos, frutos secos en el amaretto, sulfitos…) y rellenar `allergens` en cada plato',
-    allergensNote: 'Si tienes alguna alergia o intolerancia, dínoslo antes de pedir.',
-    allergensNoteEn: 'If you have any allergy or intolerance, please tell us before ordering.',
+    revisar: 'Alérgenos publicados según la receta base de la carta (docs/ALERGENOS.md): confirmar con el dueño las marcas (amaretto, cerveza de jengibre), los zumos y el apio del Bloody Mary',
+    allergensNote: 'Alérgenos según la receta base de cada cóctel. Si tienes alguna alergia o intolerancia, dínoslo antes de pedir.',
+    allergensNoteEn: "Allergens are listed according to each cocktail's base recipe. If you have any allergy or intolerance, please tell us before ordering.",
   },
 
   // VALORACIÓN EN GOOGLE (opcional). Si rating está vacío no se muestra.

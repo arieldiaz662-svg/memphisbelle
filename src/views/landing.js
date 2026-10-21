@@ -158,6 +158,7 @@ export function menuHtml(site, { idioma = 'es', titulo = 'h2', enlaces = '', int
     <div class="carta-hoja menu" id="menu-completo">
       ${secciones}
     </div>
+    ${titulo === 'h2' && (en ? m.allergensNoteEn : m.allergensNote) ? `<p class="carta-nota">${esc(en ? m.allergensNoteEn : m.allergensNote)}</p>` : ''}
     ${enlaces}
   </div>
 </section>`;

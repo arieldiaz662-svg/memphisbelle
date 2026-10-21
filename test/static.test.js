@@ -670,3 +670,21 @@ describe('seguridad', () => {
     }
   });
 });
+
+describe('alérgenos de la carta', () => {
+  const conAlergenos = items.filter((i) => i.allergens && i.allergens.length);
+  test('los platos con alérgenos los muestran en español e inglés, y solo con claves válidas de los 14', () => {
+    assert.ok(conAlergenos.length >= 10);
+    const validas = ['gluten', 'crustaceos', 'huevos', 'pescado', 'cacahuetes', 'soja', 'lacteos', 'frutos_secos', 'apio', 'mostaza', 'sesamo', 'sulfitos', 'altramuces', 'moluscos'];
+    for (const i of conAlergenos) for (const k of i.allergens) assert.ok(validas.includes(k), `${i.name}: ${k}`);
+    assert.equal((index.match(/class="plato-alergenos"/g) || []).length, conAlergenos.length);
+    assert.equal((read('en.html').match(/class="plato-alergenos"/g) || []).length, conAlergenos.length);
+    assert.match(index, /<span>Alérgenos:<\/span> sulfitos/);
+    assert.match(read('en.html'), /<span>Allergens:<\/span> sulphites/);
+  });
+  test('la carta avisa de que los alérgenos son los de la receta base y de que se pregunte antes de pedir', () => {
+    assert.ok(index.includes(`<p class="carta-nota">${site.menu.allergensNote}</p>`));
+    assert.ok(read('en.html').includes('class="carta-nota"'));
+    assert.match(site.menu.allergensNote, /dínoslo antes de pedir/);
+  });
+});

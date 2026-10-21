@@ -189,6 +189,7 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 .plato-texto { margin-top: .3rem; max-width: 46ch; font-size: 1rem; line-height: 1.5; color: var(--tinta-2); }
 .plato-alergenos { margin-top: .35rem; font: 500 .75rem/1.5 var(--etiqueta); letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-2); }
 .plato-alergenos span { color: var(--laton); }
+.carta-nota { max-width: 62rem; margin: clamp(2.5rem, 5vw, 4rem) auto 0; font-size: .9375rem; line-height: 1.5; color: var(--tinta-2); text-align: center; text-wrap: balance; }
 .barril { grid-column: 2; margin-top: -.5rem; color: var(--tinta-2); }
 .barril b { font: 500 .75rem/1.4 var(--etiqueta); letter-spacing: .08em; text-transform: uppercase; color: var(--laton); }
 @media (max-width: 760px) {
