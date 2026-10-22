@@ -9,3 +9,4 @@ tarjetas/*.zip
 qr-mesas/
 __pycache__/
 *.pyc
+tarjetas/visita/
