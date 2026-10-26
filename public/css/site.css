@@ -235,12 +235,14 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 .estrellas { color: var(--mural); letter-spacing: .15em; font-size: .9rem; }
 @media (hover: hover) and (pointer: fine) { .btn-resena:hover { background: rgba(232, 190, 69, .1); } }
 .resenas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.resenas-grid.una-cita .cita { align-self: center; }
+.resenas-grid.una-cita { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); align-items: center; gap: clamp(2rem, 6vw, 5rem); }
 .resenas-grid.sin-citas { grid-template-columns: 1fr; justify-items: center; text-align: center; }
 .resenas-grid.sin-citas .resenas-nota { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
 .cita { padding: 1.75rem; border-radius: var(--radio); background: var(--tarjeta); font-family: var(--display); font-size: 1.4rem; line-height: 1.25; }
-.cita footer { margin-top: 1rem; font: 500 .75rem/1.5 var(--etiqueta); letter-spacing: .07em; text-transform: uppercase; color: var(--texto-3); }
+.cita footer { margin-top: 1rem; padding: 0; overflow: visible; font: 500 .75rem/1.5 var(--etiqueta); letter-spacing: .07em; text-transform: uppercase; color: var(--texto-3); }
 .nota-google strong { font-family: var(--display); font-weight: 400; font-size: 3.4rem; }
-@media (max-width: 860px) { .resenas-grid { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .resenas-grid, .resenas-grid.una-cita { grid-template-columns: 1fr; } }
 
 /* ---------- Visítanos: banda cálida ---------- */
 .visita { padding-block: clamp(5rem, 11vw, 9rem); background: radial-gradient(ellipse 90% 80% at 12% 0%, #3A2410 0%, #1A110A 48%, var(--fondo) 100%); }

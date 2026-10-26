@@ -197,7 +197,11 @@ export const site = {
 
   // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como
   // aparece en la reseña), máximo 3 líneas cada una: { text: '...', author: 'Nombre' }.
-  reviews: { rating: '4,7', count: '112', quotes: [], revisar: 'Valoración de la ficha de Google (octubre de 2026). Falta copiar 2 o 3 citas reales y actualizar la nota y el número de vez en cuando' },
+  reviews: { rating: '4,7', count: '112', quotes: [
+    // Cita real de Google (hace unos 2 meses). Se omite lo de la comida, que no está en la carta, marcado con […].
+    { text: 'Excelente lugar para pasar un excelente rato, trato inmejorable, cócteles […] Con cada cóctel te dan la explicación de su preparación. Lo recomiendo al 100%', author: 'Sonia Perera' },
+    { text: 'Hemos venido varias veces con amigos y en pareja (incluso con el perro) y siempre de lujo. Cocteles clásicos y de autor. Buena música. […] El trato genial. Seguiremos viniendo 100%.', author: 'Elena' },
+  ], revisar: 'Valoración de la ficha de Google (octubre de 2026): actualizar la nota y el número de vez en cuando; añadir alguna cita más si se quiere (hay dos)' },
 
   // Datos del titular para el aviso legal (LSSI-CE). Mientras "owner" esté vacío, la página
   // "Aviso legal" y su enlace no se publican.

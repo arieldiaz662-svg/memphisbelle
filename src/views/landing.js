@@ -228,14 +228,14 @@ function reviews(site, idioma = 'es') {
   const en = idioma === 'en';
   if (!r.rating) return '';
   return `<section class="seccion resenas" id="resenas">
-  <div class="wrap resenas-grid${(r.quotes || []).length ? '' : ' sin-citas'}">
+  <div class="wrap resenas-grid${(r.quotes || []).length === 1 ? ' una-cita' : ''}${(r.quotes || []).length ? '' : ' sin-citas'}">
     <div class="resenas-nota">
       <h2 class="sr">${en ? 'Reviews' : 'Reseñas'}</h2>
       <p class="nota-google"><strong>${esc(r.rating)}</strong> ${en ? 'out of 5 on Google' : 'de 5 en Google'}</p>
       ${r.count ? `<p>${esc(r.count)} ${en ? 'reviews' : 'reseñas'}</p>` : ''}
       <a class="btn btn-borde" href="${esc(site.googleMapsUrl)}" rel="noopener noreferrer" target="_blank">${en ? 'Read the reviews' : 'Leer las reseñas'}</a>
     </div>
-    ${(r.quotes || []).slice(0, 3).map((q) => `<blockquote class="cita"><p>${esc(q.text)}</p><footer>${esc(q.author)}, ${en ? 'on Google' : 'en Google'}</footer></blockquote>`).join('\n    ')}
+    ${(r.quotes || []).slice(0, 3).map((q) => `<blockquote class="cita"${en ? ' lang="es"' : ''}><p>${esc(q.text)}</p><footer>${esc(q.author)}, ${en ? 'on Google' : 'en Google'}</footer></blockquote>`).join('\n    ')}
   </div>
 </section>`;
 }
