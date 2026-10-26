@@ -201,7 +201,9 @@ export const site = {
     // Cita real de Google (hace unos 2 meses). Se omite lo de la comida, que no está en la carta, marcado con […].
     { text: 'Excelente lugar para pasar un excelente rato, trato inmejorable, cócteles […] Con cada cóctel te dan la explicación de su preparación. Lo recomiendo al 100%', author: 'Sonia Perera' },
     { text: 'Hemos venido varias veces con amigos y en pareja (incluso con el perro) y siempre de lujo. Cocteles clásicos y de autor. Buena música. […] El trato genial. Seguiremos viniendo 100%.', author: 'Elena' },
-  ], revisar: 'Valoración de la ficha de Google (octubre de 2026): actualizar la nota y el número de vez en cuando; añadir alguna cita más si se quiere (hay dos)' },
+    // Sin el emoji final (🍸), que se ve distinto según el móvil.
+    { text: 'Cócteles muy buenos, buen ambiente y trato de 10. Un sitio para repetir!', author: 'Daniel Andreolli Infante' },
+  ], revisar: 'Valoración de la ficha de Google (octubre de 2026): actualizar la nota y el número de vez en cuando; añadir alguna cita más si se quiere (hay tres)' },
 
   // Datos del titular para el aviso legal (LSSI-CE). Mientras "owner" esté vacío, la página
   // "Aviso legal" y su enlace no se publican.
