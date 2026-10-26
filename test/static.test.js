@@ -752,3 +752,23 @@ describe('enlace de reseña', () => {
     for (const f of ['index.html', 'en.html', 'carta.html', 'carta-en.html']) assert.ok(read(f).includes(`href="${site.reviewCta.writeUrl}"`), f);
   });
 });
+
+describe('política de privacidad', () => {
+  const priv = () => read('privacidad.html');
+  test('cubre el RGPD y la LOPDGDD: responsable, datos, bases legales, plazos, destinatarios, transferencias, derechos, AEPD y menores', () => {
+    const h = priv();
+    for (const t of ['Responsable del tratamiento', 'Qué datos tratamos', 'Para qué los usamos y con qué base legal', 'Cuánto tiempo los guardamos', 'Con quién los compartimos', 'Transferencias internacionales', 'Tus derechos', 'Menores', 'Seguridad', 'RGPD', 'LOPDGDD', 'aepd.es', 'retirar el consentimiento', 'portabilidad']) assert.ok(h.includes(t), t);
+  });
+  test('explica Google Maps: mapa que no carga hasta pulsar, enlaces a Maps y a la reseña, Google LLC y su política', () => {
+    const h = priv();
+    assert.match(h, /Google Maps y reseñas de Google/);
+    assert.match(h, /No se carga hasta que pulsas «Ver el mapa»/);
+    assert.match(h, /Google LLC/);
+    assert.match(h, /policies\.google\.com\/privacy/);
+    assert.match(h, /Déjanos una reseña en Google/);
+  });
+  test('los enlaces externos de la política abren con noopener noreferrer y la fecha es la de site.js', () => {
+    for (const [a] of priv().matchAll(/<a [^>]*target="_blank"[^>]*>/g)) assert.match(a, /rel="noopener noreferrer"/);
+    assert.ok(priv().includes(site.legal.lastUpdated));
+  });
+});

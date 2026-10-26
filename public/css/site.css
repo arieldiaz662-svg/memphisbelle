@@ -310,6 +310,10 @@ footer { padding-top: clamp(4rem, 9vw, 7rem); padding-bottom: 6.5rem; overflow: 
 .pagina-simple h2 { margin: 2.5rem 0 .6rem; font-family: var(--display); font-weight: 400; font-size: 1.8rem; }
 .pagina-simple p { margin-bottom: 1rem; color: var(--texto-2); max-width: 65ch; }
 .pagina-simple .btn { margin-top: 1rem; }
+.pagina-simple ul { display: grid; gap: .6rem; margin-bottom: 1rem; padding-left: 1.2rem; list-style: disc; color: var(--texto-2); max-width: 65ch; }
+.pagina-simple li::marker { color: var(--oro); }
+.pagina-simple strong { color: var(--texto); font-weight: 500; }
+.pagina-simple a { color: var(--texto); }
 .pagina-simple code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .9em; }
 
 /* ---------- Movimiento reducido ---------- */

@@ -212,7 +212,7 @@ export const site = {
     taxId: '', // NIF/CIF
     address: '', // dirección postal
     registry: '', // datos registrales, si es sociedad
-    lastUpdated: '20 de octubre de 2026',
+    lastUpdated: '27 de octubre de 2026',
     pendiente: 'Datos del titular (nombre o razón social, NIF/CIF y dirección) para el aviso legal',
   },
 
