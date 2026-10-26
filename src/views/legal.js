@@ -1,16 +1,17 @@
 import { esc, layout } from './html.js';
+import { NAV_EN } from './landing.js';
 
 // PLANTILLAS ORIENTATIVAS. Deben revisarse con un profesional antes de publicar la web.
 
 const contactLine = (site) => `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>`;
 
-function page({ site, config, path, title, sections }) {
+function page({ site, config, path, title, sections, lang = 'es', alterno = null, head = '', actualizado = 'Última actualización', descripcion = '' }) {
   const body = `<main id="contenido" tabindex="-1" class="pagina-simple legal"><div class="wrap">
   <h1>${esc(title)}</h1>
-  <p class="suave">Última actualización: ${esc(site.legal.lastUpdated)}</p>
+  <p class="suave">${esc(actualizado)}: ${esc(lang === 'en' ? site.legal.lastUpdatedEn : site.legal.lastUpdated)}</p>
   ${sections.map(([heading, text]) => `<h2>${esc(heading)}</h2>\n  ${text}`).join('\n  ')}
 </div></main>`;
-  return layout({ site, config, title: `${title} | ${site.fullName}`, description: `${title} de ${site.fullName}.`, path, body });
+  return layout({ site, config, title: `${title} | ${site.fullName}`, description: descripcion || `${title} de ${site.fullName}.`, path, body, lang, alterno, head, ...(lang === 'en' ? { nav: NAV_EN } : {}) });
 }
 
 export function renderLegalNotice({ site, config }) {
@@ -34,8 +35,11 @@ export function renderPrivacy({ site, config }) {
   const titular = legal.owner
     ? `${esc(legal.owner)} (NIF/CIF ${esc(legal.taxId)}), ${esc(legal.address)}`
     : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}`;
+  const base = config.publicBaseUrl;
   return page({
     site, config, path: '/privacidad', title: 'Política de privacidad',
+    alterno: { href: 'privacy-en.html', lang: 'en', texto: 'EN', etiqueta: 'View in English' },
+    head: base ? `<link rel="alternate" hreflang="es" href="${esc(`${base}/privacidad.html`)}">\n<link rel="alternate" hreflang="en" href="${esc(`${base}/privacy-en.html`)}">\n` : '',
     sections: [
       ['Responsable del tratamiento', `<p>${titular}. Correo de contacto: ${reach}. Esta política se aplica a este sitio web, a su carta y a los canales de contacto que enlaza (correo electrónico e Instagram).</p>
   <p>Cumplimos el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).</p>`],
@@ -74,6 +78,60 @@ export function renderPrivacy({ site, config }) {
       ['Menores', '<p>Esta web está dirigida a personas mayores de edad. No tratamos datos de menores de 14 años a sabiendas. Si crees que un menor nos ha escrito, avísanos y lo borraremos.</p>'],
       ['Seguridad', '<p>La web es estática, no recoge datos en formularios y se sirve siempre por una conexión cifrada (HTTPS). Aplicamos medidas técnicas razonables: política estricta de contenidos, cabeceras de seguridad, ningún script ni recurso de terceros sin tu consentimiento y acceso protegido al alojamiento y al código.</p>'],
       ['Cambios en esta política', `<p>Podemos actualizarla cuando cambie la web o la normativa. La fecha de la última actualización figura al principio de esta página.</p>`],
+    ],
+  });
+}
+
+export function renderPrivacyEn({ site, config }) {
+  const { legal } = site;
+  const reach = contactLine(site);
+  const controller = legal.owner
+    ? `${esc(legal.owner)} (tax ID ${esc(legal.taxId)}), ${esc(legal.address)}`
+    : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}, Spain`;
+  const base = config.publicBaseUrl;
+  return page({
+    site, config, path: '/privacy-en', title: 'Privacy policy', lang: 'en', actualizado: 'Last updated',
+    descripcion: `Privacy policy of ${site.fullName}: what personal data we process, why, who receives it (including Google Maps) and your rights.`,
+    alterno: { href: 'privacidad.html', lang: 'es', texto: 'ES', etiqueta: 'Ver en español' },
+    head: base ? `<link rel="alternate" hreflang="es" href="${esc(`${base}/privacidad.html`)}">\n<link rel="alternate" hreflang="en" href="${esc(`${base}/privacy-en.html`)}">\n` : '',
+    sections: [
+      ['Data controller', `<p>${controller}. Contact email: ${reach}. This policy applies to this website, its menu and the contact channels it links to (email and Instagram).</p>
+  <p>We comply with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Law 3/2018 on the Protection of Personal Data and the guarantee of digital rights (LOPDGDD).</p>`],
+      ['What data we process and where it comes from', `<p>This website has no forms, does not create accounts, does not store first-party, analytics or advertising cookies and does not sell anything. We process personal data only in these cases:</p>
+  <ul>
+    <li><strong>If you write to us</strong> by email or on Instagram: your email address or username, your name if you give it to us and the content of your message.</li>
+    <li><strong>If you visit the website</strong>: our hosting provider (Cloudflare) technically receives your IP address, browser type and the page you request in order to deliver it and protect the site from attacks. We do not look at or keep those records individually.</li>
+    <li><strong>If you click “Show the map”</strong>: your browser connects to Google (see the Google Maps section).</li>
+    <li><strong>If you click “Get directions” or “Leave us a Google review”</strong>: you open another tab, where Google processes your data as its own controller.</li>
+  </ul>`],
+      ['Google Maps and Google reviews', `<p>The website includes a Google Maps map and links to the venue’s listing and to the page for writing a review.</p>
+  <ul>
+    <li><strong>Embedded map.</strong> It does not load until you click “Show the map”. Until then, no data is sent to Google. When you click it, Google receives your IP address and data about your browser and device, and may store cookies or identifiers, according to its own policy. The legal basis is your consent (art. 6.1.a GDPR), which you give by clicking the button and can withdraw by no longer using the map and clearing your browser data.</li>
+    <li><strong>Links to Google Maps and to the review page.</strong> These are ordinary links: when you click them you leave this website and the processing becomes the responsibility of Google LLC, acting as an independent controller. If you write a review, it will be public and linked to your Google account; we do not receive it before you publish it and we cannot edit or delete it (only you can).</li>
+    <li><strong>Reviews shown on this website.</strong> We show some reviews already published on Google, with the name that appears on them. If you want us to remove yours from this website, write to us and we will take it down.</li>
+    <li><strong>More information.</strong> Google’s privacy policy: <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">policies.google.com/privacy</a>.</li>
+  </ul>`],
+      ['Why we use it and on what legal basis', `<ul>
+    <li><strong>Answering your enquiry or message</strong>: your consent when you write to us (art. 6.1.a GDPR) and steps taken at your request (art. 6.1.b).</li>
+    <li><strong>Showing you the Google map</strong>: your consent when you click the button (art. 6.1.a).</li>
+    <li><strong>Security and operation of the website</strong> (technical hosting logs): legitimate interest in keeping the site available and secure (art. 6.1.f).</li>
+    <li><strong>Complying with legal obligations</strong> where a law requires it (art. 6.1.c).</li>
+  </ul>
+  <p>We do not send advertising or newsletters, we do not build profiles and we do not make automated decisions. If we ever did, we would ask you first and update this policy.</p>`],
+      ['How long we keep it', '<p>Email and Instagram conversations are deleted within 3 months of the last message, unless we have to keep them to deal with a claim or because of a legal obligation, for the applicable limitation periods. Technical hosting logs are managed by Cloudflare under its own retention periods. The map and Google are governed by Google’s policy.</p>'],
+      ['Who we share it with', `<p>We do not sell or transfer your data. The following processors and providers may access it, solely to provide their service to us:</p>
+  <ul>
+    <li><strong>Cloudflare, Inc.</strong>: hosting and security of the website.</li>
+    <li><strong>Google LLC</strong>: email (Gmail) and, if you request them, the map and reviews.</li>
+    <li><strong>Meta Platforms Ireland Ltd.</strong>: if you write to us on Instagram.</li>
+  </ul>
+  <p>We may also disclose data to the authorities where the law requires us to.</p>`],
+      ['International transfers', '<p>Some of these providers are based in the United States. Transfers rely on the European Commission’s adequacy decision for companies certified under the EU-US Data Privacy Framework or, failing that, on standard contractual clauses. You can ask us for more information by writing to us.</p>'],
+      ['Your rights', `<p>You can exercise at any time your rights of <strong>access, rectification, erasure, objection, restriction of processing and portability</strong>, and <strong>withdraw any consent</strong> you have given, by writing to ${reach} and saying which right you want to exercise. We may ask you to prove your identity. We reply within one month at most.</p>
+  <p>If you believe we have not handled your request properly, you can lodge a complaint with the Spanish Data Protection Agency (<a href="https://www.aepd.es" rel="noopener noreferrer" target="_blank">www.aepd.es</a>) or with the supervisory authority of your country of residence.</p>`],
+      ['Minors', '<p>This website is aimed at adults. We do not knowingly process data of children under 14. If you believe a minor has written to us, let us know and we will delete it.</p>'],
+      ['Security', '<p>The website is static, collects no data through forms and is always served over an encrypted connection (HTTPS). We apply reasonable technical measures: a strict content policy, security headers, no third-party scripts or resources without your consent, and protected access to the hosting and the code.</p>'],
+      ['Changes to this policy', '<p>We may update it when the website or the regulations change. The date of the last update appears at the top of this page.</p>'],
     ],
   });
 }

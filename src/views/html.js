@@ -154,7 +154,7 @@ ${body}
       <span class="etiqueta">© ${year} ${esc(site.fullName)}</span>
       <nav aria-label="${esc(t.info)}">
         ${hasLegalNotice(site) ? `<a class="etiqueta" href="${to.legal}">${esc(t.legal)}</a>` : ''}
-        <a class="etiqueta" href="${to.privacy}">${esc(t.privacidad)}</a>
+        <a class="etiqueta" href="${lang === 'en' ? 'privacy-en.html' : to.privacy}"${lang === 'en' ? ' lang="en"' : ''}>${esc(t.privacidad)}</a>
         <a class="etiqueta" href="${to.cookies}">${esc(t.cookies)}</a>
       </nav>
       <a class="etiqueta" href="#contenido">${esc(t.arriba)} ↑</a>

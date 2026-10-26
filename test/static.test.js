@@ -684,7 +684,7 @@ describe('alérgenos de la carta', () => {
 });
 
 describe('revisión técnica de la web', () => {
-  const paginas = ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html'];
+  const paginas = ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'privacy-en.html', 'cookies.html', '404.html'];
   test('cada página tiene título único, meta descripción, un solo h1 e idioma', () => {
     const titulos = new Set();
     for (const f of paginas) {
@@ -770,5 +770,26 @@ describe('política de privacidad', () => {
   test('los enlaces externos de la política abren con noopener noreferrer y la fecha es la de site.js', () => {
     for (const [a] of priv().matchAll(/<a [^>]*target="_blank"[^>]*>/g)) assert.match(a, /rel="noopener noreferrer"/);
     assert.ok(priv().includes(site.legal.lastUpdated));
+  });
+});
+
+describe('política de privacidad en inglés', () => {
+  const h = () => read('privacy-en.html');
+  test('existe, está en inglés, con las mismas secciones que la española y Google Maps explicado', () => {
+    assert.match(h(), /<html lang="en"/);
+    assert.equal((h().match(/<h2>/g) || []).length, (read('privacidad.html').match(/<h2>/g) || []).length);
+    for (const t of ['Data controller', 'Google Maps and Google reviews', 'does not load until you click “Show the map”', 'Google LLC', 'policies.google.com/privacy', 'International transfers', 'Your rights', 'aepd.es', 'withdraw any consent', 'GDPR', 'LOPDGDD', 'Minors']) assert.ok(h().includes(t), t);
+    assert.ok(h().includes(`Last updated: ${site.legal.lastUpdatedEn}`));
+  });
+  test('las páginas en inglés enlazan a ella desde el pie y las dos políticas se enlazan entre sí (hreflang con dirección pública)', () => {
+    for (const f of ['en.html', 'carta-en.html', 'privacy-en.html']) assert.match(read(f), /href="privacy-en\.html"/, f);
+    assert.match(read('privacidad.html'), /href="privacy-en\.html" lang="en" hreflang="en"/);
+    assert.match(h(), /href="privacidad\.html" lang="es" hreflang="es"/);
+    const conBase = buildStatic({ outDir: mkdtempSync(join(tmpdir(), 'mb-')), publicBaseUrl: 'https://ejemplo.test' });
+    const html = readFileSync(join(conBase.outDir, 'privacy-en.html'), 'utf8');
+    assert.match(html, /hreflang="es" href="https:\/\/ejemplo\.test\/privacidad\.html"/);
+    assert.match(html, /hreflang="en" href="https:\/\/ejemplo\.test\/privacy-en\.html"/);
+    assert.match(readFileSync(join(conBase.outDir, 'sitemap.xml'), 'utf8'), /privacy-en\.html/);
+    rmSync(conBase.outDir, { recursive: true, force: true });
   });
 });

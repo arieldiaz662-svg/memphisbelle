@@ -13,7 +13,7 @@ import { CABECERAS_SEGURIDAD } from '../src/seguridad.js';
 import { hasLegalNotice, messagePage } from '../src/views/html.js';
 import { renderCarta } from '../src/views/carta.js';
 import { renderLanding } from '../src/views/landing.js';
-import { renderCookies, renderLegalNotice, renderPrivacy } from '../src/views/legal.js';
+import { renderCookies, renderLegalNotice, renderPrivacy, renderPrivacyEn } from '../src/views/legal.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // CSS y JS con versión según su contenido (?v=...). horario.js no la lleva porque lo importa site.js
@@ -52,6 +52,7 @@ export function buildStatic({
     ...(hasLegalNotice(site) ? { 'aviso-legal.html': renderLegalNotice({ site, config }) } : {}),
     'en.html': renderLanding({ site, config, idioma: 'en' }),
     'privacidad.html': renderPrivacy({ site, config }),
+    'privacy-en.html': renderPrivacyEn({ site, config }),
     'cookies.html': renderCookies({ site, config }),
     // Cloudflare sirve 404.html en cualquier ruta inexistente: <base href="/"> hace que estilos y enlaces
     // funcionen también en rutas con subcarpetas.
