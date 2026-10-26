@@ -745,3 +745,10 @@ describe('revisión técnica de la web', () => {
     }
   });
 });
+
+describe('enlace de reseña', () => {
+  test('el enlace directo de reseñas es el de Google (g.page/r/…/review) y llega a la franja y al pie', () => {
+    assert.match(site.reviewCta.writeUrl, /^https:\/\/g\.page\/r\/[\w-]+\/review$/);
+    for (const f of ['index.html', 'en.html', 'carta.html', 'carta-en.html']) assert.ok(read(f).includes(`href="${site.reviewCta.writeUrl}"`), f);
+  });
+});

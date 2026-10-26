@@ -192,7 +192,7 @@ export const site = {
     titleEn: 'Been with us?',
     textEn: 'Your Google review helps more people find us.',
     buttonEn: 'Leave us a Google review',
-    writeUrl: 'https://share.google/zSSIE7czQ8sTxQtMX',
+    writeUrl: 'https://g.page/r/CbHxxpLWAlm2EBM/review',
   },
 
   // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como
