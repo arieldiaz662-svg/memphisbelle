@@ -133,7 +133,7 @@ html.js:not(.cargado) .hero-foto img { scale: 1.08; }
 .hero-foto img { object-position: 16% 0%; }
 @media (min-width: 900px) { .hero-foto img { object-position: 50% 8%; } }
 .hero-foto img { filter: saturate(.92); }
-.hero-velo { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, rgba(11, 10, 9, .4), rgba(11, 10, 9, 0) 18%, rgba(11, 10, 9, 0) 46%, rgba(11, 10, 9, .62) 74%, var(--fondo) 100%); }
+.hero-velo { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, rgba(11, 10, 9, .4), rgba(11, 10, 9, 0) 18%, rgba(11, 10, 9, 0) 55%, var(--fondo) 100%); }
 .hero-contenido { position: relative; display: grid; grid-template-rows: 1fr auto; min-height: inherit; padding-top: calc(var(--cab) + clamp(1rem, 3vw, 2.5rem)); padding-bottom: clamp(2rem, 5vw, 4rem); }
 h1 { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; font-family: var(--display); font-weight: 400; line-height: .88; letter-spacing: -.035em; }
 h1 .linea { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
@@ -142,7 +142,11 @@ html.js:not(.cargado) h1 .linea > span { transform: translateY(105%); }
 h1 .a { font-size: clamp(4.4rem, 14vw, 13rem); }
 h1 .b { align-self: flex-end; font-size: clamp(3.4rem, 10.5vw, 9.5rem); text-align: right; }
 /* El mural ya trae el nombre pintado, el avión y las lámparas: el titular va debajo, en una sola línea, sin pisarlos (móvil: apilado abajo). */
-@media (min-width: 900px) { .hero { min-height: max(100svh, calc(28vw + 430px)); } h1 { flex-direction: row; align-items: baseline; justify-content: flex-start; align-self: end; gap: .22em; } h1 .a, h1 .b { font-size: clamp(3.4rem, 6.6vw, 7rem); } h1 .b { align-self: auto; text-align: left; } }
+@media (min-width: 900px) { .hero { display: block; min-height: 0; }
+  /* La foto ocupa solo la franja de arriba (38 % del ancho): el mural se ve entero y el texto empieza donde se funde con el negro. */
+  .hero-foto, .hero-velo { inset: 0 0 auto 0; height: 38vw; }
+  .hero-contenido { min-height: 0; display: block; padding-top: calc(38vw + 0.5rem); }
+  .hero-contenido h1 { margin-bottom: 1.5rem; } h1 { flex-direction: row; align-items: baseline; justify-content: flex-start; align-self: end; gap: .22em; } h1 .a, h1 .b { font-size: clamp(3.4rem, 6.6vw, 7rem); } h1 .b { align-self: auto; text-align: left; } }
 @media (max-width: 899px) { h1 { justify-content: flex-end; gap: .4rem; } h1 .a { font-size: clamp(3.6rem, 17vw, 6rem); } h1 .b { font-size: clamp(3rem, 13vw, 5rem); } }
 .hero-pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-top: clamp(1.5rem, 3vw, 2.5rem); }
 .hero-lectura { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; max-width: 34rem; }
