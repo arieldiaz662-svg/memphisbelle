@@ -60,7 +60,7 @@ export const site = {
     secondary: 'Cómo llegar',
     // Fondo de la portada: foto real del mural del B-17 pintado en la pared, con el nombre en amarillo (el dueño pidió
     // no mostrar la cara del bartender). Decorativa, con alt vacío. Sin imagen, la portada usa la ilustración vectorial.
-    image: { src: 'img/portada/mural', widths: [640, 1024, 1600], width: 1600, height: 1066 },
+    image: { src: 'img/portada/lampara', widths: [640, 1024, 1333], width: 1333, height: 2000 },
     imageCaption: 'Memphis Belle, B-17',
     // Textos del pie de la portada (el primero es el estado "Abierto ahora", que calcula el navegador).
     foot: ['Cócteles desde 8 €', 'Dorada y Guinness de barril'],

@@ -530,7 +530,7 @@ describe('selector de idioma: español / inglés', () => {
 
   test('en inglés se traduce el contenido y la interfaz, y la estructura es la misma', () => {
     const h = en();
-    assert.ok(h.includes(site.en.hero.title[0]) && h.includes(site.en.hero.lead));
+    assert.ok(h.includes(site.en.hero.lead));
     assert.ok(h.includes(site.en.title));
     assert.ok(h.includes(`alt="${site.en.local.gallery[0].alt}"`));
     for (const t of ['See the menu', 'Get directions', 'Opening hours', 'Wednesday to Sunday, 18:00 to 02:00', 'The full menu', 'Moscow Mule', 'Vodka, ginger beer and lime']) assert.ok(h.includes(t), t);

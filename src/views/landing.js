@@ -85,7 +85,7 @@ function hero(site, idioma) {
   ${h.image ? fondo(h.image, 'hero-foto', { prioridad: true, sizes: '100vw', alt: h.imageAlt }) : ''}
   <div class="hero-velo" aria-hidden="true"></div>
   <div class="wrap hero-contenido">
-    <h1><span class="linea a"><span${d(0)}>${esc(h.title[0])}</span></span><span class="linea b"><span${d(2)}><em>${esc(h.title[1])}</em></span></span></h1>
+    <h1 class="sr">${esc(site.fullName)}</h1>
     <div class="hero-pie" data-reveal${d(3)}>
       <div class="hero-lectura">
         ${estadoAhora(site, 'estado-hero')}
