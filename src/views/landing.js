@@ -228,7 +228,7 @@ function reviews(site, idioma = 'es') {
   const en = idioma === 'en';
   if (!r.rating) return '';
   return `<section class="seccion resenas" id="resenas">
-  <div class="wrap resenas-grid">
+  <div class="wrap resenas-grid${(r.quotes || []).length ? '' : ' sin-citas'}">
     <div class="resenas-nota">
       <h2 class="sr">${en ? 'Reviews' : 'Reseñas'}</h2>
       <p class="nota-google"><strong>${esc(r.rating)}</strong> ${en ? 'out of 5 on Google' : 'de 5 en Google'}</p>

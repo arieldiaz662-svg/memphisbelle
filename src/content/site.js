@@ -197,7 +197,7 @@ export const site = {
 
   // RESEÑAS: la sección solo aparece si hay valoración. Citas reales de Google (con su autor tal como
   // aparece en la reseña), máximo 3 líneas cada una: { text: '...', author: 'Nombre' }.
-  reviews: { rating: '', count: '', quotes: [], revisar: 'Copiar la valoración, el número de reseñas y 2 o 3 citas reales de la ficha de Google' },
+  reviews: { rating: '4,7', count: '112', quotes: [], revisar: 'Valoración de la ficha de Google (octubre de 2026). Falta copiar 2 o 3 citas reales y actualizar la nota y el número de vez en cuando' },
 
   // Datos del titular para el aviso legal (LSSI-CE). Mientras "owner" esté vacío, la página
   // "Aviso legal" y su enlace no se publican.
