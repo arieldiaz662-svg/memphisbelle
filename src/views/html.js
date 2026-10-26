@@ -61,11 +61,11 @@ const PIE = {
 
 // lang: idioma de la página ("es" o "en"). cabecera: HTML propio para la cabecera (la página de la
 // carta usa una mínima, sin menú, con el selector de idioma).
-export function layout({ site, config, title, description, path = '/', nav = NAV, body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '', alterno = null, intro = '' }) {
+export function layout({ site, config, title, description, path = '/', nav = NAV, body, scripts = [], baseHref = '', head = '', after = '', lang = 'es', cabecera = '', alterno = null, intro = '', noindex = false }) {
   const to = links(config);
   // og:image necesita URL absoluta: solo se añade cuando se conoce la dirección pública.
   const ogImage = config.publicBaseUrl && site.ogImage ? `${config.publicBaseUrl}/assets/${site.ogImage}` : '';
-  const canonical = config.publicBaseUrl ? `${config.publicBaseUrl}/${to.page(path)}` : '';
+  const canonical = config.publicBaseUrl && !noindex ? `${config.publicBaseUrl}/${to.page(path)}` : '';
   const year = new Date().getFullYear();
   const home = path === '/' ? '' : to.home;
   const t = PIE[lang];
@@ -78,7 +78,7 @@ export function layout({ site, config, title, description, path = '/', nav = NAV
 ${baseHref ? `<base href="${esc(baseHref)}">
 ` : ''}<meta http-equiv="Content-Security-Policy" content="${STATIC_CSP}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>${esc(title)}</title>
+${noindex ? '<meta name="robots" content="noindex">\n' : ''}<title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 ${canonical ? `<link rel="canonical" href="${esc(canonical)}">
 <meta property="og:url" content="${esc(canonical)}">
@@ -95,6 +95,9 @@ ${ogImage ? `<meta property="og:image" content="${esc(ogImage)}">
 ` : ''}<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="${THEME_COLOR}">
 <link rel="icon" href="${to.asset('img/favicon.svg')}" type="image/svg+xml">
+<link rel="icon" href="${to.asset('img/favicon-32.png')}" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="${to.asset('img/apple-touch-icon.png')}">
+<link rel="manifest" href="site.webmanifest">
 ${FONTS.map((font) => `<link rel="preload" href="${to.asset(font)}" as="font" type="font/woff2" crossorigin>`).join('\n')}
 <link rel="stylesheet" href="${to.asset('css/site.css')}">
 <script src="${to.asset('js/ini.js')}"></script>
@@ -138,7 +141,13 @@ ${body}
 <footer>
   <div class="wrap">
     <p class="pie-marca" aria-hidden="true">Memphis <em>Belle</em></p>
-    <p class="pie-direccion">${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>
+    <div class="pie-columnas">
+      <p class="pie-direccion">${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>
+      <nav class="pie-nav" aria-label="${esc(t.principal)}">
+        ${nav.map((item) => `<a href="${home}#${esc(item.id)}">${esc(item.label)}</a>`).join('\n        ')}
+      </nav>
+      <p class="pie-contacto"><a href="${esc(instagramUrl(site.instagram))}" rel="noopener noreferrer" target="_blank">@${esc(site.instagram)}</a> <a href="mailto:${esc(site.email)}">${esc(site.email)}</a></p>
+    </div>
     <p class="pie-alcohol">${esc(t.alcohol)}</p>
     <p class="pie-resena"><a href="${esc(reviewUrl(site))}" rel="noopener noreferrer" target="_blank">${esc(t.resena(site))}</a></p>
     <div class="pie-fila">
@@ -161,11 +170,12 @@ ${after}${scripts.map((file) => `<script type="module" src="${esc(to.asset(file)
 // Página sencilla para errores (404).
 export function messagePage({ site, config, title, heading, text, baseHref = '' }) {
   return layout({
-    site, config, title: `${title} | ${site.fullName}`, description: text, path: '/', baseHref,
+    site, config, title: `${title} | ${site.fullName}`, description: text, path: '/404', baseHref,
     body: `<main id="contenido" tabindex="-1" class="pagina-simple"><div class="wrap">
   <h1>${esc(heading)}</h1>
   <p>${esc(text)}</p>
-  <p><a class="btn btn-claro" href="${links(config).home}">Volver al inicio</a></p>
+  <p class="acciones-404"><a class="btn btn-claro" href="${links(config).home}">Volver al inicio</a> <a class="btn btn-borde" href="${links(config).home}#carta">Ver la carta</a></p>
 </div></main>`,
+    noindex: true,
   });
 }

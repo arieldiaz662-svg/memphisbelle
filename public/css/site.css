@@ -278,7 +278,13 @@ html.js .cinta:not(.en-pantalla) .cinta-pista { animation-play-state: paused; }
 footer { padding-top: clamp(4rem, 9vw, 7rem); padding-bottom: 6.5rem; overflow: hidden; }
 .pie-marca { font-family: var(--display); font-size: clamp(3.8rem, 17vw, 16rem); line-height: .8; letter-spacing: -.045em; white-space: nowrap; color: rgba(242, 237, 228, .42); user-select: none; }
 .pie-marca em { color: var(--oro); }
-.pie-direccion { margin-top: 2.5rem; font-size: 1.1rem; }
+.pie-columnas { display: grid; grid-template-columns: 1.4fr 1fr 1.4fr; gap: 1.5rem 3rem; align-items: start; margin-top: 4.5rem; }
+.pie-direccion { font-size: 1.1rem; }
+.pie-nav, .pie-contacto { display: flex; flex-direction: column; align-items: flex-start; }
+.pie-nav a, .pie-contacto a { display: inline-flex; align-items: center; min-height: 44px; color: var(--texto-2); text-decoration: none; }
+@media (hover: hover) and (pointer: fine) { .pie-nav a:hover, .pie-contacto a:hover { color: var(--texto); text-decoration: underline; } }
+@media (max-width: 760px) { .pie-columnas { grid-template-columns: 1fr; margin-top: 2rem; gap: .75rem; } }
+.acciones-404 { display: flex; flex-wrap: wrap; gap: .75rem; }
 .pie-alcohol { margin-top: .4rem; color: var(--texto-3); }
 .pie-resena { margin-top: 1.25rem; }
 .pie-fila { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem 2rem; margin-top: clamp(2.5rem, 6vw, 4rem); }

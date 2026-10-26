@@ -20,6 +20,18 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 // por su nombre; site.js cambia de versión cuando cambia su propio código.
 const VERSIONED = ['css/site.css', 'js/site.js'];
 
+// Minificador de CSS prudente: quita comentarios y espacios sobrantes sin tocar el interior de los textos ni los
+// operadores de calc() (que necesitan sus espacios).
+export function minificarCss(css) {
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*([{};,>])\s*/g, '$1')
+    .replace(/:\s+/g, ':')
+    .replace(/;}/g, '}')
+    .trim();
+}
+
 export function buildStatic({
   outDir = join(ROOT, 'dist'),
   publicBaseUrl = process.env.PUBLIC_BASE_URL || '',
@@ -54,6 +66,9 @@ export function buildStatic({
   for (const folder of ['css', 'js', 'img', 'fonts']) {
     cpSync(join(ROOT, 'public', folder), join(outDir, 'assets', folder), { recursive: true });
   }
+  // CSS comprimido en la salida (el original de public/ no se toca): sin comentarios ni espacios sobrantes.
+  const cssSalida = join(outDir, 'assets', 'css', 'site.css');
+  writeFileSync(cssSalida, minificarCss(readFileSync(cssSalida, 'utf8')));
   // Archivos que deben estar en la raíz del dominio, tal cual (p. ej. la verificación de Google Search Console).
   cpSync(join(ROOT, 'public', 'raiz'), outDir, { recursive: true });
 

@@ -2,7 +2,7 @@
 // Los valores esperados se toman de src/content/site.js siempre que es posible, para que un cambio
 // de redacción no rompa los tests y un error de coherencia (carta, horario, enlaces) sí lo haga.
 import assert from 'node:assert/strict';
-import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
@@ -258,19 +258,13 @@ describe('portada y móvil', () => {
     assert.match(css, /env\(safe-area-inset-bottom/);
   });
 
-  test('la portada: foto del B-17 (o, sin foto, el bombardero vectorial), decorativa y quieta si se pide', () => {
+  test('la portada lleva su foto de fondo, decorativa (alt vacío) y lo primero que se descarga', () => {
     const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('class="cinta"'));
-    if (site.hero.image) {
-      assert.match(hero, /<picture class="hero-foto">/);
-      assert.match(hero, /<img [^>]*alt="[^"]*" [^>]*fetchpriority="high">/); // lo primero que se descarga
-      assert.doesNotMatch(hero, /loading="lazy"/);
-      assert.doesNotMatch(hero, /class="bombardero"/);
-      for (const w of site.hero.image.widths) assert.ok(hero.includes(`${site.hero.image.src}-${w}.webp ${w}w`), w);
-    } else {
-      assert.match(hero, /<div class="bombardero" aria-hidden="true">/);
-      const logoPath = /<path[^>]* d="([^"]+)"/.exec(readFileSync(new URL('../public/img/logo-belle.svg', import.meta.url), 'utf8'))[1];
-      assert.ok(hero.includes(`d="${logoPath}"`), 'el nombre del morro es el trazado del logotipo');
-    }
+    assert.ok(site.hero.image, 'falta la foto de portada');
+    assert.match(hero, /<picture class="hero-foto">/);
+    assert.match(hero, /<img [^>]*alt="[^"]*" [^>]*fetchpriority="high">/);
+    assert.doesNotMatch(hero, /loading="lazy"/);
+    for (const w of site.hero.image.widths) assert.ok(hero.includes(`${site.hero.image.src}-${w}.webp ${w}w`), w);
     // Ninguna animación de la portada fuera de "prefers-reduced-motion: no-preference".
     const fuera = css.replace(/@media \(prefers-reduced-motion: no-preference\) \{[\s\S]*?\n\}/g, '');
     assert.doesNotMatch(fuera, /animation: (flotar|girar 160ms|nubes|acercar)/);
@@ -686,5 +680,68 @@ describe('alérgenos de la carta', () => {
     assert.ok(index.includes(`<p class="carta-nota">${site.menu.allergensNote}</p>`));
     assert.ok(read('en.html').includes('class="carta-nota"'));
     assert.match(site.menu.allergensNote, /dínoslo antes de pedir/);
+  });
+});
+
+describe('revisión técnica de la web', () => {
+  const paginas = ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'cookies.html', '404.html'];
+  test('cada página tiene título único, meta descripción, un solo h1 e idioma', () => {
+    const titulos = new Set();
+    for (const f of paginas) {
+      const h = read(f);
+      const titulo = /<title>([^<]+)<\/title>/.exec(h)[1];
+      assert.ok(titulo.length >= 15 && titulo.length <= 75, `${f}: título de ${titulo.length} caracteres`);
+      assert.ok(!titulos.has(titulo), `${f}: título repetido`);
+      titulos.add(titulo);
+      assert.match(h, /<meta name="description" content="[^"]{20,}"/, f);
+      assert.equal((h.match(/<h1[ >]/g) || []).length, 1, `${f}: h1`);
+      assert.match(h, /<html lang="(es|en)"/, f);
+    }
+  });
+  test('todos los enlaces y recursos locales existen y los anclas apuntan a un id', () => {
+    for (const f of paginas) {
+      const h = read(f);
+      const base = f === '404.html' ? '' : '';
+      for (const [, url] of h.matchAll(/(?:href|src)="([^"]+)"/g)) {
+        if (/^(https?:|mailto:|data:|#)/.test(url)) continue;
+        const limpio = url.split('#')[0].split('?')[0];
+        if (!limpio || limpio === './') continue;
+        assert.ok(existsSync(join(outDir, base + limpio)), `${f}: ${url}`);
+      }
+      for (const [, ancla] of h.matchAll(/href="#([^"]+)"/g)) assert.ok(h.includes(`id="${ancla}"`), `${f}: #${ancla}`);
+    }
+  });
+  test('iconos: svg, png, apple-touch-icon, favicon.ico y manifiesto enlazados y presentes', () => {
+    for (const f of ['assets/img/favicon.svg', 'assets/img/favicon-32.png', 'assets/img/apple-touch-icon.png', 'assets/img/icon-192.png', 'assets/img/icon-512.png', 'favicon.ico', 'site.webmanifest']) assert.ok(existsSync(join(outDir, f)), f);
+    assert.match(index, /rel="apple-touch-icon"/);
+    assert.match(index, /rel="manifest" href="site\.webmanifest"/);
+    JSON.parse(read('site.webmanifest'));
+  });
+  test('el logo enlaza a la portada en todas las páginas y el pie lleva el menú, Instagram, correo y crédito', () => {
+    for (const f of paginas) {
+      const h = read(f);
+      assert.match(h, /<a class="marca" href="(?:[^"]*#inicio|\.\/)"/, f);
+      const pie = h.slice(h.indexOf('<footer>'));
+      for (const id of ['carta', 'bar', 'visitanos']) assert.match(pie, new RegExp(`href="[^"]*#${id}"`), `${f}: pie #${id}`);
+      assert.ok(pie.includes(`mailto:${site.email}`) && pie.includes('instagram.com'), f);
+      assert.match(pie, /Web por|Website by/, f);
+    }
+  });
+  test('la 404 está personalizada, no se indexa y ofrece volver al inicio y a la carta', () => {
+    const h = read('404.html');
+    assert.match(h, /<meta name="robots" content="noindex">/);
+    assert.match(h, /Volver al inicio/);
+    assert.match(h, /Ver la carta/);
+  });
+  test('el año del © es el actual y el CSS publicado está comprimido', () => {
+    assert.ok(index.includes(`© ${new Date().getFullYear()} `));
+    assert.ok(read('assets/css/site.css').length < readFileSync(new URL('../public/css/site.css', import.meta.url), 'utf8').length * 0.85);
+    assert.doesNotMatch(read('assets/css/site.css'), /\/\*/);
+  });
+  test('no queda texto de relleno, marcadores ni enlaces vacíos', () => {
+    for (const f of paginas) {
+      const h = read(f);
+      assert.doesNotMatch(h, /lorem ipsum|\bTODO\b|undefined|\[object|href="#"|href=""/, f);
+    }
   });
 });
