@@ -10,3 +10,4 @@ qr-mesas/
 __pycache__/
 *.pyc
 tarjetas/visita/
+tarjetas/carta-imagen/
