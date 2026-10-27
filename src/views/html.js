@@ -140,6 +140,7 @@ ${body}
 
 <footer>
   <div class="wrap">
+    <svg class="pie-emblema" aria-hidden="true"><use href="#emblema"/></svg>
     <p class="pie-marca" aria-hidden="true">Memphis <em>Belle</em></p>
     <div class="pie-columnas">
       <p class="pie-direccion">${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}</p>

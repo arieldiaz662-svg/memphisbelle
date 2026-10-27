@@ -54,7 +54,7 @@ export const site = {
   hero: {
     kicker: 'Coctelería · Santa Cruz de Tenerife',
     kickerRight: 'Clásicos de coctelería',
-    title: ['Coctelería', 'de verdad'],
+    title: ['Coctelería', 'de autor'],
     lead: 'Coctelería especializada en Santa Cruz de Tenerife. Rones añejos, whiskies y ginebras, para el paladar exigente y para quien desea descubrir algo nuevo.',
     cta: 'Ver la carta',
     secondary: 'Cómo llegar',
@@ -225,7 +225,7 @@ export const site = {
     hero: {
       kicker: 'Cocktail bar · Santa Cruz de Tenerife',
       kickerRight: 'Classic cocktails',
-      title: ['Cocktails', 'done right'],
+      title: ['Craft', 'cocktail bar'],
       lead: 'Specialist cocktail bar in Santa Cruz de Tenerife. Aged rums, whiskies and gins, for the discerning palate and for those who wish to discover something new.',
       cta: 'See the menu',
       secondary: 'Get directions',

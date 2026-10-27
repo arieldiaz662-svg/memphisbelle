@@ -84,8 +84,9 @@ function hero(site, idioma) {
   return `<section class="hero" id="inicio" aria-label="${t.portada}">
   ${h.image ? fondo(h.image, 'hero-foto', { prioridad: true, sizes: '100vw', alt: h.imageAlt }) : ''}
   <div class="hero-velo" aria-hidden="true"></div>
+  <svg class="neon-emblema" aria-hidden="true"><use href="#emblema"/></svg>
   <div class="wrap hero-contenido">
-    <h1 class="sr">${esc(site.fullName)}</h1>
+    <h1><span class="sr">${esc(site.fullName)}: </span><span class="linea a"><span${d(0)}>${esc(h.title[0])}</span></span> <span class="linea b"><span${d(2)}><em>${esc(h.title[1])}</em></span></span></h1>
     <div class="hero-pie" data-reveal${d(3)}>
       <div class="hero-lectura">
         ${estadoAhora(site, 'estado-hero')}

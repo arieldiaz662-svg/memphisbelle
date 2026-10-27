@@ -793,3 +793,22 @@ describe('política de privacidad en inglés', () => {
     rmSync(conBase.outDir, { recursive: true, force: true });
   });
 });
+
+describe('portada con titular corto y emblema bajo la lámpara', () => {
+  test('titular "Coctelería de autor" (y su versión inglesa), un solo h1 con el nombre para lectores y el emblema decorativo bajo la lámpara', () => {
+    assert.deepEqual(site.hero.title, ['Coctelería', 'de autor']);
+    assert.deepEqual(site.en.hero.title, ['Craft', 'cocktail bar']);
+    const hero = index.slice(index.indexOf('id="inicio"'), index.indexOf('class="cinta"'));
+    assert.match(hero, /<h1><span class="sr">Memphis Belle Coctelería: <\/span><span class="linea a"><span[^>]*>Coctelería<\/span><\/span> <span class="linea b"><span[^>]*><em>de autor<\/em>/);
+    assert.match(hero, /<svg class="neon-emblema" aria-hidden="true"><use href="#emblema"\/><\/svg>/);
+    assert.doesNotMatch(hero, /hero-luz/);
+    assert.match(read('en.html'), /<em>cocktail bar<\/em>/);
+  });
+  test('el emblema está en el sprite y se usa en la cabecera, el pie y la intro', () => {
+    assert.match(index, /<symbol id="emblema"/);
+    assert.ok((index.match(/<use href="#emblema"/g) || []).length >= 3);
+    assert.match(index, /class="intro-mb" href="#emblema"/);
+    assert.match(css, /\.neon-emblema\s*\{/);
+    assert.match(css, /prefers-reduced-motion: no-preference\) \{ \.neon-emblema/);
+  });
+});
