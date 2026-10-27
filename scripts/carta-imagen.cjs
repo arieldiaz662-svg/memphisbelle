@@ -1,6 +1,6 @@
 // Genera la carta de Memphis Belle como imágenes para la ficha de Google Business Profile y las redes:
 // 2 páginas verticales de 1080 × 1350 px (formato 4:5), JPG y PNG, con los precios y textos de src/content/site.js
-// (se regeneran cuando cambia la carta). Incluye un QR a la carta de la web.
+// en verde militar con letra marfil y amarillo (se regeneran cuando cambia la carta). Incluye un QR a la carta de la web.
 // Uso: node scripts/carta-imagen.cjs [https://dirección-de-la-web]     Salida: tarjetas/carta-imagen/
 const { execSync } = require('node:child_process');
 const { mkdirSync, writeFileSync } = require('node:fs');
@@ -18,7 +18,7 @@ const qr = QRCode.create(`${base}/carta.html`, { errorCorrectionLevel: 'Q' });
 const N = qr.modules.size;
 let celdas = '';
 for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (qr.modules.get(x, y)) celdas += `M${x} ${y}h1v1h-1z`;
-const qrSvg = `<svg viewBox="-3 -3 ${N + 6} ${N + 6}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect x="-3" y="-3" width="${N + 6}" height="${N + 6}" fill="#F7F1E3"/><path fill="#2A1412" d="${celdas}"/></svg>`;
+const qrSvg = `<svg viewBox="-3 -3 ${N + 6} ${N + 6}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect x="-3" y="-3" width="${N + 6}" height="${N + 6}" fill="#F2EDE4"/><path fill="#2A2E18" d="${celdas}"/></svg>`;
 
 const CSS = `
 @font-face { font-family: "Instrument Serif"; src: url("${FUENTES}/instrument-serif.woff2") format("woff2"); font-style: normal; }
@@ -26,12 +26,12 @@ const CSS = `
 @font-face { font-family: "Poppins"; src: url("${FUENTES}/poppins-500.woff2") format("woff2"); font-weight: 500; }
 @font-face { font-family: "Geist"; src: url("${FUENTES}/geist.woff2") format("woff2"); font-weight: 100 900; }
 * { box-sizing: border-box; margin: 0; }
-:root { --tinta: #2A1412; --tinta2: #5A4338; --laton: #8F6208; --rojo: #6B2A1E; }
+:root { --tinta: #F2EDE4; --tinta2: rgba(242, 237, 228, .78); --laton: #E8BE45; --rojo: #D8C98A; }
 html, body { width: 1080px; background: #000; }
 .hoja { position: relative; width: 1080px; height: 1350px; overflow: hidden; padding: 70px 76px 64px; color: var(--tinta);
-  background: radial-gradient(ellipse 110% 70% at 50% 0%, #F7F1E3, #EDE4D0 60%, #E2D6BD); display: flex; flex-direction: column; }
-.hoja::before { content: ""; position: absolute; inset: 26px; border: 2px solid rgba(143, 98, 8, .55); pointer-events: none; }
-.hoja::after { content: ""; position: absolute; inset: 36px; border: 1px solid rgba(143, 98, 8, .3); pointer-events: none; }
+  background: radial-gradient(ellipse 110% 75% at 50% 0%, #5A6638, #46512C 55%, #333D20); display: flex; flex-direction: column; }
+.hoja::before { content: ""; position: absolute; inset: 26px; border: 2px solid rgba(232, 190, 69, .7); pointer-events: none; }
+.hoja::after { content: ""; position: absolute; inset: 36px; border: 1px solid rgba(232, 190, 69, .35); pointer-events: none; }
 .cab { text-align: center; }
 .marca { font: 400 96px/1 "Instrument Serif", serif; letter-spacing: -.02em; }
 .marca em { color: var(--laton); font-style: italic; }
@@ -43,12 +43,12 @@ html, body { width: 1080px; background: #000; }
 .linea { display: flex; align-items: baseline; gap: 10px; }
 .nombre { font: 400 31px/1.05 "Instrument Serif", serif; }
 .nombre em { color: var(--laton); font-style: italic; }
-.puntos { flex: 1; min-width: 14px; border-bottom: 3px dotted rgba(42, 20, 18, .38); transform: translateY(-6px); }
+.puntos { flex: 1; min-width: 14px; border-bottom: 3px dotted rgba(242, 237, 228, .4); transform: translateY(-6px); }
 .precio { font: 400 31px/1.05 "Instrument Serif", serif; white-space: nowrap; }
 .desc { margin-top: 3px; font: 400 19px/1.3 "Geist", sans-serif; color: var(--tinta2); }
 .barril { margin-top: 6px; font: 400 19px/1.35 "Geist", sans-serif; color: var(--tinta2); }
 .barril b { font: 500 15px/1 "Poppins", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--laton); margin-right: 6px; }
-.pie { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding-top: 22px; border-top: 2px solid rgba(143, 98, 8, .4); }
+.pie { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding-top: 22px; border-top: 2px solid rgba(232, 190, 69, .45); }
 .pie .datos { font: 400 20px/1.5 "Geist", sans-serif; color: var(--tinta2); }
 .pie .datos b { font: 500 16px/1 "Poppins", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--rojo); margin-right: 8px; }
 .pie .qr { display: flex; align-items: center; gap: 16px; }
