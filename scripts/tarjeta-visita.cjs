@@ -1,7 +1,7 @@
 // Genera tres modelos de tarjeta de visita de Memphis Belle (85 × 55 mm, con 3 mm de sangrado: 91 × 61 mm), por las dos caras.
 // Salida en tarjetas/visita/modelo-N-nombre/: tarjeta-visita.pdf (2 páginas: frente y reverso) y PNG a 300 ppp de cada cara.
 //
-// Uso:  node scripts/tarjeta-visita.cjs [https://dirección-de-la-web]
+// Uso:  node scripts/tarjeta-visita.cjs [https://dirección-de-la-web] [--verde]
 //       (por defecto, https://memphisbelle.alcanceisleno.com)
 //
 // El QR lleva a la web: no se puede cambiar una vez impresa la tarjeta. Si el bar va a tener dominio propio,
@@ -15,11 +15,15 @@ const QRCode = require('qrcode');
 const RAIZ = join(__dirname, '..');
 const SALIDA = join(RAIZ, 'tarjetas', 'visita');
 const FUENTES = pathToFileURL(join(RAIZ, 'public', 'fonts')).href;
-const url = (process.argv[2] || 'https://memphisbelle.alcanceisleno.com').replace(/\/+$/, '');
+const url = (process.argv.slice(2).find((a) => !a.startsWith('--')) || 'https://memphisbelle.alcanceisleno.com').replace(/\/+$/, '');
 if (!/^https:\/\/[^/\s]+\.[^/\s]+/.test(url)) { console.error('La dirección debe empezar por https://'); process.exit(1); }
 
 // Entre el madera de whisky (#7A4420) y el bordó (#5B1423); el amarillo es el del mural (#E8BE45).
-const C = { madera: '#68301F', bordo: '#4A1A1D', bordoOscuro: '#3A1216', crema: '#F2EDE4', amarillo: '#E8BE45', tinta: '#24100F' };
+// --verde: solo el modelo 1 (el elegido por el cliente) en verde militar, el de la tarjeta original del bar.
+const VERDE = process.argv.includes('--verde');
+const C = VERDE
+  ? { madera: '#46512C', bordo: '#46512C', bordoOscuro: '#2A3219', crema: '#F2EDE4', amarillo: '#E8BE45', tinta: '#232A14', claro1: '#5E6A3B', claro2: '#333D20', claroR: '#56623A' }
+  : { madera: '#68301F', bordo: '#4A1A1D', bordoOscuro: '#3A1216', crema: '#F2EDE4', amarillo: '#E8BE45', tinta: '#24100F', claro1: '#7C3A26', claro2: '#4F1B1F', claroR: '#5E2325' };
 
 const qr = QRCode.create(url, { errorCorrectionLevel: 'Q' });
 const N = qr.modules.size;
@@ -69,8 +73,8 @@ const MODELOS = {
   1: {
     nombre: 'Tipográfico',
     css: `
-.f1 { background: radial-gradient(ellipse 85% 95% at 30% 20%, #7C3A26 0%, ${C.madera} 38%, #4F1B1F 100%); }
-.r1 { background: radial-gradient(ellipse 90% 100% at 20% 0%, #5E2325 0%, ${C.bordo} 55%, ${C.bordoOscuro} 100%); }
+.f1 { background: radial-gradient(ellipse 85% 95% at 30% 20%, ${C.claro1} 0%, ${C.madera} 38%, ${C.claro2} 100%); }
+.r1 { background: radial-gradient(ellipse 90% 100% at 20% 0%, ${C.claroR} 0%, ${C.bordo} 55%, ${C.bordoOscuro} 100%); }
 .f1 .centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4.2mm; }
 .f1 .emb { width: 19mm; height: 19mm; margin-bottom: -.5mm; } .f1 .centro { gap: 3.4mm; } .f1 .marca { font-size: 11.5mm; } .f1 .linea { width: 9mm; height: .35mm; background: ${C.amarillo}; opacity: .9; }
 .r1 .rev { position: absolute; inset: 0; padding: 7mm; display: grid; grid-template-columns: 1fr 25mm; column-gap: 5mm; align-items: center; }
@@ -124,8 +128,8 @@ const documento = (m, comp = '') => `<!doctype html><html lang="es"><meta charse
   try { playwright = require('playwright'); } catch { playwright = require(join(execSync('npm root -g').toString().trim(), 'playwright')); }
   const browser = await playwright.chromium.launch();
   const px = (mm) => Math.ceil(mm / 25.4 * 96);
-  for (const [n, m] of Object.entries(MODELOS)) {
-    const dir = join(SALIDA, `modelo-${n}-${m.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()}`);
+  for (const [n, m] of Object.entries(MODELOS).filter(([n]) => !VERDE || n === '1')) {
+    const dir = join(SALIDA, `modelo-${n}-${m.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()}${VERDE ? '-verde' : ''}`);
     mkdirSync(dir, { recursive: true });
     const archivo = join(dir, 'tarjeta.html');
     let comp = '';
