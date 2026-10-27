@@ -334,6 +334,11 @@ footer { padding-top: clamp(4rem, 9vw, 7rem); padding-bottom: 6.5rem; overflow: 
 .pagina-simple li::marker { color: var(--oro); }
 .pagina-simple strong { color: var(--texto); font-weight: 500; }
 .pagina-simple a { color: var(--texto); }
+.tabla-datos { margin: .5rem 0 1.25rem; overflow-x: auto; }
+.tabla-datos table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .9375rem; line-height: 1.45; }
+.tabla-datos th, .tabla-datos td { padding: .75rem .9rem .75rem 0; text-align: left; vertical-align: top; color: var(--texto-2); border-bottom: 1px solid var(--linea); }
+.tabla-datos thead th { font: 500 .75rem/1.3 var(--etiqueta); letter-spacing: .08em; text-transform: uppercase; color: var(--oro); }
+.tabla-datos tbody th { font-weight: 500; color: var(--texto); }
 .pagina-simple code { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: .9em; }
 
 /* ---------- Movimiento reducido ---------- */

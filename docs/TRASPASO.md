@@ -6,8 +6,10 @@ repositorio; Alcance Isleño queda como administrador invitado para mantenerla (
 > Hazlo **antes de imprimir** las pegatinas de las mesas: el QR lleva la dirección de la web y no se puede cambiar una vez impreso.
 
 ## 1. Dominio (lo hace el dueño)
-1. Elegir el dominio (por ejemplo `memphisbelle.com` o `.es`) y comprarlo **a su nombre y con su correo**. Cloudflare Registrar lo vende
-   a precio de coste (unos 10 € al año); vale cualquier registrador. Conviene activar la renovación automática.
+1. Elegir el dominio (por ejemplo `memphisbelle.com`) y comprarlo **a su nombre y con su correo**. Cloudflare Registrar lo vende
+   a precio de coste (unos 10 € al año para un `.com`) y deja el DNS y el Worker en la misma cuenta, que es lo más simple. Si se quiere un `.es`,
+   comprobar antes en cloudflare.com/tld-policies que Cloudflare lo vende; si no, comprarlo en un registrador español y apuntar sus nameservers a Cloudflare
+   (paso siguiente). Conviene activar la renovación automática y dejar el correo del dueño como contacto del dominio.
 2. Si lo compra en otro registrador, añadir el dominio a su cuenta de Cloudflare (gratis) y cambiar los servidores de nombres (nameservers)
    a los que indique Cloudflare. Si lo compra en Cloudflare, no hace falta.
 
@@ -40,7 +42,14 @@ npm run pegatinas -- https://midominio.com
 Probar el QR con un móvil real antes de imprimir. Actualizar también el enlace de la web en la ficha de Google Business.
 
 ## 7. Antes de publicar
-`npm run pendientes` debe salir sin "Pendientes antes de publicar" (datos legales del titular).
+`npm run pendientes` debe salir sin "Pendientes antes de publicar" (hoy sale limpio: el titular ya está en `site.js`).
+Comprobar también, desde un móvil: la web en el dominio nuevo, el botón «Ver el mapa», el enlace de reseñas, el QR de las mesas y de la tarjeta,
+y que `http://www…` y `memphisbelle.alcanceisleno.com` redirigen al dominio nuevo.
+
+## 8. Después de publicar
+- Google Business Profile: poner el nuevo enlace como sitio web y subir las imágenes de la carta (`npm run` → `node scripts/carta-imagen.cjs https://midominio.com`).
+- Regenerar los QR y la tarjeta de visita con el dominio definitivo: `node scripts/tarjeta-visita.cjs https://midominio.com --verde`.
+- Search Console (opcional): añadir el dominio y enviar `sitemap.xml`.
 
 ## Permisos de Alcance Isleño (mantener sin ser dueños)
 | Pieza | Dueño | Lo que necesita Alcance Isleño |

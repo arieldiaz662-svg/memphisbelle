@@ -603,14 +603,14 @@ describe('mapa de Google en "Visítanos"', () => {
       assert.match(visita, /class="mapa" data-mapa="https:\/\/www\.google\.com\/maps\?q=28\.468885,-16\.2608065&amp;z=17&amp;hl=(es|en)&amp;output=embed"/);
       assert.match(visita, /class="btn btn-claro mapa-cargar" type="button" hidden>/);
       assert.ok(visita.includes(`href="${site.googleMapsUrl.replace(/&/g, '&amp;')}"`)); // el botón "Cómo llegar" abre Maps
-      assert.match(visita, /href="cookies\.html"/);
+      assert.match(visita, /href="cookies(-en)?\.html"/);
     }
   });
   test('la CSP solo admite google.com como marco y el JS crea el iframe al pulsar', () => {
     assert.match(STATIC_CSP, /frame-src https:\/\/www\.google\.com;/);
     assert.doesNotMatch(STATIC_CSP, /frame-src[^;]*\*/);
     assert.match(read('assets/js/site.js'), /createElement\('iframe'\)/);
-    assert.match(read('cookies.html'), /Mapa de Google Maps/);
+    assert.match(read('cookies.html'), /Cookies de terceros: Google Maps/);
   });
 });
 
@@ -684,7 +684,7 @@ describe('alérgenos de la carta', () => {
 });
 
 describe('revisión técnica de la web', () => {
-  const paginas = ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'privacy-en.html', 'cookies.html', '404.html'];
+  const paginas = ['index.html', 'en.html', 'carta.html', 'carta-en.html', 'privacidad.html', 'privacy-en.html', 'cookies.html', 'cookies-en.html', '404.html'];
   test('cada página tiene título único, meta descripción, un solo h1 e idioma', () => {
     const titulos = new Set();
     for (const f of paginas) {
@@ -842,5 +842,25 @@ describe('datos del titular', () => {
       assert.ok(read('privacidad.html').includes(`${site.legal.owner} (NIF/CIF ${site.legal.taxId})`));
       assert.ok(read('privacy-en.html').includes(`${site.legal.owner} (tax ID ${site.legal.taxId})`));
     }
+  });
+});
+
+describe('política de cookies', () => {
+  test('española: LSSI, RGPD y AEPD, tabla con <code>mb-intro</code> y Google Maps, sin cookies propias ni banner, cómo gestionar y retirar el consentimiento', () => {
+    const h = read('cookies.html');
+    for (const t of ['art\u00edculo 22.2', 'LSSI-CE', 'AEPD', 'no utiliza cookies propias', 'no te mostramos un banner', '<code>mb-intro</code>', 'Cookies de Google Maps', 'Cómo gestionar o eliminar las cookies', 'retirar tu consentimiento', 'policies.google.com/technologies/cookies']) assert.ok(h.includes(t), t);
+    assert.match(h, /<table>[\s\S]*<th scope="col">Nombre<\/th>/);
+    assert.ok(h.includes(`${site.legal.owner} (NIF/CIF ${site.legal.taxId})`));
+  });
+  test('inglesa: mismas secciones y tabla, enlazada desde el pie y el aviso del mapa de las páginas en inglés', () => {
+    const h = read('cookies-en.html');
+    assert.match(h, /<html lang="en"/);
+    assert.equal((h.match(/<h2>/g) || []).length, (read('cookies.html').match(/<h2>/g) || []).length);
+    for (const t of ['does not use first-party cookies', 'we do not show a cookie banner', 'Google Maps cookies', 'How to manage or delete cookies', 'withdraw your consent']) assert.ok(h.includes(t), t);
+    for (const f of ['en.html', 'carta-en.html', 'privacy-en.html', 'cookies-en.html']) assert.match(read(f), /href="cookies-en\.html"/, f);
+    assert.match(read('cookies.html'), /href="cookies-en\.html" lang="en" hreflang="en"/);
+  });
+  test('todo enlace externo de las políticas abre con noopener noreferrer', () => {
+    for (const f of ['cookies.html', 'cookies-en.html']) for (const [a] of read(f).matchAll(/<a [^>]*target="_blank"[^>]*>/g)) assert.match(a, /rel="noopener noreferrer"/, f);
   });
 });

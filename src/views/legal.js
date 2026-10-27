@@ -136,14 +136,72 @@ export function renderPrivacyEn({ site, config }) {
   });
 }
 
+const tablaCookies = (cab, filas) => `<div class="tabla-datos" role="region" tabindex="0"><table>
+    <thead><tr>${cab.map((c) => `<th scope="col">${c}</th>`).join('')}</tr></thead>
+    <tbody>${filas.map((f) => `<tr>${f.map((c, i) => (i === 0 ? `<th scope="row">${c}</th>` : `<td>${c}</td>`)).join('')}</tr>`).join('')}</tbody>
+  </table></div>`;
+
+const NAVEGADORES = [
+  ['Chrome', 'https://support.google.com/chrome/answer/95647'],
+  ['Firefox', 'https://support.mozilla.org/es/kb/borrar-cookies-y-datos-del-sitio-en-firefox'],
+  ['Safari', 'https://support.apple.com/es-es/guide/safari/sfri11471/mac'],
+  ['Edge', 'https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09'],
+];
+const enlacesNavegadores = (en) => NAVEGADORES.map(([n, u]) => `<a href="${en ? u.replace('/es/kb', '/kb').replace('es-es/', 'en-us/').replace('/es-es', '/en-us') : u}" rel="noopener noreferrer" target="_blank">${n}</a>`).join(', ');
+
 export function renderCookies({ site, config }) {
+  const { legal } = site;
+  const reach = contactLine(site);
+  const base = config.publicBaseUrl;
+  const titular = legal.owner && legal.taxId ? `${esc(legal.owner)} (NIF/CIF ${esc(legal.taxId)}), ${esc(legal.address)}` : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}`;
   return page({
     site, config, path: '/cookies', title: 'Política de cookies',
+    alterno: { href: 'cookies-en.html', lang: 'en', texto: 'EN', etiqueta: 'View in English' },
+    head: base ? `<link rel="alternate" hreflang="es" href="${esc(`${base}/cookies.html`)}">\n<link rel="alternate" hreflang="en" href="${esc(`${base}/cookies-en.html`)}">\n` : '',
     sections: [
-      ['Qué cookies usamos', `<p>La web de ${esc(site.fullName)} no utiliza cookies propias ni de análisis o publicidad, y las tipografías se sirven desde nuestro propio alojamiento. Por eso no te mostramos un aviso de cookies al entrar.</p>`],
-      ['Mapa de Google Maps', '<p>En la sección «Visítanos» el mapa no se carga hasta que pulsas «Ver el mapa». Al hacerlo, tu navegador se conecta con Google (google.com), que puede guardar cookies y tratar datos como tu dirección IP según su propia política. Si no lo pulsas, no se envía nada a Google.  Con el botón «Cómo llegar» abres la ubicación en Google Maps en otra pestaña, y desde ese momento se aplica la política de cada servicio.</p>'],
-      ['Memoria temporal del navegador', '<p>Para no repetir la pantalla de entrada en cada página, la web guarda un único aviso (<code>mb-intro</code>) en la memoria de sesión de tu navegador. No es una cookie, no contiene datos personales, no se envía a ningún servidor y se borra al cerrar la pestaña.</p>'],
-      ['Enlaces externos', '<p>Al pulsar los enlaces de Instagram o Google Maps sales de esta web; desde ese momento se aplica la política de cookies de cada servicio.</p>'],
+      ['Qué son las cookies', `<p>Una cookie es un pequeño archivo que un sitio web guarda en tu dispositivo cuando lo visitas. Esta política también cubre otras tecnologías similares (almacenamiento local o de sesión del navegador, píxeles, identificadores). Se rige por el artículo 22.2 de la Ley 34/2002 (LSSI-CE), el Reglamento (UE) 2016/679 (RGPD), la LOPDGDD y la Guía sobre el uso de las cookies de la Agencia Española de Protección de Datos (AEPD).</p>`],
+      ['Quién es el responsable', `<p>${titular}. Contacto: ${reach}. Más datos sobre cómo tratamos tu información personal en la <a href="privacidad.html">política de privacidad</a>.</p>`],
+      ['Qué cookies usamos', `<p>La web de ${esc(site.fullName)} <strong>no utiliza cookies propias ni de análisis, de personalización o de publicidad</strong>, y las tipografías se sirven desde nuestro propio alojamiento. Por eso <strong>no te mostramos un banner de cookies al entrar</strong>: solo usamos lo estrictamente necesario, que no requiere consentimiento (art. 22.2 LSSI-CE), y lo demás solo se activa si tú lo pides.</p>
+  ${tablaCookies(['Nombre', 'Titular', 'Finalidad', 'Tipo y duración', 'Consentimiento'], [
+    ['<code>mb-intro</code>', 'Propia (esta web)', 'Recordar que ya has visto la pantalla de entrada para no repetirla en cada página.', 'Técnica, almacenamiento de sesión. Se borra al cerrar la pestaña. No es una cookie ni contiene datos personales; no se envía a ningún servidor.', 'No necesario (exenta)'],
+    ['Cookies de Google Maps', 'Tercero: Google LLC', 'Mostrar el mapa con la ubicación del local. Google puede guardar identificadores o cookies de preferencias, seguridad o publicidad.', 'Tercero. Solo tras pulsar «Ver el mapa». Duración según Google.', 'Sí: lo das al pulsar el botón'],
+  ])}`],
+      ['Cookies de terceros: Google Maps', `<p>El mapa de la sección «Visítanos» <strong>no se carga hasta que pulsas «Ver el mapa»</strong>. Hasta ese momento no se envía ningún dato a Google ni se instala nada. Al pulsarlo, tu navegador se conecta con google.com, que recibe tu dirección IP y datos de tu navegador y puede instalar cookies o identificadores. Esa acción es tu consentimiento, que se informa antes de pulsar el botón, y puedes retirarlo en cualquier momento borrando los datos del sitio en tu navegador y no volviendo a cargar el mapa.</p>
+  <p>Google es responsable de esos datos y de esas cookies: consulta su <a href="https://policies.google.com/technologies/cookies" rel="noopener noreferrer" target="_blank">política de cookies</a> y su <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">política de privacidad</a>. Si prefieres no cargar el mapa, el botón «Cómo llegar» abre la ubicación en Google Maps en otra pestaña (desde ese momento se aplica la política de Google).</p>`],
+      ['Enlaces externos', '<p>La web enlaza con Instagram, Google Maps, la página de reseñas de Google y la web de Alcance Isleño. Al pulsar esos enlaces sales de esta web y se aplica la política de cookies y de privacidad de cada servicio; no controlamos esas cookies.</p>'],
+      ['Alojamiento', '<p>La web se sirve a través de Cloudflare. Puede utilizar mecanismos técnicos estrictamente necesarios para la seguridad y la entrega del sitio (por ejemplo, protección frente a ataques), que están exentos de consentimiento. No usamos las cookies de Cloudflare con fines de análisis o publicidad.</p>'],
+      ['Cómo gestionar o eliminar las cookies', `<p>Puedes permitir, bloquear o borrar las cookies desde la configuración de tu navegador. Más información en: ${enlacesNavegadores(false)}. Si las bloqueas, la web sigue funcionando; el mapa puede no cargarse.</p>
+  <p>Puedes retirar tu consentimiento al mapa en cualquier momento borrando las cookies y los datos del sitio. Para ejercer tus derechos de protección de datos escríbenos a ${reach}; si no atendemos tu solicitud, puedes reclamar ante la <a href="https://www.aepd.es" rel="noopener noreferrer" target="_blank">AEPD</a>.</p>`],
+      ['Cambios en esta política', '<p>Si añadimos algún servicio que use cookies (por ejemplo, estadísticas), te lo pediremos antes de activarlo y actualizaremos esta política. La fecha de la última actualización figura al principio de esta página.</p>'],
+    ],
+  });
+}
+
+export function renderCookiesEn({ site, config }) {
+  const { legal } = site;
+  const reach = contactLine(site);
+  const base = config.publicBaseUrl;
+  const controller = legal.owner && legal.taxId ? `${esc(legal.owner)} (tax ID ${esc(legal.taxId)}), ${esc(legal.address)}` : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}, Spain`;
+  return page({
+    site, config, path: '/cookies-en', title: 'Cookie policy', lang: 'en', actualizado: 'Last updated',
+    descripcion: `Cookie policy of ${site.fullName}: we use no analytics or advertising cookies; the Google map loads only when you ask for it.`,
+    alterno: { href: 'cookies.html', lang: 'es', texto: 'ES', etiqueta: 'Ver en español' },
+    head: base ? `<link rel="alternate" hreflang="es" href="${esc(`${base}/cookies.html`)}">\n<link rel="alternate" hreflang="en" href="${esc(`${base}/cookies-en.html`)}">\n` : '',
+    sections: [
+      ['What cookies are', '<p>A cookie is a small file that a website stores on your device when you visit it. This policy also covers similar technologies (browser local or session storage, pixels, identifiers). It follows article 22.2 of Spanish Law 34/2002 (LSSI-CE), Regulation (EU) 2016/679 (GDPR), the LOPDGDD and the Spanish Data Protection Agency (AEPD) guide on the use of cookies.</p>'],
+      ['Who is responsible', `<p>${controller}. Contact: ${reach}. More about how we process your personal data in the <a href="privacy-en.html">privacy policy</a>.</p>`],
+      ['Which cookies we use', `<p>The ${esc(site.fullName)} website <strong>does not use first-party cookies, nor analytics, personalisation or advertising cookies</strong>, and fonts are served from our own hosting. That is why <strong>we do not show a cookie banner when you arrive</strong>: we only use what is strictly necessary, which does not require consent (art. 22.2 LSSI-CE), and anything else only starts if you ask for it.</p>
+  ${tablaCookies(['Name', 'Owner', 'Purpose', 'Type and duration', 'Consent'], [
+    ['<code>mb-intro</code>', 'First party (this website)', 'Remember that you have already seen the welcome screen so it is not repeated on every page.', 'Technical, session storage. Deleted when you close the tab. It is not a cookie and holds no personal data; it is never sent to a server.', 'Not required (exempt)'],
+    ['Google Maps cookies', 'Third party: Google LLC', 'Show the map with the venue’s location. Google may store identifiers or preference, security or advertising cookies.', 'Third party. Only after you click “Show the map”. Duration set by Google.', 'Yes: you give it by clicking the button'],
+  ])}`],
+      ['Third-party cookies: Google Maps', `<p>The map in the “Visit us” section <strong>does not load until you click “Show the map”</strong>. Until then, no data is sent to Google and nothing is installed. When you click it, your browser connects to google.com, which receives your IP address and browser data and may install cookies or identifiers. That action is your consent, which is explained before you click the button, and you can withdraw it at any time by clearing the site’s data in your browser and not loading the map again.</p>
+  <p>Google is responsible for that data and those cookies: see its <a href="https://policies.google.com/technologies/cookies" rel="noopener noreferrer" target="_blank">cookie policy</a> and <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">privacy policy</a>. If you prefer not to load the map, the “Get directions” button opens the location in Google Maps in another tab (from then on, Google’s policy applies).</p>`],
+      ['External links', '<p>The website links to Instagram, Google Maps, Google’s review page and the Alcance Isleño website. When you click those links you leave this website and each service’s own cookie and privacy policy applies; we do not control those cookies.</p>'],
+      ['Hosting', '<p>The website is served through Cloudflare. It may use strictly necessary technical mechanisms for security and delivery of the site (for example, protection against attacks), which are exempt from consent. We do not use Cloudflare cookies for analytics or advertising.</p>'],
+      ['How to manage or delete cookies', `<p>You can allow, block or delete cookies in your browser settings. More information for: ${enlacesNavegadores(true)}. If you block them, the website still works; the map may not load.</p>
+  <p>You can withdraw your consent to the map at any time by deleting the cookies and site data. To exercise your data protection rights write to ${reach}; if we do not handle your request properly, you can complain to the <a href="https://www.aepd.es" rel="noopener noreferrer" target="_blank">AEPD</a> or to your country’s supervisory authority.</p>`],
+      ['Changes to this policy', '<p>If we add a service that uses cookies (for example, statistics), we will ask you first before switching it on and will update this policy. The date of the last update appears at the top of this page.</p>'],
     ],
   });
 }

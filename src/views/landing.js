@@ -274,7 +274,7 @@ function visit(site, idioma) {
         <div class="mapa-acciones">
           <button class="btn btn-claro mapa-cargar" type="button" hidden>${rodar(t.mapaVer)}</button>
         </div>
-        <p class="mapa-aviso">${esc(t.mapaAviso)} <a href="cookies.html">${esc(t.mapaCookies)}</a>.</p>
+        <p class="mapa-aviso">${esc(t.mapaAviso)} <a href="${idioma === 'en' ? 'cookies-en.html' : 'cookies.html'}">${esc(t.mapaCookies)}</a>.</p>
       </div>
     </div>
   </div>
