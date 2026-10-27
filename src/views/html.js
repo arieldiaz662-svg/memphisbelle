@@ -27,9 +27,9 @@ export const NAV = [
   { id: 'visitanos', label: 'Visítanos' },
 ];
 
-// El aviso legal solo se publica cuando están los datos del titular (site.legal.owner).
+// El aviso legal solo se publica cuando están el nombre y el NIF del titular (site.legal.owner y taxId).
 export function hasLegalNotice(site) {
-  return Boolean(site.legal && site.legal.owner && site.legal.owner.trim());
+  return Boolean(site.legal && site.legal.owner && site.legal.owner.trim() && site.legal.taxId && site.legal.taxId.trim());
 }
 
 // La política de seguridad de contenidos (CSP) vive en src/seguridad.js; aquí se re-exporta para las páginas.

@@ -32,7 +32,7 @@ export function renderLegalNotice({ site, config }) {
 export function renderPrivacy({ site, config }) {
   const { legal } = site;
   const reach = contactLine(site);
-  const titular = legal.owner
+  const titular = legal.owner && legal.taxId
     ? `${esc(legal.owner)} (NIF/CIF ${esc(legal.taxId)}), ${esc(legal.address)}`
     : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}`;
   const base = config.publicBaseUrl;
@@ -85,7 +85,7 @@ export function renderPrivacy({ site, config }) {
 export function renderPrivacyEn({ site, config }) {
   const { legal } = site;
   const reach = contactLine(site);
-  const controller = legal.owner
+  const controller = legal.owner && legal.taxId
     ? `${esc(legal.owner)} (tax ID ${esc(legal.taxId)}), ${esc(legal.address)}`
     : `${esc(site.fullName)}, ${esc(site.address.street)}, ${esc(site.address.postalCode)} ${esc(site.address.city)}, Spain`;
   const base = config.publicBaseUrl;

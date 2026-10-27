@@ -812,3 +812,35 @@ describe('portada con titular corto y emblema bajo la lámpara', () => {
     assert.match(css, /prefers-reduced-motion: no-preference\) \{ \.neon-emblema/);
   });
 });
+
+describe('datos del titular', () => {
+  // Letra de control de DNI/NIE (7 u 8 cifras) y de CIF; solo se comprueba si ya hay NIF.
+  const valido = (nif) => {
+    const n = nif.toUpperCase().replace(/[\s-]/g, '');
+    const letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
+    let m = /^(\d{7,8})([A-Z])$/.exec(n);
+    if (m) return letras[Number(m[1]) % 23] === m[2];
+    m = /^([XYZ])(\d{7})([A-Z])$/.exec(n);
+    if (m) return letras[Number(`${'XYZ'.indexOf(m[1])}${m[2]}`) % 23] === m[3];
+    m = /^([ABCDEFGHJNPQRSUVW])(\d{7})([0-9A-J])$/.exec(n);
+    if (m) {
+      const d = m[2].split('').map(Number);
+      const suma = d.reduce((a, x, i) => a + (i % 2 === 0 ? [0, 2, 4, 6, 8, 1, 3, 5, 7, 9][x] : x), 0);
+      const c = (10 - (suma % 10)) % 10;
+      return m[3] === String(c) || m[3] === 'JABCDEFGHI'[c];
+    }
+    return false;
+  };
+  test('el validador de NIF reconoce DNI, NIE y CIF correctos e incorrectos', () => {
+    assert.ok(valido('12345678Z') && valido('04209615V') && valido('X1234567L'));
+    assert.ok(!valido('4209615R') && !valido('12345678A'));
+  });
+  test('si hay NIF, es válido; el aviso legal solo existe con nombre y NIF; y la política nombra al responsable', () => {
+    if (site.legal.taxId) assert.ok(valido(site.legal.taxId), `NIF no válido: ${site.legal.taxId}`);
+    assert.equal(existsSync(join(outDir, 'aviso-legal.html')), Boolean(site.legal.owner && site.legal.taxId));
+    if (site.legal.owner && site.legal.taxId) {
+      assert.ok(read('privacidad.html').includes(`${site.legal.owner} (NIF/CIF ${site.legal.taxId})`));
+      assert.ok(read('privacy-en.html').includes(`${site.legal.owner} (tax ID ${site.legal.taxId})`));
+    }
+  });
+});
