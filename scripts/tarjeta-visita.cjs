@@ -7,7 +7,7 @@
 // El QR lleva a la web: no se puede cambiar una vez impresa la tarjeta. Si el bar va a tener dominio propio,
 // pasarlo aquí ANTES de imprimir. Necesita Playwright con Chromium (como npm run og-image).
 const { execSync } = require('node:child_process');
-const { mkdirSync, writeFileSync, rmSync } = require('node:fs');
+const { mkdirSync, writeFileSync, rmSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { pathToFileURL } = require('node:url');
 const QRCode = require('qrcode');
@@ -28,6 +28,8 @@ for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (qr.modules.get(x, y)
 const qrSvg = `<svg viewBox="0 0 ${N} ${N}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><path fill="${C.tinta}" d="${celdas}"/></svg>`;
 const corta = url.replace(/^https?:\/\//, '');
 
+// Emblema del local (scripts/logo.py): dos cucharas de bar cruzadas, coctelera y copa, como el cartel de la puerta.
+const emblema = (variante, clase) => readFileSync(join(RAIZ, 'public', 'img', 'logo', `emblema-${variante}.svg`), 'utf8').replace('<svg ', `<svg class="${clase}" `);
 const MURAL = pathToFileURL(join(RAIZ, 'public', 'img', 'portada', 'mural-1600.jpg')).href;
 const PAPEL = { fondo: '#EDE4D0', tinta: '#2A1412', etiqueta: '#6B2A1E', belle: '#8F6208', qr: '#2A1412' };
 
@@ -50,6 +52,7 @@ html, body { width: 91mm; text-rendering: geometricPrecision; font-kerning: norm
 .qr svg { display: block; width: 100%; height: 100%; }
 .qr p { font: 500 1.8mm/1.25 "Poppins", sans-serif; letter-spacing: .12em; text-transform: uppercase; text-align: center; opacity: .9; }
 .fondo { position: absolute; inset: 0; }
+.cabm { display: flex; align-items: center; gap: 2.2mm; margin-bottom: .6mm; } .cabm .marca { margin: 0 !important; } .embp { width: 8.5mm; height: 8.5mm; flex: none; }
 `;
 
 const datosHtml = (extra = '') => `<div class="dato"><b>Dirección</b>Calle de los Sueños, 1<br>38006 Santa Cruz de Tenerife</div>
@@ -69,12 +72,12 @@ const MODELOS = {
 .f1 { background: radial-gradient(ellipse 85% 95% at 30% 20%, #7C3A26 0%, ${C.madera} 38%, #4F1B1F 100%); }
 .r1 { background: radial-gradient(ellipse 90% 100% at 20% 0%, #5E2325 0%, ${C.bordo} 55%, ${C.bordoOscuro} 100%); }
 .f1 .centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4.2mm; }
-.f1 .marca { font-size: 12.5mm; } .f1 .linea { width: 9mm; height: .35mm; background: ${C.amarillo}; opacity: .9; }
+.f1 .emb { width: 19mm; height: 19mm; margin-bottom: -.5mm; } .f1 .centro { gap: 3.4mm; } .f1 .marca { font-size: 11.5mm; } .f1 .linea { width: 9mm; height: .35mm; background: ${C.amarillo}; opacity: .9; }
 .r1 .rev { position: absolute; inset: 0; padding: 7mm; display: grid; grid-template-columns: 1fr 25mm; column-gap: 5mm; align-items: center; }
 .r1 .datos { display: flex; flex-direction: column; gap: 3.6mm; } .r1 .datos .marca { font-size: 6.4mm; margin-bottom: .6mm; }
 .r1 .dato b { color: ${C.amarillo}; } .r1 .placa { width: 25mm; height: 25mm; padding: 2mm; border-radius: 1.6mm; background: ${C.crema}; }`,
-    frente: `<div class="cara f1"><div class="centro"><div class="marca">Memphis <em>Belle</em></div><div class="linea"></div><div class="tipo">Coctelería</div></div></div>`,
-    reverso: (qr) => `<div class="cara r1"><div class="rev"><div class="datos"><div class="marca">Memphis <em>Belle</em></div>${datosHtml()}</div><div class="qr"><div class="placa">${qr(C.tinta)}</div><p>Carta, horario<br>y cómo llegar</p></div></div></div>`,
+    frente: `<div class="cara f1"><div class="centro">${emblema('claro', 'emb')}<div class="marca">Memphis <em>Belle</em></div><div class="linea"></div><div class="tipo">Coctelería</div></div></div>`,
+    reverso: (qr) => `<div class="cara r1"><div class="rev"><div class="datos"><div class="cabm">${emblema('claro', 'embp')}<div class="marca">Memphis <em>Belle</em></div></div>${datosHtml()}</div><div class="qr"><div class="placa">${qr(C.tinta)}</div><p>Carta, horario<br>y cómo llegar</p></div></div></div>`,
   },
   // 2 · Mural: panel madera-bordó con el logotipo en dos líneas y la foto real del avión pintado; reverso en papel crema (como la carta).
   2: {
@@ -86,14 +89,15 @@ const MODELOS = {
 .comp-origen .foto { position: absolute; inset: 0; background: url("${MURAL}") 92% 62% / auto 128% no-repeat; }
 .comp-origen .vela { position: absolute; inset: 0; background: linear-gradient(to right, #5A2320 0%, #5A2320 12%, rgba(90,35,32,.55) 30%, rgba(90,35,32,0) 60%), linear-gradient(to top, rgba(58,18,22,.55), rgba(58,18,22,0) 45%); }
 .f2 .texto { position: absolute; left: 7.5mm; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.4mm; }
-.f2 .marca { font-size: 10.8mm; line-height: .92; } .f2 .marca em { display: block; font-size: 13.2mm; margin: 1.4mm 0 0 3.2mm; }
+.f2 .marca { font-size: 9.6mm; line-height: .92; } .f2 .marca em { display: block; font-size: 11.6mm; margin: 1.4mm 0 0 3.2mm; }
+.f2 .emb { width: 15mm; height: 15mm; margin: 0 0 .6mm -1mm; }
 .f2 .tipo { font-size: 2.1mm; letter-spacing: .36em; padding-left: 0; opacity: .9; margin-top: 1.2mm; }
 .r2 { background: radial-gradient(ellipse 100% 90% at 50% 0%, #F3ECDB, ${PAPEL.fondo} 62%, #E3D8C0); color: ${PAPEL.tinta}; }
 .r2 .rev { position: absolute; inset: 0; padding: 7mm; display: grid; grid-template-columns: 1fr 24mm; column-gap: 6mm; align-items: center; }
 .r2 .datos { display: flex; flex-direction: column; gap: 3.6mm; } .r2 .marca { font-size: 6.4mm; margin-bottom: .6mm; color: ${PAPEL.tinta}; } .r2 .marca em { color: ${PAPEL.belle}; }
 .r2 .dato b { color: ${PAPEL.etiqueta}; } .r2 .placa { width: 24mm; height: 24mm; }`,
-    frente: `<div class="cara f2"><img class="comp" src="{{COMP}}" alt=""><div class="texto"><div class="marca">Memphis <em>Belle</em></div><div class="tipo">Coctelería</div></div></div>`,
-    reverso: (qr) => `<div class="cara r2"><div class="rev"><div class="datos"><div class="marca">Memphis <em>Belle</em></div>${datosHtml()}</div><div class="qr"><div class="placa">${qr(PAPEL.qr)}</div><p>Carta, horario<br>y cómo llegar</p></div></div></div>`,
+    frente: `<div class="cara f2"><img class="comp" src="{{COMP}}" alt=""><div class="texto">${emblema('claro', 'emb')}<div class="marca">Memphis <em>Belle</em></div><div class="tipo">Coctelería</div></div></div>`,
+    reverso: (qr) => `<div class="cara r2"><div class="rev"><div class="datos"><div class="cabm">${emblema('oscuro', 'embp')}<div class="marca">Memphis <em>Belle</em></div></div>${datosHtml()}</div><div class="qr"><div class="placa">${qr(PAPEL.qr)}</div><p>Carta, horario<br>y cómo llegar</p></div></div></div>`,
   },
   // 3 · Marco: doble filete dorado con esquinas cortadas, logotipo centrado y el mismo marco en el reverso sobre papel crema.
   3: {
@@ -101,13 +105,13 @@ const MODELOS = {
     css: `
 .f3 { background: radial-gradient(ellipse 80% 90% at 50% 40%, #6A2E22 0%, #54201F 55%, #3E1519 100%); }
 .f3 .centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3mm; }
-.f3 .marca { font-size: 11.2mm; } .f3 .rombo { width: 1.6mm; height: 1.6mm; background: ${C.amarillo}; transform: rotate(45deg); }
+.f3 .emb { width: 15mm; height: 15mm; } .f3 .centro { gap: 2.2mm; } .f3 .marca { font-size: 9.8mm; } .f3 .rombo { width: 1.6mm; height: 1.6mm; background: ${C.amarillo}; transform: rotate(45deg); }
 .f3 .tipo { font-size: 2.1mm; letter-spacing: .34em; padding-left: .34em; }
 .r3 { background: radial-gradient(ellipse 100% 90% at 50% 0%, #F3ECDB, ${PAPEL.fondo} 62%, #E3D8C0); color: ${PAPEL.tinta}; }
 .r3 .rev { position: absolute; inset: 0; padding: 10.5mm 11mm; display: grid; grid-template-columns: 1fr 21mm; column-gap: 5mm; align-items: center; }
 .r3 .datos { display: flex; flex-direction: column; gap: 2.9mm; } .r3 .dato { font-size: 2.35mm; } .r3 .dato b { color: ${PAPEL.etiqueta}; } .r3 .placa { width: 21mm; height: 21mm; }
 .r3 .qr p { font-size: 1.6mm; }`,
-    frente: `<div class="cara f3">${marco(7.4, C.amarillo, .85)}<div class="centro"><div class="marca">Memphis <em>Belle</em></div><div class="rombo"></div><div class="tipo">Coctelería · Santa Cruz de Tenerife</div></div></div>`,
+    frente: `<div class="cara f3">${marco(7.4, C.amarillo, .85)}<div class="centro">${emblema('claro', 'emb')}<div class="marca">Memphis <em>Belle</em></div><div class="tipo">Coctelería · Santa Cruz de Tenerife</div></div></div>`,
     reverso: (qr) => `<div class="cara r3">${marco(7.4, '#8A3A24', .9)}<div class="rev"><div class="datos">${datosHtml()}</div><div class="qr"><div class="placa">${qr(PAPEL.qr)}</div><p>Carta, horario<br>y cómo llegar</p></div></div></div>`,
   },
 };
