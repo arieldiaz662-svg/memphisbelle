@@ -79,7 +79,6 @@ export const site = {
       { src: 'img/ambiente/chapas-carteles', alt: 'Pared con chapas y carteles antiguos de bebidas bajo tres focos', caption: 'Chapas y carteles de la casa' },
       { src: 'img/ambiente/whiskies', alt: 'Botellas de whisky en una balda de madera', caption: 'Whiskies de todo el mundo' },
     ],
-    revisar: 'Confirmar con el local que los textos de presentación describen su forma de trabajar',
   },
   carta: {
     intro: 'Veintitrés cócteles, copas y cerveza de barril. Precios con IGIC incluido.',
