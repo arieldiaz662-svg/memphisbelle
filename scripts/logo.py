@@ -85,6 +85,30 @@ for vertical, base in ((True, 'vertical'), (False, 'horizontal')):
     lockup(vertical, None, True, nombre=f'logo-{base}-oscuro.svg', **CLA)   # texto oscuro, para fondos claros
 for nombre, col in (('emblema-claro.svg', OSC), ('emblema-oscuro.svg', CLA)):
     open(os.path.join(SALIDA, nombre), 'w').write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Memphis Belle">{emblema(col["tinta"], col["acento"])}</svg>\n')
+
+def neon(vertical):
+    """Versión de neón: tubos cálidos con halo (filtro de desenfoque), para fondos oscuros o pared de ladrillo."""
+    w, h = (640, 470) if vertical else (1000, 260)
+    memphis_d, memphis_w = texto_a_trazado(serif, 'Memphis ', 100, tracking=-0.012)
+    belle_d, belle_w = texto_a_trazado(cursiva, 'Belle', 100, tracking=-0.012)
+    total = memphis_w + belle_w
+    def palabra(x, y, k=1.0):
+        m = texto_a_trazado(serif, 'Memphis ', 100 * k, x, y, -0.012)[0]
+        b = texto_a_trazado(cursiva, 'Belle', 100 * k, x + memphis_w * k, y, -0.012)[0]
+        return m, b
+    defs = '<defs><filter id="halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="a"/><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="a"/><feMergeNode in="a"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+    emb_body = emblema('#FFF3CF', '#FFB347', 4.2)
+    if vertical:
+        s_ = 1.4; ex = (w - 200 * s_) / 2
+        m, b = palabra((w - total) / 2, 408)
+        cuerpo = f'<g filter="url(#halo)"><g transform="translate({ex} 6) scale({s_})">{emb_body}</g><path fill="#FFF3CF" d="{m}"/><path fill="#FFD25E" d="{b}"/></g>'
+    else:
+        s_ = 1.0; px = 200 * s_ + 40
+        m, b = palabra(px, 150)
+        cuerpo = f'<g filter="url(#halo)"><g transform="translate(10 25) scale({s_})">{emb_body}</g><path fill="#FFF3CF" d="{m}"/><path fill="#FFD25E" d="{b}"/></g>'
+        w = int(px + total + 40)
+    open(os.path.join(SALIDA, f"logo-neon-{'vertical' if vertical else 'horizontal'}.svg"), 'w').write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" role="img" aria-label="Memphis Belle Coctelería">{defs}{cuerpo}</svg>\n')
+neon(True); neon(False)
 print('Logotipos SVG en', SALIDA)
 
 # PNG con Playwright (fondo transparente)
