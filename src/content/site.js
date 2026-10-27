@@ -209,12 +209,11 @@ export const site = {
   // "Aviso legal" y su enlace no se publican.
   legal: {
     owner: 'Jesús Garrido Estévez', // nombre o razón social (autónomo)
-    taxId: '', // NIF/CIF: falta confirmarlo (ver "pendiente")
+    taxId: '42096165R', // NIF
     address: 'Calle de los Sueños, 1, 38006 Santa Cruz de Tenerife', // la del local
     registry: '', // datos registrales, si es sociedad
     lastUpdated: '27 de octubre de 2026',
     lastUpdatedEn: '27 October 2026',
-    pendiente: 'NIF del titular: el 4209615R que se pasó no es válido (la letra de control de 4209615 es V). Confirmarlo con su DNI y ponerlo en taxId',
   },
 
   // VERSIÓN EN INGLÉS de la portada (en.html). Cada bloque se mezcla sobre el español: lo que no se traduce
