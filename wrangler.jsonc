@@ -3,11 +3,13 @@
 // (CHECK_PUBLICACION=1, ver test/publicacion.test.js).
 // Mientras no haya dominio propio, la web se sirve en la dirección de workers.dev (sin routes y sin PUBLIC_BASE_URL, así
 // que no se generan canonical ni sitemap). Cuando el bar tenga dominio: node scripts/cambiar-dominio.js midominio.com
-// (cambia DOMINIO en worker/redireccion.js, routes y PUBLIC_BASE_URL).
+// (cambia DOMINIO en worker/redireccion.js, routes y PUBLIC_BASE_URL). workers_dev fija la dirección de workers.dev
+// activada en cada despliegue (con routes, Wrangler la apagaba y la web dejaba de responder ahí).
 {
   "name": "memphisbelle",
   "main": "worker/index.js",
   "compatibility_date": "2025-09-01",
+  "workers_dev": true,
   "build": {
     "command": "CHECK_PUBLICACION=1 npm test && npm run build"
   },

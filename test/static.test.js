@@ -83,6 +83,7 @@ describe('construcción y publicación', () => {
       assert.ok(config.routes.some((r) => r.pattern === DOMINIO && r.custom_domain === true));
     } else {
       assert.equal(config.routes, undefined);
+      assert.equal(config.workers_dev, true);
     }
   });
 
