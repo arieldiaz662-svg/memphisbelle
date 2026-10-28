@@ -652,9 +652,10 @@ describe('seguridad', () => {
     assert.equal(ok.headers.get('X-Frame-Options'), 'DENY');
     assert.equal(ok.headers.get('Server'), null);
     assert.match(ok.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
-    const redir = await worker.fetch(new Request('https://memphisbelle.workers.dev/carta'), env);
-    assert.equal(redir.status, 301);
-    assert.equal(redir.headers.get('Strict-Transport-Security'), 'max-age=31536000; includeSubDomains');
+    const secundaria = await worker.fetch(new Request('https://memphisbelle.workers.dev/carta'), env);
+    // Con dominio propio, workers.dev redirige a él; sin dominio, se sirve directamente.
+    assert.equal(secundaria.status, DOMINIO ? 301 : 200);
+    assert.equal(secundaria.headers.get('Strict-Transport-Security'), 'max-age=31536000; includeSubDomains');
   });
 
   test('el JavaScript no usa vías de inyección (innerHTML, eval, document.write…)', () => {

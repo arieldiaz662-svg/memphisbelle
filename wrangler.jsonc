@@ -1,18 +1,16 @@
 // Cloudflare Workers (Worker "memphisbelle"): pasa los tests, construye la web estática y publica dist/.
 // Si falla un test, no se publica. Tampoco se publica mientras queden datos pendientes en site.js
 // (CHECK_PUBLICACION=1, ver test/publicacion.test.js).
-// La web vive en memphisbelle.alcanceisleno.com (subdominio de Alcance Isleño, en la misma cuenta de Cloudflare). Hay que
-// añadir el dominio personalizado una vez en el panel si no se crea solo al publicar. La dirección de workers.dev
-// redirige a ella (worker/redireccion.js). Si el bar tiene dominio propio algún día: cambiar DOMINIO, routes y
-// PUBLIC_BASE_URL, y este subdominio redirigirá al nuevo.
+// Mientras no haya dominio propio, la web se sirve en la dirección de workers.dev (sin routes y sin PUBLIC_BASE_URL, así
+// que no se generan canonical ni sitemap). Cuando el bar tenga dominio: node scripts/cambiar-dominio.js midominio.com
+// (cambia DOMINIO en worker/redireccion.js, routes y PUBLIC_BASE_URL).
 {
   "name": "memphisbelle",
   "main": "worker/index.js",
   "compatibility_date": "2025-09-01",
   "build": {
-    "command": "CHECK_PUBLICACION=1 npm test && PUBLIC_BASE_URL=https://memphisbelle.alcanceisleno.com npm run build"
+    "command": "CHECK_PUBLICACION=1 npm test && npm run build"
   },
-  "routes": [{ "pattern": "memphisbelle.alcanceisleno.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

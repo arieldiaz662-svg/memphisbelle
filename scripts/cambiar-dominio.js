@@ -31,8 +31,9 @@ const editar = (archivo, pares) => {
 
 editar('worker/redireccion.js', [[/export const DOMINIO = '[^']*';/, `export const DOMINIO = '${dominio}';`]]);
 const rutas = (esRaiz ? [dominio, `www.${dominio}`] : [dominio]).map((p) => `{ "pattern": "${p}", "custom_domain": true }`).join(', ');
+// wrangler.jsonc puede estar sin dominio (sin routes ni PUBLIC_BASE_URL): se añaden si faltan.
 editar('wrangler.jsonc', [
-  [/"routes": \[[^\]]*\]/, `"routes": [${rutas}]`],
-  [/PUBLIC_BASE_URL=https:\/\/[^ ]+/, `PUBLIC_BASE_URL=https://${dominio}`],
+  [/"command": "CHECK_PUBLICACION=1 npm test && (PUBLIC_BASE_URL=https:\/\/[^ ]+ )?npm run build"/, `"command": "CHECK_PUBLICACION=1 npm test && PUBLIC_BASE_URL=https://${dominio} npm run build"`],
+  [/(  "routes": \[[^\]]*\],\n)?  "assets"/, `  "routes": [${rutas}],\n  "assets"`],
 ]);
 console.log(`Dominio cambiado a ${dominio}${esRaiz ? ' (con www)' : ''}.\nSiguiente: npm test · npm run qr-mesas · npm run pegatinas -- https://${dominio}`);
